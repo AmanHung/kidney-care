@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v3.1</title>
+    <title>腎利管家 v3.2</title>
     <style>
         :root {
             /* --- 豐原醫院配色系統 --- */
@@ -60,7 +60,7 @@
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,144,69,0.3); transition: transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn:active { transform: scale(0.98); }
         .btn-line { background: #06c755; box-shadow: 0 4px 10px rgba(6,199,85,0.3); }
-        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 4px 10px rgba(245,130,32,0.3); } /* 橘色按鈕給慢箋 */
+        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 4px 10px rgba(245,130,32,0.3); } 
         .btn-next { background: linear-gradient(135deg, var(--accent), #e07010); margin-top: 15px; box-shadow: 0 4px 10px rgba(245,130,32,0.3); }
 
         /* KDIGO Grid */
@@ -117,22 +117,8 @@
         .qr-img { width: 100%; height: 100%; object-fit: cover; }
         
         /* Refill Box */
-        .refill-box {
-            display: flex;
-            align-items: center;
-            background: #fff8e1; /* 淡淡的橘黃色背景 */
-            border: 1px solid #ffe0b2;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            gap: 15px;
-        }
-        .refill-icon {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
+        .refill-box { display: flex; align-items: center; background: #fff8e1; border: 1px solid #ffe0b2; padding: 15px; border-radius: 15px; margin-bottom: 25px; gap: 15px; }
+        .refill-icon { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -154,13 +140,23 @@
             <div class="input-row">
                 <div class="input-group">
                     <label>eGFR (腎功能)</label>
-                    <input type="number" id="egfr-input" placeholder="例如 50">
+                    <div class="select-wrapper">
+                        <select id="egfr-input">
+                            <option value="" disabled selected>請選擇區間...</option>
+                            <option value="90">正常 (≥ 90)</option>
+                            <option value="60">輕度低下 (60 - 89)</option>
+                            <option value="45">輕度至中度 (45 - 59)</option>
+                            <option value="30">中度至重度 (30 - 44)</option>
+                            <option value="15">重度低下 (15 - 29)</option>
+                            <option value="10">末期腎病變 (&lt; 15)</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label>蛋白尿 (UACR)</label>
                     <div class="select-wrapper">
                         <select id="albumin-input">
-                            <option value="A1">正常 (<30)</option>
+                            <option value="A1">正常 (&lt;30)</option>
                             <option value="A2">微量 (30-299)</option>
                             <option value="A3">嚴重 (>300)</option>
                         </select>
@@ -363,119 +359,23 @@
     }
 
     function updateRisk() {
-        const egfr = parseFloat(document.getElementById('egfr-input').value);
+        const egfrSelect = document.getElementById('egfr-input');
+        const egfr = parseFloat(egfrSelect.value); // Gets numeric value like 90, 60...
+        const egfrText = egfrSelect.options[egfrSelect.selectedIndex].text; // Gets text like "60 - 89 (第2期)"
         const albumin = document.getElementById('albumin-input').value;
         const resultBox = document.getElementById('risk-display');
         const adviceBox = document.getElementById('home-advice');
+        
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
 
-        if (!egfr) { alert("請輸入 eGFR 數值"); return; }
+        if (!egfr) { alert("請選擇 eGFR 區間"); return; }
         
         resultBox.classList.remove('hidden');
         adviceBox.classList.remove('hidden');
 
+        // Logic uses the lower bound values to determine rowId (same logic as before)
         let stage = "", rowId = "";
         if (egfr >= 90) { stage = "第1期"; rowId = "1"; }
         else if (egfr >= 60) { stage = "第2期"; rowId = "2"; }
         else if (egfr >= 45) { stage = "第3a期"; rowId = "3a"; }
-        else if (egfr >= 30) { stage = "第3b期"; rowId = "3b"; }
-        else if (egfr >= 15) { stage = "第4期"; rowId = "4"; }
-        else { stage = "第5期"; rowId = "5"; }
-
-        let albText = "", colId = "";
-        if (albumin === 'A1') { albText = "正常/輕微蛋白尿"; colId = "1"; }
-        else if (albumin === 'A2') { albText = "微量蛋白尿"; colId = "2"; }
-        else { albText = "嚴重蛋白尿"; colId = "3"; }
-
-        const targetCellId = `cell-${rowId}-${colId}`;
-        const targetCell = document.getElementById(targetCellId);
-        if(targetCell) targetCell.classList.add('active-cell');
-
-        let riskText = "", riskColor = "";
-        if (targetCell.classList.contains('bg-g')) { riskText = "「低風險」"; riskColor = "var(--risk-g)"; }
-        else if (targetCell.classList.contains('bg-y')) { riskText = "「中度風險」"; riskColor = "var(--risk-y)"; }
-        else if (targetCell.classList.contains('bg-o')) { riskText = "「高風險」"; riskColor = "var(--risk-o)"; }
-        else { riskText = "「超高風險」"; riskColor = "var(--risk-r)"; }
-
-        document.getElementById('res-risk-text').innerText = riskText;
-        document.getElementById('res-risk-text').style.backgroundColor = riskColor;
-        document.getElementById('res-detail-text').innerText = `腎絲球過濾率${stage} 與 ${albText}`;
-        document.getElementById('res-value-text').innerHTML = `您的 eGFR 數值為 <strong style="color:${riskColor}">${egfr}</strong>`;
-
-        const a1 = document.getElementById('advice-1');
-        const a2 = document.getElementById('advice-2');
-        const a3 = document.getElementById('advice-3');
-        if (egfr >= 60 && albumin === 'A1') { a1.innerText = "維持健康生活，每年定期檢查即可。"; a2.innerText = "飲食均衡，不需過度限制蛋白質。"; a3.innerText = "避免長期使用止痛藥 (NSAIDs) 與來路不明中草藥。"; }
-        else if (egfr < 45 || albumin === 'A3') { a1.innerText = "屬於高風險群，請嚴格控制血壓與血糖。"; a2.innerText = "低蛋白飲食 (0.6-0.8 g/kg)，避免加工食品。"; a3.innerText = "諮詢醫師是否使用 SGLT2 排糖藥或 ACEi/ARB 保護心腎。"; }
-        else { a1.innerText = "每 3-6 個月追蹤一次腎功能。"; a2.innerText = "注意血壓控制 (<130/80)，減少鹽分攝取。"; a3.innerText = "若有糖尿病，務必嚴格控糖。"; }
-    }
-
-    function checkMed() {
-        const val = document.getElementById('med-select').value;
-        const lights = document.querySelectorAll('.light');
-        const res = document.getElementById('med-result');
-        lights.forEach(l => l.classList.remove('on'));
-        res.classList.add('hidden');
-        if(!val) return;
-        const data = medDB[val];
-        res.classList.remove('hidden');
-        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
-        if (data.level === 'r') { document.getElementById('light-r').classList.add('on'); res.style.borderColor = "var(--danger)"; res.style.background = "#fff5f5"; }
-        else if (data.level === 'y') { document.getElementById('light-y').classList.add('on'); res.style.borderColor = "var(--warning)"; res.style.background = "#fffbf0"; }
-        else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--success)"; res.style.background = "#e6fffa"; }
-    }
-
-    function toggleSymptom(btn) {
-        btn.classList.toggle('selected');
-        const any = document.querySelectorAll('.symptom-btn.selected').length > 0;
-        const box = document.getElementById('sick-alert');
-        any ? box.classList.remove('hidden') : box.classList.add('hidden');
-    }
-
-    function checkFood() {
-        const val = document.getElementById('food-select').value;
-        const res = document.getElementById('food-result');
-        res.classList.add('hidden');
-        if(!val) return;
-        const data = foodDB[val];
-        res.classList.remove('hidden');
-        res.innerHTML = `<strong>${data.t}</strong><br>${data.d}`;
-        if (data.t.includes("紅燈")) { res.style.borderColor = "var(--danger)"; res.style.background = "#fff5f5"; res.style.color = "#721c24"; }
-        else if (data.t.includes("黃燈")) { res.style.borderColor = "var(--warning)"; res.style.background = "#fffbf0"; res.style.color = "#856404"; }
-        else { res.style.borderColor = "var(--success)"; res.style.background = "#e6fffa"; res.style.color = "#155724"; }
-    }
-
-    let currentQ = 0, score = 0;
-    function initQuiz() { currentQ = 0; score = 0; document.getElementById('quiz-score-area').classList.add('hidden'); document.getElementById('quiz-area').classList.remove('hidden'); document.getElementById('quiz-progress').style.width = '0%'; renderQuestion(); }
-    function renderQuestion() {
-        const qData = quizDB[currentQ];
-        document.getElementById('quiz-question').innerText = `Q${currentQ+1}. ${qData.q}`;
-        document.getElementById('quiz-counter').innerText = `Q${currentQ+1} / ${quizDB.length}`;
-        document.getElementById('quiz-progress').style.width = `${((currentQ)/quizDB.length)*100}%`;
-        const optsDiv = document.getElementById('quiz-options');
-        optsDiv.innerHTML = '';
-        document.getElementById('quiz-feedback-box').classList.add('hidden');
-        qData.a.forEach(opt => {
-            const btn = document.createElement('div'); btn.className = 'quiz-option'; btn.innerText = opt.t; btn.onclick = () => checkAnswer(btn, opt.c); optsDiv.appendChild(btn);
-        });
-    }
-    function checkAnswer(btn, isCorrect) {
-        document.querySelectorAll('.quiz-option').forEach(b => b.style.pointerEvents = 'none');
-        if (isCorrect) { btn.classList.add('correct'); score += 10; document.getElementById('quiz-feedback-text').innerText = "🎉 答對了！"; document.getElementById('quiz-feedback-text').style.color = "var(--success)"; }
-        else { btn.classList.add('wrong'); document.getElementById('quiz-feedback-text').innerText = "😱 答錯囉！"; document.getElementById('quiz-feedback-text').style.color = "var(--danger)"; }
-        document.getElementById('quiz-feedback-box').classList.remove('hidden');
-        document.getElementById('quiz-explanation').innerText = quizDB[currentQ].exp;
-    }
-    function nextQuestion() { currentQ++; if (currentQ < quizDB.length) renderQuestion(); else showScore(); }
-    function showScore() {
-        document.getElementById('quiz-area').classList.add('hidden'); document.getElementById('quiz-feedback-box').classList.add('hidden');
-        document.getElementById('quiz-score-area').classList.remove('hidden');
-        document.getElementById('final-score').innerText = score;
-        document.getElementById('quiz-progress').style.width = '100%';
-        document.getElementById('score-comment').innerText = score===100 ? "🏆 太強了！你是護腎達人！" : score>=60 ? "👍 很不錯，繼續保持！" : "💪 加油，多看幾次衛教資訊喔！";
-    }
-    function restartQuiz() { initQuiz(); }
-    initQuiz();
-</script>
-</body>
-</html>
+        else if (egfr >=
