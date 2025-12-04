@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v3.0</title>
+    <title>腎利管家 v3.1</title>
     <style>
         :root {
             /* --- 豐原醫院配色系統 --- */
@@ -16,7 +16,7 @@
             --white: #ffffff;
             --text: #333;
             
-            /* --- 風險燈號顏色 (KDIGO標準) --- */
+            /* --- 風險燈號顏色 --- */
             --risk-g: #6bbd45; --risk-y: #f9d423; --risk-o: #f58220; --risk-r: #e03e2e;
             
             --nav-height: 70px;
@@ -25,13 +25,10 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); color: var(--text); user-select: none; }
 
-        /* --- Header (左右 Logo 版) --- */
+        /* --- Header --- */
         header { 
-            background: var(--white); 
-            padding: 12px 15px; 
-            border-radius: 0 0 25px 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-            position: sticky; top: 0; z-index: 100;
+            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
             display: flex; justify-content: space-between; align-items: center;
         }
         header::after {
@@ -63,6 +60,7 @@
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,144,69,0.3); transition: transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn:active { transform: scale(0.98); }
         .btn-line { background: #06c755; box-shadow: 0 4px 10px rgba(6,199,85,0.3); }
+        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 4px 10px rgba(245,130,32,0.3); } /* 橘色按鈕給慢箋 */
         .btn-next { background: linear-gradient(135deg, var(--accent), #e07010); margin-top: 15px; box-shadow: 0 4px 10px rgba(245,130,32,0.3); }
 
         /* KDIGO Grid */
@@ -117,6 +115,24 @@
         /* Consult specific */
         .qr-box { width: 180px; height: 180px; margin: 10px auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .qr-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Refill Box */
+        .refill-box {
+            display: flex;
+            align-items: center;
+            background: #fff8e1; /* 淡淡的橘黃色背景 */
+            border: 1px solid #ffe0b2;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .refill-icon {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -275,9 +291,9 @@
     <div id="tab-consult" class="section">
         <div class="card">
             <h2>💬 藥師諮詢室</h2>
-            <p style="color: #666; margin-bottom: 20px;">關於用藥、飲食或腎臟病的疑問，<br>歡迎透過 LINE 聯繫我們。</p>
+            <p style="color: #666; margin-bottom: 20px;">有關於用藥或飲食的疑問嗎？<br>歡迎使用以下服務。</p>
             
-            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee;">
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 25px;">
                 <h3 style="color: #06c755; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 5px;">
                     <span style="font-size: 1.5rem;">LINE</span> 官方帳號
                 </h3>
@@ -288,11 +304,24 @@
                 <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">長按儲存或掃描上方 QR Code</p>
 
                 <a href="https://lin.ee/zwLjX1Lb" target="_blank" class="btn btn-line">
-                    <span>📲 點擊加入好友 (詢問藥師)</span>
+                    <span>📲 加入好友 (線上諮詢)</span>
                 </a>
                 <p style="font-size: 0.8rem; color: #555; margin-top: 10px;">
-                    可即時諮詢、傳送藥袋照片、預約領藥
+                    可即時諮詢、傳送藥袋照片
                 </p>
+            </div>
+
+            <div class="refill-box">
+                <img src="icon_refill.png" alt="慢箋預約" class="refill-icon" onerror="this.style.opacity='0.3'">
+                <div style="flex: 1; text-align: left;">
+                    <h3 style="margin: 0 0 5px 0; color: var(--accent);">慢箋預約</h3>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px; line-height: 1.4;">
+                        不用現場排隊，<br>手機預約快速領藥。
+                    </p>
+                    <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill" style="padding: 10px; font-size: 0.95rem;">
+                        前往預約 ➜
+                    </a>
+                </div>
             </div>
 
             <hr style="border: 0; border-top: 1px dashed #ddd; margin: 30px 0;">
@@ -301,9 +330,8 @@
                 <h3 style="color: var(--primary); margin-bottom: 10px;">📝 填寫詳細提問單</h3>
                 <p style="font-size: 0.85rem;">若不方便使用 LINE，可填寫表單 (Email 回覆)</p>
                 <div style="position: relative; overflow: hidden; padding-top: 80%; border: 1px solid #eee; border-radius: 10px; background: #f0f0f0;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #999; text-align: center; width: 80%;">
-                        表單功能維護中<br>請優先使用上方 LINE 諮詢
-                    </div>
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScf4-vFv6sN0e5wK6_v8j8G6k6r5h3w/viewform?embedded=true" 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;">載入中...</iframe>
                 </div>
             </div>
         </div>
