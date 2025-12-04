@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v3.2</title>
+    <title>腎利管家 v3.3</title>
     <style>
         :root {
             /* --- 豐原醫院配色系統 --- */
@@ -16,8 +16,11 @@
             --white: #ffffff;
             --text: #333;
             
-            /* --- 風險燈號顏色 --- */
-            --risk-g: #6bbd45; --risk-y: #f9d423; --risk-o: #f58220; --risk-r: #e03e2e;
+            /* --- 風險燈號顏色 (KDIGO標準) --- */
+            --risk-g: #6bbd45; /* 綠: 低風險 */
+            --risk-y: #f9d423; /* 黃: 中風險 */
+            --risk-o: #f58220; /* 橘: 高風險 */
+            --risk-r: #e03e2e; /* 紅: 超高風險 */
             
             --nav-height: 70px;
         }
@@ -60,7 +63,7 @@
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,144,69,0.3); transition: transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn:active { transform: scale(0.98); }
         .btn-line { background: #06c755; box-shadow: 0 4px 10px rgba(6,199,85,0.3); }
-        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 4px 10px rgba(245,130,32,0.3); } 
+        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 4px 10px rgba(245,130,32,0.3); }
         .btn-next { background: linear-gradient(135deg, var(--accent), #e07010); margin-top: 15px; box-shadow: 0 4px 10px rgba(245,130,32,0.3); }
 
         /* KDIGO Grid */
@@ -72,6 +75,7 @@
         .bg-y { background-color: var(--risk-y); color: #555; }
         .bg-o { background-color: var(--risk-o); color: white; }
         .bg-r { background-color: var(--risk-r); color: white; }
+        /* 藍色選取框 */
         .matrix-cell.active-cell { border: 3px solid #0056b3; box-shadow: 0 0 10px rgba(0,86,179,0.5); z-index: 10; transform: scale(1.1); }
         
         .risk-result-box { margin-top: 15px; padding: 15px; background: #fffbe6; border-radius: 12px; border-left: 5px solid var(--accent); text-align: left; }
@@ -79,6 +83,7 @@
         .risk-desc { font-size: 0.95rem; color: #555; margin-bottom: 5px; }
         .risk-value { font-size: 0.9rem; color: #777; font-family: monospace; }
         
+        /* Other Components */
         .plate-container { width: 200px; height: 200px; background: white; border-radius: 50%; border: 8px solid #eee; margin: 20px auto; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; }
         .plate-half { width: 50%; height: 100%; background: #d4edda; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #155724; font-size: 0.8rem; border-right: 1px solid white; }
         .plate-quarter-container { width: 50%; height: 100%; display: flex; flex-direction: column; }
@@ -115,8 +120,6 @@
         /* Consult specific */
         .qr-box { width: 180px; height: 180px; margin: 10px auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .qr-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Refill Box */
         .refill-box { display: flex; align-items: center; background: #fff8e1; border: 1px solid #ffe0b2; padding: 15px; border-radius: 15px; margin-bottom: 25px; gap: 15px; }
         .refill-icon { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
     </style>
@@ -143,12 +146,12 @@
                     <div class="select-wrapper">
                         <select id="egfr-input">
                             <option value="" disabled selected>請選擇區間...</option>
-                            <option value="90">正常 (≥ 90)</option>
-                            <option value="60">輕度低下 (60 - 89)</option>
-                            <option value="45">輕度至中度 (45 - 59)</option>
-                            <option value="30">中度至重度 (30 - 44)</option>
-                            <option value="15">重度低下 (15 - 29)</option>
-                            <option value="10">末期腎病變 (&lt; 15)</option>
+                            <option value="90">正常 (eGFR ≥ 90)</option>
+                            <option value="60">第2期 (eGFR 60-89)</option>
+                            <option value="45">第3a期 (eGFR 45-59)</option>
+                            <option value="30">第3b期 (eGFR 30-44)</option>
+                            <option value="15">第4期 (eGFR 15-29)</option>
+                            <option value="5">第5期 (eGFR &lt; 15)</option>
                         </select>
                     </div>
                 </div>
@@ -344,12 +347,71 @@
 </nav>
 
 <script>
-    // --- Data ---
-    const medDB = { 'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！請改用普拿疼。' }, 'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸是台灣洗腎主因之一。' }, 'contrast': { level: 'r', title: '⚠️ 高風險 (顯影劑)', desc: '檢查前告知 eGFR，檢查後多喝水。' }, 'mycin': { level: 'r', title: '⚠️ 高風險 (抗生素)', desc: '某些抗生素具腎毒性，需監測濃度。' }, 'starfruit_j': { level: 'r', title: '🛑 絕對禁止 (楊桃)', desc: '含神經毒素，腎友無法排出，恐致昏迷。' }, 'smoking': { level: 'r', title: '🛑 建議戒除 (吸菸)', desc: '尼古丁加速腎絲球硬化。' }, 'hold_urine': { level: 'r', title: '🛑 壞習慣 (憋尿)', desc: '易引發泌尿道感染損傷腎功能。' }, 'diuretic': { level: 'y', title: '🟡 需注意 (利尿劑)', desc: '脫水或生病時需評估暫停。' }, 'metformin': { level: 'y', title: '🟡 需注意 (降糖藥)', desc: 'eGFR < 30 時通常需停用。' }, 'vit_d': { level: 'y', title: '🟡 需監測 (維生素D)', desc: '需定期監測血鈣與血磷濃度。' }, 'multi_vit': { level: 'y', title: '🟡 需挑選 (綜合維他命)', desc: '市售產品可能含高磷、高鉀。' }, 'enema': { level: 'y', title: '🟡 需告知 (清腸劑)', desc: '含磷酸鈉產品可能傷腎。' }, 'antacid': { level: 'y', title: '🟡 需注意 (胃藥)', desc: '含鋁胃藥恐導致中毒。' }, 'dehydration': { level: 'y', title: '🟡 需喝水 (脫水)', desc: '飲水不足會減少腎臟血流。' }, 'constipation': { level: 'y', title: '🟡 需改善 (便秘)', desc: '增加尿毒素吸收。' }, 'sglt2': { level: 'g', title: '✅ 強力推薦 (排糖藥)', desc: '護腎神藥！延緩洗腎並保護心臟。' }, 'ras': { level: 'g', title: '✅ 強力推薦 (ACEi/ARB)', desc: '減少蛋白尿，核心護腎藥物。' }, 'panadol': { level: 'g', title: '✅ 相對安全 (普拿疼)', desc: '安全劑量下不傷腎。' }, 'probiotic': { level: 'g', title: '✅ 輔助推薦 (益生菌)', desc: '部分菌株有助減少尿毒素。' }, 'bp_check': { level: 'g', title: '✅ 必要行為 (量血壓)', desc: '控制血壓是護腎關鍵。' }, 'vaccine': { level: 'g', title: '✅ 建議施打 (疫苗)', desc: '預防嚴重感染引發急性腎損傷。' } };
-    const foodDB = { 'egg_white': { t: '🟢 綠燈 (優質)', d: '高生物價蛋白質，低磷好吸收。' }, 'tofu': { t: '🟢 綠燈 (優質)', d: '植物性蛋白，加工過程磷較低。' }, 'rice_noodle': { t: '🟢 綠燈 (主食)', d: '低氮澱粉！熱量夠且少尿毒素。' }, 'white_rice': { t: '🟢 綠燈 (主食)', d: '比糙米低磷，適合晚期腎友。' }, 'cabbage': { t: '🟢 綠燈 (蔬菜)', d: '高麗菜、洋蔥低鉀。' }, 'apple': { t: '🟢 綠燈 (水果)', d: '蘋果、鳳梨、葡萄低鉀。' }, 'olive_oil': { t: '🟢 綠燈 (油脂)', d: '優質好油補充熱量。' }, 'spinach': { t: '🟡 黃燈 (高鉀)', d: '建議切段汆燙讓鉀流失。' }, 'brown_rice': { t: '🟡 黃燈 (高磷)', d: '初期可吃，晚期建議改白飯。' }, 'nuts': { t: '🟡 黃燈 (高磷鉀)', d: '一天限制 5 顆。' }, 'coffee': { t: '🟡 黃燈 (咖啡因)', d: '黑咖啡含鉀，建議每日一杯。' }, 'kiwi': { t: '🟡 黃燈 (水果)', d: '鉀偏高，需適量。' }, 'banana': { t: '🟡 黃燈 (高鉀)', d: '血鉀不穩者避免。' }, 'starfruit': { t: '🔴 紅燈 (劇毒)', d: '絕對禁止！含神經毒素。' }, 'processed_meat': { t: '🔴 紅燈 (無機磷)', d: '香腸火腿含磷酸鹽，吸收率100%。' }, 'organs': { t: '🔴 紅燈 (高毒素)', d: '內臟高磷、高毒素。' }, 'low_na_salt': { t: '🔴 紅燈 (高鉀)', d: '低鈉鹽通常是高鉀鹽，危險。' }, 'cola': { t: '🔴 紅燈 (高磷)', d: '碳酸飲料含大量磷酸。' }, 'chicken_essence': { t: '🔴 紅燈 (濃縮)', d: '濃縮鉀與普林，加重負擔。' }, 'instant_noodle': { t: '🔴 紅燈 (高鈉)', d: '湯頭高鈉，麵體含磷。' }, 'pastry': { t: '🔴 紅燈 (含鋁)', d: '油條麵包常含膨鬆劑(鋁)。' } };
-    const quizDB = [ { q: "因為我有腎臟病，所以要改吃「薄鹽醬油」或「低鈉鹽」比較健康？", a: [ {t:"對，少鹽就是好", c:false}, {t:"錯，那些通常是高鉀產品", c:true} ], exp: "低鈉產品常以「鉀」取代鈉，對腎友來說可能導致高血鉀心律不整。" }, { q: "關於水分攝取，下列何者正確？", a: [ {t:"腎臟病完全不能喝水", c:false}, {t:"沒有水腫下，應適量喝水", c:true} ], exp: "除非已透析或嚴重水腫，否則水分不足會減少腎臟血流，反而傷腎。" }, { q: "我感冒全身痠痛，去藥局買「強效止痛藥 (NSAID)」吃比較快好？", a: [ {t:"絕對不可，會傷腎", c:true}, {t:"可以，只要不吃超過三天", c:false} ], exp: "NSAIDs 是常見傷腎藥物，會造成急性腎損傷。請改用普拿疼或諮詢醫師。" }, { q: "尿液有泡泡，一定就是腎臟壞掉了嗎？", a: [ {t:"不一定，需檢驗確認", c:true}, {t:"對，立刻準備洗腎", c:false} ], exp: "衝力大或尿太濃也會有泡泡。若泡泡「10分鐘不散」才高度懷疑是蛋白尿。" }, { q: "醫生開的「鈣片」好大顆，我不想吃可以嗎？", a: [ {t:"可以，那是補骨頭的", c:false}, {t:"不行，那是降磷用的", c:true} ], exp: "腎友的鈣片通常作為「磷結合劑」，需隨餐咬碎服用以吸附食物中的磷。" }, { q: "楊桃很好吃，我只吃「一口」應該沒關係吧？", a: [ {t:"絕對禁止", c:true}, {t:"沒關係，不要喝汁就好", c:false} ], exp: "楊桃含神經毒素，腎功能不全者無法代謝，嚴重恐致昏迷。" }, { q: "SGLT2 抑制劑（排糖藥）除了降血糖，還有什麼功能？", a: [ {t:"保護心臟與延緩腎惡化", c:true}, {t:"只有降血糖", c:false} ], exp: "這是國際指引推薦的護腎藥物，即使無糖尿病的腎友也可能使用。" }, { q: "聽說「腰子（腎臟）」以形補形，腎不好要多吃豬腰子？", a: [ {t:"對，吃腎補腎", c:false}, {t:"錯，那是高毒素食物", c:true} ], exp: "內臟類含極高磷與毒素，吃多反而加速腎衰竭。" }, { q: "一旦開始洗腎（透析），這輩子就沒救了嗎？", a: [ {t:"錯，透析仍可維持生活品質", c:true}, {t:"對，人生變黑白的", c:false} ], exp: "透析是延續生命的方式，許多腎友仍能工作、旅遊，或等待腎臟移植。" }, { q: "腎臟不好的人，運動會讓腰更痠，所以要多躺著休息？", a: [ {t:"對，能不動就不動", c:false}, {t:"錯，適度運動反而護腎", c:true} ], exp: "規律運動（如快走）能控制三高，是保護腎臟的重要生活習慣。" } ];
+    // --- Data Definitions (Full Expanded Version for Stability) ---
+    const medDB = {
+        'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！這類止痛藥會收縮入球小動脈，極易造成急性腎損傷。請改用普拿疼。' },
+        'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸或含馬兜鈴酸藥材，是台灣洗腎主因之一。請勿聽信電台廣告。' },
+        'contrast': { level: 'r', title: '⚠️ 高風險 (顯影劑)', desc: '做 CT 檢查前請務必告知醫師您的 eGFR。檢查後需大量喝水幫助代謝。' },
+        'mycin': { level: 'r', title: '⚠️ 高風險 (抗生素)', desc: '某些抗生素 (如 Aminoglycosides) 具腎毒性，使用時需監測藥物濃度。' },
+        'starfruit_j': { level: 'r', title: '🛑 絕對禁止 (楊桃)', desc: '楊桃含神經毒素，腎友無法排出，會導致打嗝、癲癇甚至昏迷。' },
+        'smoking': { level: 'r', title: '🛑 建議戒除 (吸菸)', desc: '尼古丁會收縮腎臟血管，加速腎絲球硬化。戒菸是護腎第一步。' },
+        'hold_urine': { level: 'r', title: '🛑 壞習慣 (憋尿)', desc: '易引發泌尿道感染，細菌逆行向上恐導致腎盂腎炎，損傷腎功能。' },
+        'diuretic': { level: 'y', title: '🟡 需注意 (利尿劑)', desc: '有助消水腫，但若脫水或生病 (Sick Day) 時需評估暫停，以免急性腎衰竭。' },
+        'metformin': { level: 'y', title: '🟡 需注意 (降糖藥)', desc: 'eGFR < 30 分時通常需停用，以免發生乳酸中毒。' },
+        'vit_d': { level: 'y', title: '🟡 需監測 (維生素D)', desc: '建議由醫師開立活性維生素 D，需定期監測血鈣與血磷濃度。' },
+        'multi_vit': { level: 'y', title: '🟡 需挑選 (綜合維他命)', desc: '市售產品可能含高磷、高鉀。透析病患建議補充專用水溶性 B 群。' },
+        'enema': { level: 'y', title: '🟡 需告知 (清腸劑)', desc: '含磷酸鈉的清腸劑可能造成急性磷腎病變，請事先告知醫師病史。' },
+        'antacid': { level: 'y', title: '🟡 需注意 (胃藥)', desc: '避免長期服用含「鋁」或「鎂」的制酸劑，腎臟無法代謝恐中毒。' },
+        'dehydration': { level: 'y', title: '🟡 需喝水 (脫水)', desc: '除非醫師限水，否則飲水不足會減少腎臟血流。' },
+        'constipation': { level: 'y', title: '🟡 需改善 (便秘)', desc: '便秘會增加腸道尿毒素的吸收，加重腎臟負擔。' },
+        'sglt2': { level: 'g', title: '✅ 強力推薦 (排糖藥)', desc: '新一代護腎神藥！能顯著延緩洗腎時間並保護心臟，但需注意生殖器清潔。' },
+        'ras': { level: 'g', title: '✅ 強力推薦 (ACEi/ARB)', desc: '雖短期可能讓 eGFR 微降，但長期能減少蛋白尿，是核心護腎藥物。' },
+        'panadol': { level: 'g', title: '✅ 相對安全 (普拿疼)', desc: '若需止痛退燒，Acetaminophen 在安全劑量下不傷腎，是首選藥物。' },
+        'probiotic': { level: 'g', title: '✅ 輔助推薦 (益生菌)', desc: '部分特定菌株證實有助減少腸道尿毒素前驅物。' },
+        'bp_check': { level: 'g', title: '✅ 必要行為 (量血壓)', desc: '控制血壓 (<130/80) 是延緩洗腎最重要的一件事。' },
+        'vaccine': { level: 'g', title: '✅ 建議施打 (疫苗)', desc: '預防流感與肺炎，減少因嚴重感染引發急性腎損傷的風險。' }
+    };
 
-    // --- Logic ---
+    const foodDB = {
+        'egg_white': { t: '🟢 綠燈 (優質)', d: '高生物價蛋白質，磷含量低，是腎友補充營養的首選。' },
+        'tofu': { t: '🟢 綠燈 (優質)', d: '植物性蛋白產生的含氮廢物較少，且加工過程磷較低 (優於百頁)。' },
+        'rice_noodle': { t: '🟢 綠燈 (主食)', d: '低氮澱粉！熱量夠且幾乎不產生尿毒素，適合取代部分米飯。' },
+        'white_rice': { t: '🟢 綠燈 (主食)', d: '雖然不如糙米營養，但對晚期腎臟病來說，「低磷」的白飯比較安全。' },
+        'cabbage': { t: '🟢 綠燈 (蔬菜)', d: '高麗菜、洋蔥屬於低鉀蔬菜，適合食用。' },
+        'apple': { t: '🟢 綠燈 (水果)', d: '蘋果、鳳梨、葡萄屬於低鉀水果，可適量食用。' },
+        'olive_oil': { t: '🟢 綠燈 (油脂)', d: '優質不飽和脂肪酸，補充熱量且不傷腎。' },
+        'spinach': { t: '🟡 黃燈 (高鉀)', d: '深綠色蔬菜通常高鉀。建議切段後「汆燙」3分鐘，讓鉀流失後再拌油吃。' },
+        'brown_rice': { t: '🟡 黃燈 (高磷)', d: '糙米、五穀米磷含量高，初期 CKD 可吃，晚期建議改吃白飯。' },
+        'nuts': { t: '🟡 黃燈 (高磷鉀)', d: '雖護心但磷鉀皆高。一天限制 5 顆，或血磷高者避免。' },
+        'coffee': { t: '🟡 黃燈 (咖啡因)', d: '黑咖啡含鉀，且利尿可能影響水分。建議每日一杯為限，避免加奶精。' },
+        'kiwi': { t: '🟡 黃燈 (水果)', d: '鉀含量中等偏高，需視當次抽血報告決定是否限量。' },
+        'banana': { t: '🟡 黃燈 (高鉀)', d: '著名的好鉀水果，血鉀不穩者應避免。' },
+        'starfruit': { t: '🔴 紅燈 (劇毒)', d: '絕對禁止！含神經毒素，腎病患者食用會引發嚴重神經症狀。' },
+        'processed_meat': { t: '🔴 紅燈 (無機磷)', d: '香腸、火腿添加「磷酸鹽」，吸收率100%，極度傷血管與骨頭。' },
+        'organs': { t: '🔴 紅燈 (高毒素)', d: '內臟類膽固醇與磷含量極高，痛風與腎友應禁食。' },
+        'low_na_salt': { t: '🔴 紅燈 (高鉀)', d: '低鈉鹽通常是「以鉀代鈉」，對排鉀功能差的腎友是致命毒藥。' },
+        'cola': { t: '🔴 紅燈 (高磷)', d: '碳酸飲料含大量「磷酸」，是高血磷的隱形殺手。' },
+        'chicken_essence': { t: '🔴 紅燈 (濃縮)', d: '濃縮的鉀離子與普林，會加重腎臟負擔。' },
+        'instant_noodle': { t: '🔴 紅燈 (高鈉)', d: '湯頭鈉含量驚人，麵體常含磷酸鹽。' },
+        'pastry': { t: '🔴 紅燈 (含鋁)', d: '油條、糕點常含含鋁膨鬆劑，腎友無法排鋁恐導致腦病變。' }
+    };
+
+    const quizDB = [
+        { q: "因為我有腎臟病，所以要改吃「薄鹽醬油」或「低鈉鹽」比較健康？", a: [ {t:"對，少鹽就是好", c:false}, {t:"錯，那些通常是高鉀產品", c:true} ], exp: "低鈉產品常以「鉀」取代鈉，對腎友來說可能導致高血鉀心律不整。" },
+        { q: "關於水分攝取，下列何者正確？", a: [ {t:"腎臟病完全不能喝水", c:false}, {t:"沒有水腫下，應適量喝水", c:true} ], exp: "除非已透析或嚴重水腫，否則水分不足會減少腎臟血流，反而傷腎。" },
+        { q: "我感冒全身痠痛，去藥局買「強效止痛藥 (NSAID)」吃比較快好？", a: [ {t:"絕對不可，會傷腎", c:true}, {t:"可以，只要不吃超過三天", c:false} ], exp: "NSAIDs 是常見傷腎藥物，會造成急性腎損傷。請改用普拿疼或諮詢醫師。" },
+        { q: "尿液有泡泡，一定就是腎臟壞掉了嗎？", a: [ {t:"不一定，需檢驗確認", c:true}, {t:"對，立刻準備洗腎", c:false} ], exp: "衝力大或尿太濃也會有泡泡。若泡泡「10分鐘不散」才高度懷疑是蛋白尿。" },
+        { q: "醫生開的「鈣片」好大顆，我不想吃可以嗎？", a: [ {t:"可以，那是補骨頭的", c:false}, {t:"不行，那是降磷用的", c:true} ], exp: "腎友的鈣片通常作為「磷結合劑」，需隨餐咬碎服用以吸附食物中的磷。" },
+        { q: "楊桃很好吃，我只吃「一口」應該沒關係吧？", a: [ {t:"絕對禁止", c:true}, {t:"沒關係，不要喝汁就好", c:false} ], exp: "楊桃含神經毒素，腎功能不全者無法代謝，嚴重恐致昏迷。" },
+        { q: "SGLT2 抑制劑（排糖藥）除了降血糖，還有什麼功能？", a: [ {t:"保護心臟與延緩腎惡化", c:true}, {t:"只有降血糖", c:false} ], exp: "這是國際指引推薦的護腎藥物，即使無糖尿病的腎友也可能使用。" },
+        { q: "聽說「腰子（腎臟）」以形補形，腎不好要多吃豬腰子？", a: [ {t:"對，吃腎補腎", c:false}, {t:"錯，那是高毒素食物", c:true} ], exp: "內臟類含極高磷與毒素，吃多反而加速腎衰竭。" },
+        { q: "一旦開始洗腎（透析），這輩子就沒救了嗎？", a: [ {t:"錯，透析仍可維持生活品質", c:true}, {t:"對，人生變黑白的", c:false} ], exp: "透析是延續生命的方式，許多腎友仍能工作、旅遊，或等待腎臟移植。" },
+        { q: "腎臟不好的人，運動會讓腰更痠，所以要多躺著休息？", a: [ {t:"對，能不動就不動", c:false}, {t:"錯，適度運動反而護腎", c:true} ], exp: "規律運動（如快走）能控制三高，是保護腎臟的重要生活習慣。" }
+    ];
+
+    // --- Logic Functions ---
+
+    // Tab Switching
     function switchTab(tabId, el) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tabId).classList.add('active');
@@ -358,24 +420,156 @@
         window.scrollTo(0,0);
     }
 
+    // Risk Logic (Updated for Select Input)
     function updateRisk() {
         const egfrSelect = document.getElementById('egfr-input');
-        const egfr = parseFloat(egfrSelect.value); // Gets numeric value like 90, 60...
-        const egfrText = egfrSelect.options[egfrSelect.selectedIndex].text; // Gets text like "60 - 89 (第2期)"
+        const egfrVal = egfrSelect.value;
+        const egfrText = egfrSelect.options[egfrSelect.selectedIndex].text;
         const albumin = document.getElementById('albumin-input').value;
         const resultBox = document.getElementById('risk-display');
         const adviceBox = document.getElementById('home-advice');
         
+        // Reset matrix cells
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
 
-        if (!egfr) { alert("請選擇 eGFR 區間"); return; }
+        if (egfrVal === "") { alert("請選擇 eGFR 區間"); return; }
+        const egfr = parseFloat(egfrVal);
         
         resultBox.classList.remove('hidden');
         adviceBox.classList.remove('hidden');
 
-        // Logic uses the lower bound values to determine rowId (same logic as before)
+        // Logic Mapping
         let stage = "", rowId = "";
         if (egfr >= 90) { stage = "第1期"; rowId = "1"; }
         else if (egfr >= 60) { stage = "第2期"; rowId = "2"; }
         else if (egfr >= 45) { stage = "第3a期"; rowId = "3a"; }
-        else if (egfr >=
+        else if (egfr >= 30) { stage = "第3b期"; rowId = "3b"; }
+        else if (egfr >= 15) { stage = "第4期"; rowId = "4"; }
+        else { stage = "第5期"; rowId = "5"; } // Handles values < 15
+
+        let albText = "", colId = "";
+        if (albumin === 'A1') { albText = "正常/輕微蛋白尿"; colId = "1"; }
+        else if (albumin === 'A2') { albText = "微量蛋白尿"; colId = "2"; }
+        else { albText = "嚴重蛋白尿"; colId = "3"; }
+
+        // Highlight Cell
+        const targetCellId = `cell-${rowId}-${colId}`;
+        const targetCell = document.getElementById(targetCellId);
+        if(targetCell) targetCell.classList.add('active-cell');
+
+        // Determine Risk Color/Text from Cell Class
+        let riskText = "", riskColor = "";
+        if (targetCell.classList.contains('bg-g')) { riskText = "「低風險」"; riskColor = "var(--risk-g)"; }
+        else if (targetCell.classList.contains('bg-y')) { riskText = "「中度風險」"; riskColor = "var(--risk-y)"; }
+        else if (targetCell.classList.contains('bg-o')) { riskText = "「高風險」"; riskColor = "var(--risk-o)"; }
+        else { riskText = "「超高風險」"; riskColor = "var(--risk-r)"; }
+
+        // Update UI
+        document.getElementById('res-risk-text').innerText = riskText;
+        document.getElementById('res-risk-text').style.backgroundColor = riskColor;
+        document.getElementById('res-detail-text').innerText = `腎絲球過濾率${stage} 與 ${albText}`;
+        document.getElementById('res-value-text').innerHTML = `您的 eGFR 區間為 <strong style="color:${riskColor}">${egfrText}</strong>`;
+
+        // Update Advice
+        const a1 = document.getElementById('advice-1');
+        const a2 = document.getElementById('advice-2');
+        const a3 = document.getElementById('advice-3');
+        if (egfr >= 60 && albumin === 'A1') {
+            a1.innerText = "維持健康生活，每年定期檢查即可。";
+            a2.innerText = "飲食均衡，不需過度限制蛋白質。";
+            a3.innerText = "避免長期使用止痛藥 (NSAIDs) 與來路不明中草藥。";
+        } else if (egfr < 45 || albumin === 'A3') {
+            a1.innerText = "屬於高風險群，請嚴格控制血壓與血糖。";
+            a2.innerText = "低蛋白飲食 (0.6-0.8 g/kg)，避免加工食品。";
+            a3.innerText = "諮詢醫師是否使用 SGLT2 排糖藥或 ACEi/ARB 保護心腎。";
+        } else {
+            a1.innerText = "每 3-6 個月追蹤一次腎功能。";
+            a2.innerText = "注意血壓控制 (<130/80)，減少鹽分攝取。";
+            a3.innerText = "若有糖尿病，務必嚴格控糖。";
+        }
+    }
+
+    // Medication Check
+    function checkMed() {
+        const val = document.getElementById('med-select').value;
+        const lights = document.querySelectorAll('.light');
+        const res = document.getElementById('med-result');
+        lights.forEach(l => l.classList.remove('on'));
+        res.classList.add('hidden');
+        if(!val) return;
+
+        const data = medDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
+        
+        if (data.level === 'r') {
+            document.getElementById('light-r').classList.add('on');
+            res.style.borderColor = "var(--danger)"; res.style.background = "#fff5f5";
+        } else if (data.level === 'y') {
+            document.getElementById('light-y').classList.add('on');
+            res.style.borderColor = "var(--warning)"; res.style.background = "#fffbf0";
+        } else {
+            document.getElementById('light-g').classList.add('on');
+            res.style.borderColor = "var(--success)"; res.style.background = "#e6fffa";
+        }
+    }
+
+    // Symptom Toggle
+    function toggleSymptom(btn) {
+        btn.classList.toggle('selected');
+        const any = document.querySelectorAll('.symptom-btn.selected').length > 0;
+        const box = document.getElementById('sick-alert');
+        any ? box.classList.remove('hidden') : box.classList.add('hidden');
+    }
+
+    // Food Check
+    function checkFood() {
+        const val = document.getElementById('food-select').value;
+        const res = document.getElementById('food-result');
+        res.classList.add('hidden');
+        if(!val) return;
+
+        const data = foodDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong>${data.t}</strong><br>${data.d}`;
+        
+        if (data.t.includes("紅燈")) { res.style.borderColor = "var(--danger)"; res.style.background = "#fff5f5"; res.style.color = "#721c24"; }
+        else if (data.t.includes("黃燈")) { res.style.borderColor = "var(--warning)"; res.style.background = "#fffbf0"; res.style.color = "#856404"; }
+        else { res.style.borderColor = "var(--success)"; res.style.background = "#e6fffa"; res.style.color = "#155724"; }
+    }
+
+    // Quiz Logic
+    let currentQ = 0, score = 0;
+    function initQuiz() { currentQ = 0; score = 0; document.getElementById('quiz-score-area').classList.add('hidden'); document.getElementById('quiz-area').classList.remove('hidden'); document.getElementById('quiz-progress').style.width = '0%'; renderQuestion(); }
+    function renderQuestion() {
+        const qData = quizDB[currentQ];
+        document.getElementById('quiz-question').innerText = `Q${currentQ+1}. ${qData.q}`;
+        document.getElementById('quiz-counter').innerText = `Q${currentQ+1} / ${quizDB.length}`;
+        document.getElementById('quiz-progress').style.width = `${((currentQ)/quizDB.length)*100}%`;
+        const optsDiv = document.getElementById('quiz-options');
+        optsDiv.innerHTML = '';
+        document.getElementById('quiz-feedback-box').classList.add('hidden');
+        qData.a.forEach(opt => {
+            const btn = document.createElement('div'); btn.className = 'quiz-option'; btn.innerText = opt.t; btn.onclick = () => checkAnswer(btn, opt.c); optsDiv.appendChild(btn);
+        });
+    }
+    function checkAnswer(btn, isCorrect) {
+        document.querySelectorAll('.quiz-option').forEach(b => b.style.pointerEvents = 'none');
+        if (isCorrect) { btn.classList.add('correct'); score += 10; document.getElementById('quiz-feedback-text').innerText = "🎉 答對了！"; document.getElementById('quiz-feedback-text').style.color = "var(--success)"; }
+        else { btn.classList.add('wrong'); document.getElementById('quiz-feedback-text').innerText = "😱 答錯囉！"; document.getElementById('quiz-feedback-text').style.color = "var(--danger)"; }
+        document.getElementById('quiz-feedback-box').classList.remove('hidden');
+        document.getElementById('quiz-explanation').innerText = quizDB[currentQ].exp;
+    }
+    function nextQuestion() { currentQ++; if (currentQ < quizDB.length) renderQuestion(); else showScore(); }
+    function showScore() {
+        document.getElementById('quiz-area').classList.add('hidden'); document.getElementById('quiz-feedback-box').classList.add('hidden');
+        document.getElementById('quiz-score-area').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('quiz-progress').style.width = '100%';
+        document.getElementById('score-comment').innerText = score===100 ? "🏆 太強了！你是護腎達人！" : score>=60 ? "👍 很不錯，繼續保持！" : "💪 加油，多看幾次衛教資訊喔！";
+    }
+    function restartQuiz() { initQuiz(); }
+    initQuiz();
+</script>
+</body>
+</html>
