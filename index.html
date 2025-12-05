@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v4.4</title>
+    <title>腎利管家 v4.4 (Fixed)</title>
     <style>
         :root {
             --primary: #009045;
@@ -127,6 +127,40 @@
         .list-item { margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 12px; }
         .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .list-title { font-weight: 900; display: block; color: #222; }
+
+        /* --- 測驗選項樣式 (已修復) --- */
+        .quiz-option {
+            background: #fff;
+            border: 2px solid #eee;
+            padding: 15px;
+            border-radius: 15px; /* 配合整體圓角風格 */
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+        .quiz-option:hover {
+            border-color: var(--primary-dark);
+            background: #f0fbf4;
+            transform: translateY(-2px);
+        }
+        /* 答對時的樣式 */
+        .quiz-option.correct {
+            border-color: var(--risk-g);
+            background: #e8f5e9;
+            color: #2e7d32;
+            box-shadow: 0 0 10px rgba(107, 189, 69, 0.4);
+        }
+        /* 答錯時的樣式 */
+        .quiz-option.wrong {
+            border-color: var(--risk-r);
+            background: #ffebee;
+            color: #c62828;
+            opacity: 0.8;
+        }
         
         /* 導航列 */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ccc; z-index: 1000; }
@@ -136,11 +170,8 @@
         .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 2px; }
 
         .hidden { display: none; }
+        
         /* 其他小元件 */
-        .plate-container { width: 220px; height: 220px; background: white; border-radius: 50%; border: 8px solid #eee; margin: 20px auto; display: flex; flex-wrap: wrap; overflow: hidden; }
-        .plate-half { width: 50%; height: 100%; background: #d4edda; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #155724; font-weight: bold; border-right: 2px solid white; }
-        .plate-quarter-container { width: 50%; height: 100%; display: flex; flex-direction: column; }
-        .plate-quarter { width: 100%; height: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; font-weight: bold; }
         .qr-box { width: 200px; height: 200px; margin: 15px auto; border: 2px solid #eee; border-radius: 15px; }
         .qr-img { width: 100%; height: 100%; object-fit: contain; }
     </style>
@@ -308,273 +339,4 @@
                 <div id="quiz-options"></div>
             </div>
             <div id="quiz-feedback" class="hidden" style="margin-top:20px;">
-                <div id="quiz-res-text" style="font-size:1.5rem; font-weight:900; margin-bottom:10px;"></div>
-                <div id="quiz-exp" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #ccc; color:#444;"></div>
-                <button class="btn btn-next" onclick="nextQ()">下一題 ➜</button>
-            </div>
-            <div id="quiz-score" class="hidden">
-                <h3 style="font-size:3rem; color:var(--primary);">得分：<span id="final-score">0</span></h3>
-                <button class="btn" onclick="initQuiz()">🔄 再測一次</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-consult" class="section">
-        <div class="card">
-            <h2>💬 藥師諮詢室</h2>
-            
-            <div style="background:#f9f9f9; padding:20px; border-radius:20px; border:2px solid #eee; margin-bottom:20px;">
-                <h3 style="color:#06c755; margin-top:0;">LINE 官方帳號</h3>
-                <div class="qr-box">
-                    <img src="line_qr.png" class="qr-img" onerror="this.style.display='none'">
-                </div>
-                <a href="https://lin.ee/zwLjX1Lb" target="_blank" class="btn btn-line">📲 加入好友 (線上諮詢)</a>
-            </div>
-
-            <div style="background:#fff8e1; padding:20px; border-radius:20px; border:2px solid #ffe0b2;">
-                <h3 style="color:var(--accent); margin-top:0;">慢箋預約</h3>
-                <p style="font-weight:bold; color:#555;">不用排隊，手機預約領藥</p>
-                <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">前往預約 ➜</a>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span>首頁</div>
-    <div class="nav-item" onclick="switchTab('meds')"><span class="nav-icon">💊</span>用藥</div>
-    <div class="nav-item" onclick="switchTab('diet')"><span class="nav-icon">🥦</span>飲食</div>
-    <div class="nav-item" onclick="switchTab('quiz')"><span class="nav-icon">🎓</span>測驗</div>
-    <div class="nav-item" onclick="switchTab('consult')"><span class="nav-icon">💬</span>諮詢</div>
-</nav>
-
-<script>
-    // --- 核心邏輯：自動計算風險 (Auto Calc) ---
-    function calcRisk() {
-        const egfr = document.getElementById('egfr-input').value;
-        const uacr = document.getElementById('albumin-input').value;
-        
-        // 若 eGFR 還沒選，就不執行 (保持安靜，不彈窗)
-        if (!egfr) return;
-
-        // 1. 顯示結果區
-        document.getElementById('start-hint').classList.add('hidden');
-        document.getElementById('risk-result-area').classList.remove('hidden');
-        
-        // 2. 清除舊藍框
-        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
-
-        // 3. 計算座標 (Row & Col)
-        const eVal = parseFloat(egfr);
-        let row = '5', stageText = '第5期';
-        if (eVal >= 90) { row = '1'; stageText = '第1期'; }
-        else if (eVal >= 60) { row = '2'; stageText = '第2期'; }
-        else if (eVal >= 45) { row = '3a'; stageText = '第3a期'; }
-        else if (eVal >= 30) { row = '3b'; stageText = '第3b期'; }
-        else if (eVal >= 15) { row = '4'; stageText = '第4期'; }
-
-        let col = '1', uacrText = '正常/輕微';
-        if (uacr === 'A2') { col = '2'; uacrText = '微量蛋白尿'; }
-        if (uacr === 'A3') { col = '3'; uacrText = '嚴重蛋白尿'; }
-
-        // 4. 定位並加框
-        const cellId = `cell-${row}-${col}`;
-        const cell = document.getElementById(cellId);
-        if (cell) cell.classList.add('active-cell');
-
-        // 5. 判斷顏色與風險文字
-        let color = '#e03e2e', text = '超高風險';
-        if (cell.classList.contains('bg-g')) { color = '#6bbd45'; text = '低風險 (定期追蹤)'; }
-        else if (cell.classList.contains('bg-y')) { color = '#ffd700'; text = '中度風險 (需注意)'; }
-        else if (cell.classList.contains('bg-o')) { color = '#f58220'; text = '高風險 (嚴格控制)'; }
-
-        // 6. 更新首頁 Banner
-        const banner = document.getElementById('risk-banner');
-        banner.style.backgroundColor = color;
-        // 黃色背景時文字改黑，其他白
-        banner.style.color = (color === '#ffd700') ? '#222' : '#fff'; 
-        
-        document.getElementById('risk-title').innerText = text;
-        document.getElementById('risk-desc').innerText = `腎絲球過濾率${stageText} + ${uacrText}`;
-
-        // 7. 同步更新用藥與飲食建議
-        updateMeds(eVal);
-        updateDiet(eVal);
-    }
-
-    // --- 用藥建議產生器 ---
-    function updateMeds(egfr) {
-        document.getElementById('med-placeholder').classList.add('hidden');
-        document.getElementById('med-content').classList.remove('hidden');
-        
-        // 取得 eGFR 選項文字
-        const sel = document.getElementById('egfr-input');
-        const txt = sel.options[sel.selectedIndex].text;
-        document.getElementById('med-egfr-val').innerText = txt;
-
-        const g = document.getElementById('list-med-g');
-        const y = document.getElementById('list-med-y');
-        const r = document.getElementById('list-med-r');
-        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
-
-        function add(list, title, desc) {
-            list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
-        }
-
-        // 綠燈
-        add(g, "ACEi / ARB (血壓藥)", "保護腎臟首選，減少蛋白尿。");
-        add(g, "SGLT2 抑制劑 (排糖藥)", "國際指引推薦，延緩洗腎、保護心臟。");
-        add(g, "Statins (降血脂藥)", "預防血管阻塞，降低中風風險。");
-
-        // 黃燈
-        add(y, "Diuretics (利尿劑)", "若拉肚子或嘔吐脫水，需評估暫停。");
-        add(y, "抗生素 (Antibiotics)", "看診請告知醫師腎功能，調整劑量。");
-
-        // 紅燈 (動態邏輯)
-        add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！易導致急性腎衰竭。");
-        add(r, "來路不明中草藥", "可能含重金屬或馬兜鈴酸，絕對禁止。");
-        add(r, "含碘顯影劑 (CT)", "檢查前告知醫師，檢查後多喝水。");
-
-        if (egfr < 30) {
-            add(r, "Metformin (降糖藥)", "eGFR < 30 禁止使用，乳酸中毒風險高。");
-        } else if (egfr < 45) {
-            add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量並小心監測。");
-        }
-    }
-
-    // --- 飲食建議產生器 ---
-    function updateDiet(egfr) {
-        document.getElementById('diet-placeholder').classList.add('hidden');
-        document.getElementById('diet-content').classList.remove('hidden');
-
-        const g = document.getElementById('list-diet-g');
-        const y = document.getElementById('list-diet-y');
-        const r = document.getElementById('list-diet-r');
-        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
-
-        function add(list, title, desc) {
-            list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
-        }
-
-        add(g, "優質蛋白質", "雞蛋、豆腐、魚肉。吸收好、廢物少。");
-        add(g, "天然好油", "橄欖油、苦茶油。");
-        add(r, "楊桃 (絕對禁止)", "含神經毒素，腎友無法代謝恐昏迷。");
-        add(r, "加工肉品", "香腸、火腿含高磷，極傷血管。");
-
-        if (egfr < 45) { // 中重度
-            add(g, "低氮澱粉", "冬粉、米粉。補充熱量不傷腎。");
-            add(y, "糙米/五穀米", "磷含量高，晚期建議改吃白飯。");
-            add(y, "深綠色蔬菜", "鉀高，建議切段汆燙後再吃。");
-            add(y, "堅果類", "磷鉀雙高，少吃為妙。");
-            add(r, "低鈉鹽", "通常是「高鉀鹽」，會造成心律不整。");
-        } else { // 初期
-            add(g, "蔬菜水果", "保持排便順暢。");
-            add(y, "重口味食物", "鹽分太高會傷腎。");
-        }
-    }
-
-    // --- 單項食物查詢資料庫 ---
-    const foodDB = {
-        'egg': {t:'🟢 綠燈', d:'優質蛋白質，磷含量低，推薦食用。'},
-        'tofu': {t:'🟢 綠燈', d:'植物性蛋白，產生尿毒素少。'},
-        'rice_noodle': {t:'🟢 綠燈', d:'低氮澱粉，補充熱量首選。'},
-        'rice': {t:'🟢 綠燈', d:'比糙米低磷，適合晚期腎友。'},
-        'veg': {t:'🟢 綠燈', d:'低鉀蔬菜，適合食用。'},
-        'fruit_low': {t:'🟢 綠燈', d:'低鉀水果，可適量食用。'},
-        'oil': {t:'🟢 綠燈', d:'優質好油，保護心血管。'},
-        'spinach': {t:'🟡 黃燈', d:'高鉀，請汆燙過再吃。'},
-        'brown_rice': {t:'🟡 黃燈', d:'高磷，初期可吃，晚期建議少吃。'},
-        'nuts': {t:'🟡 黃燈', d:'磷鉀皆高，一天限 5 顆。'},
-        'coffee': {t:'🟡 黃燈', d:'含鉀且利尿，一天一杯為限。'},
-        'banana': {t:'🟡 黃燈', d:'高鉀水果，血鉀高者避免。'},
-        'starfruit': {t:'🔴 紅燈', d:'絕對禁止！含神經毒素。'},
-        'sausage': {t:'🔴 紅燈', d:'加工肉品含無機磷，極傷腎。'},
-        'organs': {t:'🔴 紅燈', d:'內臟高毒素、高磷。'},
-        'cola': {t:'🔴 紅燈', d:'含大量磷酸，隱形殺手。'},
-        'chicken': {t:'🔴 紅燈', d:'濃縮鉀與普林，加重負擔。'}
-    };
-
-    function checkFood() {
-        const val = document.getElementById('food-select').value;
-        const res = document.getElementById('food-result');
-        res.classList.add('hidden');
-        if(!val) return;
-        const data = foodDB[val];
-        res.classList.remove('hidden');
-        res.innerHTML = `<strong style="font-size:1.4rem;">${data.t}</strong><br>${data.d}`;
-        if(data.t.includes('紅')) { res.style.borderColor = 'red'; res.style.background = '#fff5f5'; }
-        else if(data.t.includes('黃')) { res.style.borderColor = 'gold'; res.style.background = '#fffbe6'; }
-        else { res.style.borderColor = 'green'; res.style.background = '#e8f5e9'; }
-    }
-
-    // --- 頁面切換 ---
-    function switchTab(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById('tab-' + id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        // 簡單對應：0=Home, 1=Meds, 2=Diet, 3=Quiz, 4=Consult
-        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
-        document.querySelectorAll('.nav-item')[idx].classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    // --- 測驗功能 ---
-    const quizData = [
-        {q:"要改吃「薄鹽醬油」或「低鈉鹽」嗎？", a:[{t:"對，少鹽就好",c:false},{t:"錯，那是高鉀鹽",c:true}], exp:"低鈉鹽通常以「鉀」取代鈉，腎友排鉀功能差，吃多恐致心律不整。"},
-        {q:"關於喝水，何者正確？", a:[{t:"完全不能喝水",c:false},{t:"沒水腫應適量喝",c:true}], exp:"除非已透析或嚴重水腫，否則水分不足會減少腎臟血流，反而傷腎。"},
-        {q:"可以自己買「強效止痛藥」嗎？", a:[{t:"絕對不可",c:true},{t:"可以，少吃就好",c:false}], exp:"市售強效止痛藥(NSAIDs)會收縮腎血管，極易造成急性腎損傷。"},
-        {q:"尿有泡泡就是腎臟壞了嗎？", a:[{t:"不一定，需檢驗",c:true},{t:"對，準備洗腎",c:false}], exp:"尿太濃或衝力大也會有泡泡。若泡泡「10分鐘不散」才高度懷疑蛋白尿。"},
-        {q:"楊桃很好吃，吃一點沒關係？", a:[{t:"絕對禁止",c:true},{t:"可以吃一口",c:false}], exp:"楊桃含神經毒素，腎友無法代謝，食用恐導致抽搐昏迷。"}
-    ];
-    let qIdx = 0, score = 0;
-    
-    function initQuiz() { 
-        qIdx=0; score=0; 
-        document.getElementById('quiz-score').classList.add('hidden'); 
-        document.getElementById('quiz-area').classList.remove('hidden'); 
-        renderQ(); 
-    }
-    
-    function renderQ() {
-        const q = quizData[qIdx];
-        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}/${quizData.length}`;
-        document.getElementById('quiz-question').innerText = q.q;
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        const div = document.getElementById('quiz-options');
-        div.innerHTML = '';
-        q.a.forEach(opt => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.innerText = opt.t;
-            btn.onclick = () => {
-                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
-                if(opt.c) { btn.classList.add('correct'); score+=20; document.getElementById('quiz-res-text').innerText="🎉 答對了！"; document.getElementById('quiz-res-text').style.color="green"; }
-                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 答錯囉！"; document.getElementById('quiz-res-text').style.color="red"; }
-                document.getElementById('quiz-exp').innerText = q.exp;
-                document.getElementById('quiz-feedback').classList.remove('hidden');
-            };
-            div.appendChild(btn);
-        });
-        // Update Progress
-        document.querySelector('.progress-fill').style.width = `${((qIdx)/quizData.length)*100}%`;
-    }
-
-    function nextQ() {
-        qIdx++;
-        if(qIdx < quizData.length) renderQ();
-        else {
-            document.getElementById('quiz-area').classList.add('hidden');
-            document.getElementById('quiz-feedback').classList.add('hidden');
-            document.getElementById('quiz-score').classList.remove('hidden');
-            document.getElementById('final-score').innerText = score;
-            document.querySelector('.progress-fill').style.width = '100%';
-        }
-    }
-    initQuiz();
-</script>
-</body>
-</html>
-
-
-
+                <div id
