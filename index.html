@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v4.0</title>
+    <title>腎利管家 v4.1</title>
     <style>
         :root {
             /* --- 豐原醫院配色系統 --- */
@@ -183,6 +183,15 @@
                 <p style="font-size:0.8rem; color:#999; margin-top:10px;">👇 請點選下方「用藥」按鈕，查看您的專屬建議。</p>
             </div>
         </div>
+        
+        <div id="home-advice" class="hidden">
+            <div class="card" style="background: #e8f5e9; border: 1px dashed var(--primary);">
+                <h3>👨‍⚕️ 藥師給您的重點</h3>
+                <ul style="text-align: left; padding-left: 20px; color: #444; line-height: 1.6;">
+                    <li id="advice-1"></li><li id="advice-2"></li><li id="advice-3"></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div id="tab-meds" class="section">
@@ -204,7 +213,7 @@
 
                 <div class="med-list-card" style="border-color: var(--risk-g);">
                     <div class="med-head" style="background: var(--risk-g);">
-                        <span>🟢 建議用藥 (Green Light)</span>
+                        <span>🟢 建議用藥 (Good)</span>
                     </div>
                     <div class="med-body" id="med-list-green"></div>
                 </div>
@@ -350,7 +359,6 @@
 
 <script>
     // --- Data Definitions ---
-    // Med Logic: Based on KDIGO & eGFR thresholds
     const foodDB = {
         'egg_white': { t: '🟢 綠燈 (優質)', d: '高生物價蛋白質，磷含量低，是腎友補充營養的首選。' },
         'tofu': { t: '🟢 綠燈 (優質)', d: '植物性蛋白產生的含氮廢物較少，且加工過程磷較低 (優於百頁)。' },
@@ -399,14 +407,14 @@
         window.scrollTo(0,0);
     }
 
-    // Update Risk & Link to Meds
+    // Update Risk & Link to Meds (Logic Fixed)
     function updateRisk() {
         const egfrSelect = document.getElementById('egfr-input');
         const egfrVal = egfrSelect.value;
         const egfrText = egfrSelect.options[egfrSelect.selectedIndex].text;
         const albumin = document.getElementById('albumin-input').value;
         const resultBox = document.getElementById('risk-display');
-        const adviceBox = document.getElementById('home-advice');
+        const adviceBox = document.getElementById('home-advice'); // Now exists!
         
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
 
@@ -475,28 +483,24 @@
             list.innerHTML += `<div class="med-item"><span class="med-name">${name}</span><span class="med-effect">${desc}</span></div>`;
         }
 
-        // 1. GREEN LIST (Recommended)
-        addItem(greenList, "ACEi / ARB (血壓藥)", "能降低腎絲球內壓與蛋白尿，是延緩腎功能惡化的核心藥物。");
-        addItem(greenList, "SGLT2 抑制劑 (排糖藥)", "KDIGO 強力推薦，不僅降糖更能顯著降低洗腎與心衰竭風險。");
-        addItem(greenList, "Statins (降血脂藥)", "降低心血管疾病風險，保護血管健康。");
+        // 1. GREEN LIST
+        addItem(greenList, "ACEi / ARB (血壓藥)", "降低腎絲球內壓與蛋白尿，延緩惡化。");
+        addItem(greenList, "SGLT2 抑制劑 (排糖藥)", "KDIGO 強力推薦，保護心臟與腎臟。");
+        addItem(greenList, "Statins (降血脂藥)", "保護血管健康，降低心血管風險。");
 
-        // 2. YELLOW LIST (Caution)
-        addItem(yellowList, "Diuretics (利尿劑)", "注意脫水風險，若發生嘔吐腹瀉需評估暫停，以免急性腎損傷。");
-        addItem(yellowList, "抗生素 (Antibiotics)", "部分抗生素需依照腎功能調整劑量，就醫時請主動告知 eGFR。");
+        // 2. YELLOW LIST
+        addItem(yellowList, "Diuretics (利尿劑)", "注意水分，脫水(嘔吐/腹瀉)時需評估暫停。");
+        addItem(yellowList, "抗生素 (Antibiotics)", "部分需依腎功能調整劑量，請主動告知醫師。");
         
-        // 3. RED LIST (Avoid) - Conditional Logic
-        // NSAID is always bad
-        addItem(redList, "NSAIDs (強效止痛藥)", "風險：收縮入球小動脈，極易造成急性腎損傷 (AKI)。請改用普拿疼。");
+        // 3. RED LIST
+        addItem(redList, "NSAIDs (強效止痛藥)", "風險：收縮入球小動脈，易造成急性腎損傷。");
         addItem(redList, "來路不明中草藥", "風險：可能含馬兜鈴酸或重金屬，具強烈腎毒性。");
-        addItem(redList, "含碘顯影劑 (CT檢查)", "風險：可能導致顯影劑腎病變。檢查前後務必補充足夠水分。");
+        addItem(redList, "含碘顯影劑 (CT檢查)", "風險：可能導致顯影劑腎病變。檢查前後多喝水。");
 
-        // Metformin Logic: eGFR < 30 is Contraindicated
         if (egfr < 30) {
-            addItem(redList, "Metformin (降糖藥)", "風險：eGFR < 30 時禁止使用，乳酸中毒風險增加。");
+            addItem(redList, "Metformin (降糖藥)", "eGFR < 30 時禁止使用，乳酸中毒風險增加。");
         } else if (egfr < 45) {
-            addItem(yellowList, "Metformin (降糖藥)", "注意：eGFR 30-45 時需減量使用並監測。");
-        } else {
-            // Safe to use, usually green/neutral, but listed here for clarity if needed
+            addItem(yellowList, "Metformin (降糖藥)", "eGFR 30-45 時需減量使用並小心監測。");
         }
     }
 
