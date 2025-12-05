@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v4.1</title>
+    <title>腎利管家 v5.0</title>
     <style>
         :root {
             /* --- 豐原醫院配色系統 --- */
@@ -49,7 +49,7 @@
         .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,144,69,0.08); text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.02); }
         .card h2 { margin-top: 0; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 2px solid #f0f4f8; padding-bottom: 10px; margin-bottom: 15px; }
 
-        .input-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 5px; }
         .input-group { flex: 1; text-align: left; }
         .input-group label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 5px; font-weight: bold; }
         input, select { width: 100%; padding: 12px; border: 2px solid #e1e5eb; border-radius: 12px; font-size: 1rem; background: #fcfcfc; outline: none; transition: 0.3s; appearance: none; }
@@ -81,7 +81,7 @@
         .risk-value { font-size: 0.9rem; color: #777; font-family: monospace; }
         .risk-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; color: white; font-size: 0.9rem; margin-left: 5px; }
 
-        /* Med List Styles */
+        /* List Styles (Med & Diet) */
         .med-list-card { text-align: left; margin-bottom: 15px; border-radius: 12px; border: 1px solid #eee; overflow: hidden; }
         .med-head { padding: 10px 15px; font-weight: bold; color: white; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
         .med-body { padding: 15px; font-size: 0.9rem; line-height: 1.6; background: #fff; }
@@ -119,6 +119,16 @@
         .qr-img { width: 100%; height: 100%; object-fit: cover; }
         .refill-box { display: flex; align-items: center; background: #fff8e1; border: 1px solid #ffe0b2; padding: 15px; border-radius: 15px; margin-bottom: 25px; gap: 15px; }
         .refill-icon { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
+        
+        .dialysis-risk-banner {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            animation: fadeIn 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -137,11 +147,12 @@
     <div id="tab-home" class="section active">
         <div class="card">
             <h2>📊 我的腎臟地圖</h2>
+            <p style="color:#666; font-size:0.9rem; margin-bottom:15px;">請選擇數值，系統將自動分析風險</p>
             <div class="input-row">
                 <div class="input-group">
                     <label>eGFR (腎功能)</label>
                     <div class="select-wrapper">
-                        <select id="egfr-input">
+                        <select id="egfr-input" onchange="updateRisk()">
                             <option value="" disabled selected>請選擇區間...</option>
                             <option value="90">正常 (eGFR ≥ 90)</option>
                             <option value="60">第2期 (eGFR 60-89)</option>
@@ -155,32 +166,37 @@
                 <div class="input-group">
                     <label>蛋白尿 (UACR)</label>
                     <div class="select-wrapper">
-                        <select id="albumin-input">
-                            <option value="A1">正常 (&lt;30)</option>
-                            <option value="A2">微量 (30-299)</option>
-                            <option value="A3">嚴重 (>300)</option>
+                        <select id="albumin-input" onchange="updateRisk()">
+                            <option value="" disabled selected>請選擇數值...</option>
+                            <option value="A1">正常 (&lt;30 mg/g)</option>
+                            <option value="A2">微量 (30-299 mg/g)</option>
+                            <option value="A3">嚴重 (&gt;300 mg/g)</option>
                         </select>
                     </div>
                 </div>
             </div>
-            <button class="btn" onclick="updateRisk()"><span>🚀 分析風險</span></button>
-
             <div id="risk-display" class="hidden">
                 <div class="risk-result-box">
                     <div class="risk-title">您的腎臟功能為 <span id="res-risk-text" class="risk-badge">--</span></div>
                     <div class="risk-desc" id="res-detail-text">--</div>
                     <div class="risk-value" id="res-value-text">--</div>
                 </div>
+                
                 <div class="risk-matrix">
-                    <div class="matrix-header"></div><div class="matrix-header">正常<br><30</div><div class="matrix-header">微量<br>30-299</div><div class="matrix-header">嚴重<br>>300</div>
-                    <div class="matrix-label">第1期<br>>90</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
+                    <div class="matrix-header"></div><div class="matrix-header">正常<br>&lt;30</div><div class="matrix-header">微量<br>30-299</div><div class="matrix-header">嚴重<br>&gt;300</div>
+                    <div class="matrix-label">第1期<br>&gt;90</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
                     <div class="matrix-label">第2期<br>60-89</div><div class="matrix-cell bg-g" id="cell-2-1"></div><div class="matrix-cell bg-g" id="cell-2-2"></div><div class="matrix-cell bg-o" id="cell-2-3"></div>
                     <div class="matrix-label">第3a期<br>45-59</div><div class="matrix-cell bg-y" id="cell-3a-1"></div><div class="matrix-cell bg-o" id="cell-3a-2"></div><div class="matrix-cell bg-r" id="cell-3a-3"></div>
                     <div class="matrix-label">第3b期<br>30-44</div><div class="matrix-cell bg-o" id="cell-3b-1"></div><div class="matrix-cell bg-r" id="cell-3b-2"></div><div class="matrix-cell bg-r" id="cell-3b-3"></div>
                     <div class="matrix-label">第4期<br>15-29</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
-                    <div class="matrix-label">第5期<br><15</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
+                    <div class="matrix-label">第5期<br>&lt;15</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
-                <p style="font-size:0.8rem; color:#999; margin-top:10px;">👇 請點選下方「用藥」按鈕，查看您的專屬建議。</p>
+
+                <div id="dialysis-risk-banner" class="dialysis-risk-banner hidden">
+                    預估未來進展至洗腎 (ESRD) 風險：<span id="dialysis-risk-level">--</span>
+                </div>
+
+                <p style="font-size:0.8rem; color:#999; margin-top:10px;">👇 請點選下方「用藥」或「飲食」按鈕，查看您的專屬建議。</p>
             </div>
         </div>
         
@@ -200,7 +216,7 @@
             
             <div id="med-placeholder" style="padding: 30px 10px; color: #666;">
                 <p style="font-size: 3rem; margin: 0;">📉</p>
-                <p>請先至「首頁」輸入您的腎功能數據<br>系統將自動分析您的用藥風險。</p>
+                <p>請先至「首頁」輸入數據<br>系統將自動分析您的用藥風險。</p>
                 <button class="btn btn-outline" onclick="switchTab('home', document.querySelectorAll('.nav-item')[0])">
                     前往首頁輸入
                 </button>
@@ -213,21 +229,21 @@
 
                 <div class="med-list-card" style="border-color: var(--risk-g);">
                     <div class="med-head" style="background: var(--risk-g);">
-                        <span>🟢 建議用藥 (Good)</span>
+                        <span>🟢 建議用藥 (建議規則服藥)</span>
                     </div>
                     <div class="med-body" id="med-list-green"></div>
                 </div>
 
                 <div class="med-list-card" style="border-color: var(--risk-y);">
                     <div class="med-head" style="background: var(--risk-y); color: #555;">
-                        <span>🟡 使用要注意 (Caution)</span>
+                        <span>🟡 使用要注意 (小心副作用)</span>
                     </div>
                     <div class="med-body" id="med-list-yellow"></div>
                 </div>
 
                 <div class="med-list-card" style="border-color: var(--risk-r);">
                     <div class="med-head" style="background: var(--risk-r);">
-                        <span>🔴 不建議服用 (Avoid)</span>
+                        <span>🔴 不建議服用 (傷腎風險高)</span>
                     </div>
                     <div class="med-body" id="med-list-red"></div>
                 </div>
@@ -249,17 +265,47 @@
 
     <div id="tab-diet" class="section">
         <div class="card">
-            <h2>🍽️ 護腎餐盤</h2>
-            <div class="plate-container">
-                <div class="plate-half"><span class="food-icon">🥦</span><span>50%<br>蔬菜/水果</span></div>
-                <div class="plate-quarter-container">
-                    <div class="plate-quarter pq-protein"><span class="food-icon">🥚</span><span>25%<br>豆/魚/蛋</span></div>
-                    <div class="plate-quarter pq-starch"><span class="food-icon">🍚</span><span>25%<br>低氮澱粉</span></div>
+            <h2>🍽️ 個人化飲食建議</h2>
+            
+            <div id="diet-placeholder" style="padding: 30px 10px; color: #666;">
+                <p style="font-size: 3rem; margin: 0;">🥦</p>
+                <p>請先至「首頁」輸入數據<br>系統將自動產生飲食紅綠燈。</p>
+                <button class="btn btn-outline" onclick="switchTab('home', document.querySelectorAll('.nav-item')[0])">
+                    前往首頁輸入
+                </button>
+            </div>
+
+            <div id="diet-advice-container" class="hidden">
+                <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">
+                    護腎飲食紅綠燈：
+                </p>
+
+                <div class="med-list-card" style="border-color: var(--risk-g);">
+                    <div class="med-head" style="background: var(--risk-g);">
+                        <span>🟢 建議攝取 (安心吃)</span>
+                    </div>
+                    <div class="med-body" id="diet-list-green"></div>
+                </div>
+
+                <div class="med-list-card" style="border-color: var(--risk-y);">
+                    <div class="med-head" style="background: var(--risk-y); color: #555;">
+                        <span>🟡 小心攝取 (限量吃)</span>
+                    </div>
+                    <div class="med-body" id="diet-list-yellow"></div>
+                </div>
+
+                <div class="med-list-card" style="border-color: var(--risk-r);">
+                    <div class="med-head" style="background: var(--risk-r);">
+                        <span>🔴 不建議攝取 (盡量避免)</span>
+                    </div>
+                    <div class="med-body" id="diet-list-red"></div>
                 </div>
             </div>
         </div>
+
         <div class="card">
-            <h2>🥗 食物查詢地雷區</h2>
+            <h2>🔍 查詢特定食物</h2>
+            <p style="font-size:0.9rem; color:#666;">想知道某個食物能不能吃？</p>
             <div class="select-wrapper">
                 <select id="food-select" onchange="checkFood()">
                     <option value="">🥒 請選擇食物...</option>
@@ -333,17 +379,6 @@
                     </a>
                 </div>
             </div>
-
-            <hr style="border: 0; border-top: 1px dashed #ddd; margin: 30px 0;">
-
-            <div style="opacity: 0.8;">
-                <h3 style="color: var(--primary); margin-bottom: 10px;">📝 填寫詳細提問單</h3>
-                <p style="font-size: 0.85rem;">若不方便使用 LINE，可填寫表單 (Email 回覆)</p>
-                <div style="position: relative; overflow: hidden; padding-top: 80%; border: 1px solid #eee; border-radius: 10px; background: #f0f0f0;">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScf4-vFv6sN0e5wK6_v8j8G6k6r5h3w/viewform?embedded=true" 
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;">載入中...</iframe>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -407,24 +442,25 @@
         window.scrollTo(0,0);
     }
 
-    // Update Risk & Link to Meds (Logic Fixed)
+    // Auto-Update Risk & Links
     function updateRisk() {
         const egfrSelect = document.getElementById('egfr-input');
         const egfrVal = egfrSelect.value;
         const egfrText = egfrSelect.options[egfrSelect.selectedIndex].text;
         const albumin = document.getElementById('albumin-input').value;
-        const resultBox = document.getElementById('risk-display');
-        const adviceBox = document.getElementById('home-advice'); // Now exists!
         
+        // Wait for both inputs
+        if (egfrVal === "" || albumin === "") return;
+
+        const resultBox = document.getElementById('risk-display');
+        const adviceBox = document.getElementById('home-advice');
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
 
-        if (egfrVal === "") { alert("請選擇 eGFR 區間"); return; }
         const egfr = parseFloat(egfrVal);
-        
         resultBox.classList.remove('hidden');
         adviceBox.classList.remove('hidden');
 
-        // Logic Mapping
+        // Stage Logic
         let stage = "", rowId = "";
         if (egfr >= 90) { stage = "第1期"; rowId = "1"; }
         else if (egfr >= 60) { stage = "第2期"; rowId = "2"; }
@@ -433,6 +469,7 @@
         else if (egfr >= 15) { stage = "第4期"; rowId = "4"; }
         else { stage = "第5期"; rowId = "5"; }
 
+        // Albumin Logic
         let albText = "", colId = "";
         if (albumin === 'A1') { albText = "正常/輕微蛋白尿"; colId = "1"; }
         else if (albumin === 'A2') { albText = "微量蛋白尿"; colId = "2"; }
@@ -443,18 +480,25 @@
         const targetCell = document.getElementById(targetCellId);
         if(targetCell) targetCell.classList.add('active-cell');
 
-        // Determine Risk Color
-        let riskColor = "";
-        if (targetCell.classList.contains('bg-g')) { riskColor = "var(--risk-g)"; }
-        else if (targetCell.classList.contains('bg-y')) { riskColor = "var(--risk-y)"; }
-        else if (targetCell.classList.contains('bg-o')) { riskColor = "var(--risk-o)"; }
-        else { riskColor = "var(--risk-r)"; }
+        // Risk Level & Color
+        let riskText = "", riskColor = "";
+        if (targetCell.classList.contains('bg-g')) { riskText = "低風險"; riskColor = "var(--risk-g)"; }
+        else if (targetCell.classList.contains('bg-y')) { riskText = "中度風險"; riskColor = "var(--risk-y)"; }
+        else if (targetCell.classList.contains('bg-o')) { riskText = "高風險"; riskColor = "var(--risk-o)"; }
+        else { riskText = "超高風險"; riskColor = "var(--risk-r)"; }
 
-        // Update Home UI
-        document.getElementById('res-risk-text').innerText = targetCell.classList.contains('bg-g') ? "低風險" : (targetCell.classList.contains('bg-y') ? "中度風險" : (targetCell.classList.contains('bg-o') ? "高風險" : "超高風險"));
+        // Update UI
+        document.getElementById('res-risk-text').innerText = riskText;
         document.getElementById('res-risk-text').style.backgroundColor = riskColor;
         document.getElementById('res-detail-text').innerText = `腎絲球過濾率${stage} 與 ${albText}`;
         document.getElementById('res-value-text').innerHTML = `您的 eGFR 區間為 <strong style="color:${riskColor}">${egfrText}</strong>`;
+
+        // Update Dialysis Risk Banner
+        const dialBanner = document.getElementById('dialysis-risk-banner');
+        const dialText = document.getElementById('dialysis-risk-level');
+        dialBanner.classList.remove('hidden');
+        dialBanner.style.backgroundColor = riskColor;
+        dialText.innerText = riskText;
 
         // Update Advice
         const a1 = document.getElementById('advice-1'); a2 = document.getElementById('advice-2'); a3 = document.getElementById('advice-3');
@@ -462,12 +506,13 @@
         else if (egfr < 45 || albumin === 'A3') { a1.innerText = "屬於高風險群，請嚴格控制血壓與血糖。"; a2.innerText = "低蛋白飲食 (0.6-0.8 g/kg)，避免加工食品。"; a3.innerText = "諮詢醫師是否使用 SGLT2 排糖藥或 ACEi/ARB 保護心腎。"; }
         else { a1.innerText = "每 3-6 個月追蹤一次腎功能。"; a2.innerText = "注意血壓控制 (<130/80)，減少鹽分攝取。"; a3.innerText = "若有糖尿病，務必嚴格控糖。"; }
 
-        // --- Trigger Meds Update ---
-        generateMedAdvice(egfr, albumin);
+        // Trigger Smart Links
+        generateMedAdvice(egfr);
+        generateDietAdvice(egfr);
     }
 
-    // Generate Dynamic Med Advice (KDIGO Logic)
-    function generateMedAdvice(egfr, albumin) {
+    // Smart Med Advice
+    function generateMedAdvice(egfr) {
         document.getElementById('med-placeholder').classList.add('hidden');
         document.getElementById('med-advice-container').classList.remove('hidden');
         document.getElementById('med-egfr-display').innerText = document.getElementById('egfr-input').options[document.getElementById('egfr-input').selectedIndex].text;
@@ -475,46 +520,65 @@
         const greenList = document.getElementById('med-list-green');
         const yellowList = document.getElementById('med-list-yellow');
         const redList = document.getElementById('med-list-red');
-        
         greenList.innerHTML = ''; yellowList.innerHTML = ''; redList.innerHTML = '';
 
-        // Helper to add item
-        function addItem(list, name, desc) {
-            list.innerHTML += `<div class="med-item"><span class="med-name">${name}</span><span class="med-effect">${desc}</span></div>`;
-        }
+        function addItem(list, name, desc) { list.innerHTML += `<div class="med-item"><span class="med-name">${name}</span><span class="med-effect">${desc}</span></div>`; }
 
-        // 1. GREEN LIST
-        addItem(greenList, "ACEi / ARB (血壓藥)", "降低腎絲球內壓與蛋白尿，延緩惡化。");
-        addItem(greenList, "SGLT2 抑制劑 (排糖藥)", "KDIGO 強力推薦，保護心臟與腎臟。");
-        addItem(greenList, "Statins (降血脂藥)", "保護血管健康，降低心血管風險。");
-
-        // 2. YELLOW LIST
-        addItem(yellowList, "Diuretics (利尿劑)", "注意水分，脫水(嘔吐/腹瀉)時需評估暫停。");
-        addItem(yellowList, "抗生素 (Antibiotics)", "部分需依腎功能調整劑量，請主動告知醫師。");
-        
-        // 3. RED LIST
-        addItem(redList, "NSAIDs (強效止痛藥)", "風險：收縮入球小動脈，易造成急性腎損傷。");
-        addItem(redList, "來路不明中草藥", "風險：可能含馬兜鈴酸或重金屬，具強烈腎毒性。");
-        addItem(redList, "含碘顯影劑 (CT檢查)", "風險：可能導致顯影劑腎病變。檢查前後多喝水。");
+        addItem(greenList, "ACEi / ARB (血壓藥)", "降低腎內壓與蛋白尿，護腎首選。");
+        addItem(greenList, "SGLT2 抑制劑 (排糖藥)", "延緩洗腎、保護心臟的強效藥物。");
+        addItem(redList, "NSAIDs (強效止痛藥)", "風險：收縮腎血管，易致急性腎衰竭。");
+        addItem(redList, "含碘顯影劑", "風險：需注意顯影劑腎病變，檢查前後多喝水。");
 
         if (egfr < 30) {
-            addItem(redList, "Metformin (降糖藥)", "eGFR < 30 時禁止使用，乳酸中毒風險增加。");
-        } else if (egfr < 45) {
-            addItem(yellowList, "Metformin (降糖藥)", "eGFR 30-45 時需減量使用並小心監測。");
+            addItem(redList, "Metformin (降糖藥)", "風險：eGFR < 30 時禁止使用，避免乳酸中毒。");
+        } else {
+            addItem(greenList, "Metformin (降糖藥)", "血糖控制的第一線用藥，配合腎功能調整劑量。");
         }
     }
 
-    // Food Check
+    // Smart Diet Advice
+    function generateDietAdvice(egfr) {
+        document.getElementById('diet-placeholder').classList.add('hidden');
+        document.getElementById('diet-advice-container').classList.remove('hidden');
+
+        const dGreen = document.getElementById('diet-list-green');
+        const dYellow = document.getElementById('diet-list-yellow');
+        const dRed = document.getElementById('diet-list-red');
+        dGreen.innerHTML = ''; dYellow.innerHTML = ''; dRed.innerHTML = '';
+
+        function addItem(list, name, desc) { list.innerHTML += `<div class="med-item"><span class="med-name">${name}</span><span class="med-effect">${desc}</span></div>`; }
+
+        // Always Red
+        addItem(dRed, "楊桃 (Starfruit)", "絕對禁忌：含神經毒素，腎友無法代謝恐致昏迷。");
+        addItem(dRed, "加工肉品 (香腸/火腿)", "禁忌：含高量無機磷，吸收率100%，極傷血管。");
+        addItem(dRed, "內臟類 (豬肝/腰子)", "禁忌：高膽固醇、高磷、高尿酸。");
+
+        // Dynamic based on eGFR
+        if (egfr >= 60) {
+            addItem(dGreen, "優質蛋白質 (魚/豆/蛋)", "建議：正常攝取，維持肌肉量。");
+            addItem(dGreen, "全穀類 (糙米/五穀)", "建議：富含纖維，初期CKD可食用。");
+            addItem(dYellow, "鈉鹽 (醬油/鹽)", "注意：減少鹽分可幫助控制血壓。");
+        } else if (egfr >= 30) { // Stage 3
+            addItem(dGreen, "植物性蛋白 (豆腐)", "建議：產生含氮廢物較少，優於動物肉。");
+            addItem(dYellow, "高鉀水果 (香蕉/奇異果)", "注意：需開始監測血鉀濃度，適量食用。");
+            addItem(dRed, "糙米/五穀米", "不建議：磷含量較高，建議改吃白飯。");
+        } else { // Stage 4-5
+            addItem(dGreen, "低氮澱粉 (冬粉/米粉)", "建議：補充熱量且不增加尿毒素。");
+            addItem(dYellow, "深綠色蔬菜", "注意：高鉀風險，務必汆燙3分鐘後再吃。");
+            addItem(dRed, "高鉀水果 (香蕉/番茄)", "不建議：血鉀排泄困難，嚴重恐心律不整。");
+            addItem(dRed, "五穀雜糧", "不建議：極高磷，請改用白飯或低蛋白米。");
+        }
+    }
+
+    // Food Check (Manual)
     function checkFood() {
         const val = document.getElementById('food-select').value;
         const res = document.getElementById('food-result');
         res.classList.add('hidden');
         if(!val) return;
-
         const data = foodDB[val];
         res.classList.remove('hidden');
         res.innerHTML = `<strong>${data.t}</strong><br>${data.d}`;
-        
         if (data.t.includes("紅燈")) { res.style.borderColor = "var(--danger)"; res.style.background = "#fff5f5"; res.style.color = "#721c24"; }
         else if (data.t.includes("黃燈")) { res.style.borderColor = "var(--warning)"; res.style.background = "#fffbf0"; res.style.color = "#856404"; }
         else { res.style.borderColor = "var(--success)"; res.style.background = "#e6fffa"; res.style.color = "#155724"; }
