@@ -253,27 +253,46 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+<div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
-            <p style="color:#666;">不確定藥品風險？請在此查詢</p>
+            <p style="font-size: 0.9rem; color:#666;">不確定藥品風險？請在此查詢</p>
             <div class="select-wrapper">
                 <select id="med-select" onchange="checkMed()">
                     <option value="">🔍 請選擇查詢項目...</option>
-                    <optgroup label="🔴 危險 / 禁止 / 需特別注意">
-                        <option value="nsaid">強效止痛藥 (NSAIDs)</option><option value="herbal">來路不明中草藥/黑藥丸</option><option value="contrast">含碘顯影劑 (檢查)</option><option value="mycin">部分抗生素 (Aminoglycosides)</option><option value="starfruit_j">楊桃汁/楊桃乾</option><option value="smoking">吸菸 (尼古丁)</option><option value="hold_urine">長期憋尿</option>
+                    <optgroup label="危險 / 禁止 / 需特別注意">
+                        <option value="nsaid">強效止痛藥 (NSAIDs)</option>
+                        <option value="herbal">來路不明中草藥/黑藥丸</option>
+                        <option value="contrast">含碘顯影劑 (檢查)</option>
+                        <option value="mycin">部分抗生素 (Aminoglycosides)</option>
+                        <option value="starfruit_j">楊桃汁/楊桃乾</option>
+                        <option value="smoking">吸菸 (尼古丁)</option>
+                        <option value="hold_urine">長期憋尿</option>
                     </optgroup>
-                    <optgroup label="🟡 謹慎 / 需監測 / 適量">
-                        <option value="diuretic">利尿劑 (Diuretics)</option><option value="metformin">降糖藥 (Metformin)</option><option value="vit_d">維生素 D (鈣磷平衡)</option><option value="multi_vit">綜合維他命</option><option value="enema">清腸劑 (大腸鏡)</option><option value="antacid">含鋁胃藥/制酸劑</option><option value="dehydration">喝水不足/脫水</option><option value="constipation">長期便秘</option>
+                    <optgroup label="謹慎 / 需監測 / 適量">
+                        <option value="diuretic">利尿劑 (Diuretics)</option>
+                        <option value="metformin">降糖藥 (Metformin)</option>
+                        <option value="vit_d">維生素 D (鈣磷平衡)</option>
+                        <option value="multi_vit">綜合維他命</option>
+                        <option value="enema">清腸劑 (大腸鏡)</option>
+                        <option value="antacid">含鋁胃藥/制酸劑</option>
+                        <option value="dehydration">喝水不足/脫水</option>
+                        <option value="constipation">長期便秘</option>
                     </optgroup>
-                    <optgroup label="🟢 推薦 / 安全 / 護腎">
-                        <option value="sglt2">排糖藥 (SGLT2i)</option><option value="ras">血壓藥 (ACEi/ARB)</option><option value="panadol">普拿疼 (Acetaminophen)</option><option value="probiotic">腎臟專用益生菌</option><option value="bp_check">每日量血壓</option><option value="vaccine">疫苗接種 (流感/肺鏈)</option>
+                    <optgroup label="推薦 / 安全 / 護腎">
+                        <option value="sglt2">排糖藥 (SGLT2i)</option>
+                        <option value="ras">血壓藥 (ACEi/ARB)</option>
+                        <option value="panadol">普拿疼 (Acetaminophen)</option>
+                        <option value="probiotic">腎臟專用益生菌</option>
+                        <option value="bp_check">每日量血壓</option>
+                        <option value="vaccine">疫苗接種 (流感/肺鏈)</option>
                     </optgroup>
                 </select>
             </div>
+            
             <div class="traffic-container">
-                <div id="light-r" class="light" style="color: var(--danger); background: var(--danger);"></div>
-                <div id="light-y" class="light" style="color: var(--warning); background: var(--warning);"></div>
-                <div id="light-g" class="light" style="color: var(--success); background: var(--success);"></div>
+                <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div>
+                <div id="light-y" class="light" style="color: var(--risk-y); background: var(--risk-y);"></div>
+                <div id="light-g" class="light" style="color: var(--risk-g); background: var(--risk-g);"></div>
             </div>
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
@@ -646,4 +665,5 @@
 </script>
 </body>
 </html>
+
 
