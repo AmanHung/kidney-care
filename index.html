@@ -432,7 +432,37 @@
 </nav>
 
 <script>
-    // --- DATABASE: Med Lookup (Fixed: Missing in v4.6) ---
+    // --- 🔊 音效產生器 (免下載檔案) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(isCorrect) {
+        if (audioCtx.state === 'suspended') audioCtx.resume(); // 喚醒音效引擎
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (isCorrect) {
+            // ⭕ 答對音效：清脆的叮咚聲 (正弦波)
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(500, audioCtx.currentTime); // 500Hz
+            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1); // 升到 1000Hz
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); // 音量
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); // 淡出
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+        } else {
+            // ❌ 答錯音效：低沈的噗噗聲 (鋸齒波)
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime); // 150Hz
+            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3); // 降到 100Hz
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
     const medDB = {
         'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！這類止痛藥會收縮入球小動脈，極易造成急性腎損傷。請改用普拿疼。' },
         'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸或含馬兜鈴酸藥材，是台灣洗腎主因之一。請勿聽信電台廣告。' },
@@ -664,16 +694,27 @@
             const btn = document.createElement('div');
             btn.className = 'quiz-option';
             btn.innerText = opt.t;
-            btn.onclick = () => {
-                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
-                if(opt.c) { btn.classList.add('correct'); score+=20; document.getElementById('quiz-res-text').innerText="🎉 答對了！"; document.getElementById('quiz-res-text').style.color="green"; }
-                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 答錯囉！"; document.getElementById('quiz-res-text').style.color="red"; }
-                document.getElementById('quiz-exp').innerText = q.exp;
-                document.getElementById('quiz-feedback').classList.remove('hidden');
-            };
+            btn.onclick = () => checkAnswer(btn, opt.c);
             div.appendChild(btn);
         });
         document.querySelector('.progress-fill').style.width = `${((qIdx)/quizData.length)*100}%`;
+    }
+
+    function checkAnswer(btn, isCorrect) {
+        playSound(isCorrect);
+        document.querySelectorAll('.quiz-option').forEach(b => b.style.pointerEvents = 'none');
+        if (isCorrect) { 
+            btn.classList.add('correct'); 
+            score += 20; 
+            document.getElementById('quiz-res-text').innerText = "🎉 答對了！"; 
+            document.getElementById('quiz-res-text').style.color = "var(--success)"; 
+        } else { 
+            btn.classList.add('wrong'); 
+            document.getElementById('quiz-res-text').innerText = "😱 答錯囉！"; 
+            document.getElementById('quiz-res-text').style.color = "var(--danger)"; 
+        }
+        document.getElementById('quiz-feedback-box').classList.remove('hidden');
+        document.getElementById('quiz-explanation').innerText = quizData[qIdx].exp;
     }
 
     function nextQ() {
@@ -691,4 +732,3 @@
 </script>
 </body>
 </html>
-
