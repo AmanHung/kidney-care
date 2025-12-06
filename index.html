@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v5.0</title>
+    <title>腎利管家 v5.3</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
@@ -37,13 +37,15 @@
             background: linear-gradient(90deg, #009ADA 20%, var(--primary) 50%, var(--accent) 80%);
         }
         
+        /* 右邊 Logo 維持預設 */
         .header-logo { height: 50px; width: auto; object-fit: contain; }
-        /* 特別指定：縮小左邊 Logo */
-        header img.header-logo:first-of-type { height: 35px; width: auto; }
+
+        /* 縮小左邊 Logo */
+        header img.header-logo:first-of-type { height: 38px; }
 
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
-        .header-title-box h1 { margin: 0; font-size: 1.9rem; color: var(--primary); font-weight: 900; }
-        .header-title-box p { margin: 2px 0 0 0; color: #666; font-size: 0.85rem; font-weight: bold; }
+        .header-title-box h1 { margin: 0; font-size: 1.8rem; color: var(--primary); font-weight: 900; line-height: 1.1; }
+        .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.85rem; font-weight: bold; }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -68,15 +70,6 @@
             color: #444; pointer-events: none; font-size: 1.2rem; 
         }
         select:focus { border-color: var(--primary); background: #f9fff9; }
-
-        /* KFRE Input Style */
-        .custom-input {
-            width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
-            font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
-            transition: 0.3s; -webkit-appearance: none;
-        }
-        .custom-input:focus { border-color: #29b6f6; background: #f0fbff; }
-        .custom-input::placeholder { color: #bbb; font-weight: normal; }
 
         /* Buttons */
         .btn { 
@@ -162,6 +155,10 @@
         .light { width: 70px; height: 70px; border-radius: 50%; background: #ddd; opacity: 0.2; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
         .light.on { opacity: 1; transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
+        
+        /* 強調 KFRE 結果文字 */
+        .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
+        .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -178,42 +175,78 @@
 <div class="container">
 
     <div id="tab-home" class="section active">
-        <div class="card">
-            <h2>📊 我的腎臟功能評估</h2>
-            <div class="input-group">
-                <label>1. 腎功能 (eGFR)</label>
-                <div class="select-wrapper">
-                    <select id="egfr-input" onchange="calcRisk()">
-                        <option value="" disabled selected>請點此選擇區間...</option>
-                        <option value="90">正常 (eGFR ≥ 90)</option>
-                        <option value="60">第2期 (eGFR 60-89)</option>
-                        <option value="45">第3a期 (eGFR 45-59)</option>
-                        <option value="30">第3b期 (eGFR 30-44)</option>
-                        <option value="15">第4期 (eGFR 15-29)</option>
-                        <option value="5">第5期 (eGFR &lt; 15)</option>
-                    </select>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>2. 蛋白尿狀況 (UACR)</label>
-                <div class="select-wrapper">
-                    <select id="albumin-input" onchange="calcRisk()">
-                        <option value="A1" selected>正常/輕微 (&lt;30)</option>
-                        <option value="A2">微量蛋白尿 (30-299)</option>
-                        <option value="A3">嚴重蛋白尿 (>300)</option>
-                    </select>
-                </div>
-            </div>
-            
-            <p id="start-hint" style="color:#888; font-size:1.1rem; margin-top:20px; font-weight:bold;">
-                👆 請選擇上方數值，下方將自動顯示
+        <div class="card" style="border-top: 5px solid #29b6f6;">
+            <h2 style="color:#0277bd; border-bottom-color:#e1f5fe;">📊 腎臟風險評估與預測</h2>
+            <p style="color:#666; font-size:0.95rem; margin-bottom:20px; text-align:left; padding:0 10px;">
+                請輸入以下資料，系統將自動計算您的腎臟病分期以及未來洗腎風險。
             </p>
 
-            <div id="risk-result-area" class="hidden">
-                <div id="risk-banner" class="risk-banner" style="background:#ccc;">
-                    <h3 id="risk-title">--</h3>
-                    <p id="risk-desc">--</p>
+            <div class="input-group">
+                <label>1. 年齡</label>
+                <div class="select-wrapper">
+                    <select id="kfre-age" onchange="updateAllRisks()">
+                        <option value="" disabled selected>請選擇年齡...</option>
+                        <option value="20">20-29 歲</option>
+                        <option value="30">30-39 歲</option>
+                        <option value="40">40-49 歲</option>
+                        <option value="50">50-59 歲</option>
+                        <option value="60">60-69 歲</option>
+                        <option value="70">70-79 歲</option>
+                        <option value="80">80-89 歲</option>
+                        <option value="90">90 歲以上</option>
+                    </select>
                 </div>
+            </div>
+
+            <div class="input-group">
+                <label>2. 性別</label>
+                <div class="select-wrapper">
+                    <select id="kfre-sex" onchange="updateAllRisks()">
+                        <option value="" disabled selected>請選擇性別...</option>
+                        <option value="1">男</option>
+                        <option value="0">女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>3. 腎功能 (eGFR)</label>
+                <div class="select-wrapper">
+                    <select id="kfre-egfr" onchange="updateAllRisks()">
+                        <option value="" disabled selected>請選擇數值區間...</option>
+                        <option value="90">正常 (eGFR ≥ 90)</option>
+                        <option value="75">第2期 (eGFR 60-89)</option>
+                        <option value="52">第3a期 (eGFR 45-59)</option>
+                        <option value="37">第3b期 (eGFR 30-44)</option>
+                        <option value="22">第4期 (eGFR 15-29)</option>
+                        <option value="10">第5期 (eGFR < 15)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>4. 蛋白尿狀況 (UACR)</label>
+                <div class="select-wrapper">
+                    <select id="kfre-uacr" onchange="updateAllRisks()">
+                        <option value="" disabled selected>請選擇檢驗結果...</option>
+                        <option value="10">正常/輕微 (<30)</option>
+                        <option value="150">微量蛋白尿 (30-299)</option>
+                        <option value="500">嚴重蛋白尿 (>300)</option>
+                    </select>
+                </div>
+            </div>
+
+            <p id="start-hint" style="color:#888; font-size:1.1rem; margin-top:20px; font-weight:bold;">
+                👆 資料填寫完整後，結果將自動顯示
+            </p>
+
+            <div id="unified-result" class="hidden">
+                
+                <div id="risk-banner" class="risk-banner" style="background:#ccc; margin-bottom:20px;">
+                    <h3 id="risk-title" style="margin-bottom:5px;">--</h3>
+                    <p id="risk-desc" style="font-size:1rem;">--</p>
+                </div>
+
                 <div class="risk-matrix">
                     <div class="matrix-header"></div><div class="matrix-header">正常<br><30</div><div class="matrix-header">微量<br>30-299</div><div class="matrix-header">嚴重<br>>300</div>
                     <div class="matrix-label">第1期<br>>90</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
@@ -223,68 +256,29 @@
                     <div class="matrix-label">第4期<br>15-29</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
                     <div class="matrix-label">第5期<br><15</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
-                <p style="color:#d32f2f; font-weight:900; margin-top:20px; font-size:1.1rem;">
-                    👇 您的用藥與飲食建議已生成，請點選下方按鈕查看。
-                </p>
-            </div>
-        </div>
 
-        <div class="card" style="border-top: 5px solid #29b6f6;">
-            <h2 style="color:#0277bd; border-bottom-color:#e1f5fe;">🧮 未來洗腎風險預測 (KFRE)</h2>
-            <p style="color:#666; font-size:0.95rem; margin-bottom:20px; line-height:1.4;">
-                這是 KDIGO 指引推薦的評估工具，能預測 2~5 年內的洗腎風險。
-            </p>
-
-            <div class="input-group">
-                <label>1. 年齡 (歲)</label>
-                <input type="number" id="kfre-age" class="custom-input" placeholder="例如：65">
-            </div>
-
-            <div class="input-group">
-                <label>2. 性別</label>
-                <div class="select-wrapper">
-                    <select id="kfre-sex">
-                        <option value="1">男</option>
-                        <option value="0">女</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>3. 腎功能 (eGFR)</label>
-                <input type="number" id="kfre-egfr" class="custom-input" placeholder="例如：45">
-            </div>
-
-            <div class="input-group">
-                <label>4. 尿液白蛋白/肌酸酐比值 (UACR)</label>
-                <input type="number" id="kfre-uacr" class="custom-input" placeholder="單位：mg/g">
-                <p style="font-size:0.85rem; color:#888; margin-top:5px;">* 若無數據請填寫 30 (預設值)</p>
-            </div>
-
-            <button class="btn" style="background: linear-gradient(135deg, #29b6f6, #0277bd); box-shadow: 0 6px 15px rgba(2,119,189,0.3);" onclick="calculateKFRE()">開始計算</button>
-
-            <div id="kfre-result" class="hidden" style="margin-top:25px; animation: fadeIn 0.5s ease;">
-                <div style="background:#e1f5fe; border-radius:15px; padding:20px; border:2px solid #b3e5fc; text-align:center;">
-                    <h3 style="margin:0; color:#01579b; font-size:1.4rem;">預測結果</h3>
-                    <hr style="border:0; border-top:1px dashed #81d4fa; margin:15px 0;">
+                <div style="background:#e1f5fe; border-radius:15px; padding:25px 15px; border:2px solid #b3e5fc; text-align:center; margin-top:25px;">
+                    <h3 style="margin:0 0 20px 0; color:#01579b; font-size:1.5rem;">📅 未來洗腎機率預測</h3>
                     
-                    <div style="display:flex; justify-content:space-around; margin-bottom:15px;">
-                        <div>
-                            <span style="font-size:0.9rem; color:#555;">2年內洗腎機率</span><br>
-                            <span id="res-2yr" style="font-size:1.8rem; font-weight:900; color:#0288d1;">--%</span>
+                    <div style="display:flex; justify-content:space-around; margin-bottom:20px; align-items: flex-start;">
+                        <div style="flex:1;">
+                            <span class="kfre-highlight-label">2年內洗腎機率</span>
+                            <span id="res-2yr" class="kfre-highlight-value">--%</span>
                         </div>
-                        <div>
-                            <span style="font-size:0.9rem; color:#555;">5年內洗腎機率</span><br>
-                            <span id="res-5yr" style="font-size:1.8rem; font-weight:900; color:#0288d1;">--%</span>
+                        <div style="width:2px; background:#81d4fa; height:60px; margin-top:10px;"></div>
+                        <div style="flex:1;">
+                            <span class="kfre-highlight-label">5年內洗腎機率</span>
+                            <span id="res-5yr" class="kfre-highlight-value">--%</span>
                         </div>
                     </div>
 
-                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1rem; line-height:1.5; border-left:5px solid #ccc;">
+                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
                         建議載入中...
                     </div>
                 </div>
-                <p style="font-size:0.8rem; color:#999; margin-top:10px; text-align:center;">
-                    公式來源：Tangri N et al. JAMA. 2011
+                
+                <p style="color:#d32f2f; font-weight:900; margin-top:25px; font-size:1.1rem;">
+                    👇 您的專屬用藥與飲食建議已生成，<br>請點選下方選單切換查看。
                 </p>
             </div>
         </div>
@@ -538,39 +532,28 @@
 
     // --- DB ---
     const medDB = {
-// --- A 開頭 ---
-    'ras': { level: 'g', title: '✅ 基礎護腎 (ACEi/ARB)', desc: '抗蛋白尿首選血壓藥。剛使用 eGFR 微降 30% 內屬正常，不需停藥。' },
-    'panadol': { level: 'g', title: '✅ 相對安全 (Acetaminophen)', desc: '普拿疼成分。在安全劑量下不傷腎，是腎友止痛退燒首選。' },
-    'mycin': { level: 'r', title: '⚠️ 高風險 (Aminoglycosides)', desc: '部分抗生素具腎毒性，看診時請務必主動告知醫師腎功能。' },
-    'antacid': { level: 'y', title: '🟡 需注意 (Antacids)', desc: '避免長期服用含「鋁」或「鎂」的制酸胃藥，腎臟無法代謝恐導致中毒。' },
-
-    // --- C, D, E ---
-    'contrast': { level: 'r', title: '⚠️ 高風險 (Contrast Media)', desc: '含碘顯影劑。eGFR<30 或急性期高風險。檢查前後需補充足夠水分。' },
-    'diuretic': { level: 'y', title: '🟡 需注意 (Diuretics)', desc: '利尿劑。有助消水腫，但若發燒、腹瀉、嘔吐 (Sick Day) 時需暫停以防脫水。' },
-    'enema': { level: 'y', title: '🟡 需告知 (Enema)', desc: '含磷酸鈉的清腸劑可能造成急性磷腎病變，請告知醫師腎病史。' },
-
-    // --- G, H, M ---
-    'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '腸泌素針劑。針對 T2D 合併 CKD，若血糖未達標，推薦優先使用具心血管實證的藥物。' },
-    'herbal': { level: 'r', title: '🛑 絕對禁止 (Herbal Meds)', desc: '來路不明中草藥/黑藥丸。可能含馬兜鈴酸或重金屬，具高度腎毒性。' },
-    'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: '降糖藥。eGFR < 30 必須停用；30-45 需減量。注意乳酸中毒風險。' },
-    'multi_vit': { level: 'y', title: '🟡 需挑選 (Multivitamins)', desc: '市售綜合維他命可能含高磷、高鉀。透析病患建議補充專用水溶性 B 群。' },
-
-    // --- N ---
-    'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '強效止痛藥。最強烈的腎臟殺手！會收縮入球小動脈，極易造成急性腎損傷。' },
-    'gout_nsaid': { level: 'r', title: '🛑 痛風急性期 (Avoid NSAIDs)', desc: '痛風發作請避免吃強效止痛藥(NSAID)，應優先諮詢醫師使用秋水仙素或類固醇。' },
-    'ns_mra': { level: 'g', title: '✅ 進階護腎 (ns-MRA)', desc: 'Finerenone。針對糖尿病腎病變且仍有蛋白尿者，可抗發炎抗纖維化。' },
-
-    // --- P, S ---
-    'ppi': { level: 'y', title: '🟡 需評估 (PPIs)', desc: '特定胃藥。長期使用可能增加慢性腎病進展風險，應定期評估是否需續用。' },
-    'probiotic': { level: 'g', title: '✅ 輔助推薦 (Probiotics)', desc: '腎臟專用益生菌。部分特定菌株證實有助減少腸道尿毒素前驅物。' },
-    'sglt2': { level: 'g', title: '✅ 核心護腎 (SGLT2i)', desc: '排糖藥。eGFR≧20即可使用，能顯著延緩洗腎、保護心臟。生病脫水時需暫停。' },
-    'statins': { level: 'g', title: '✅ 建議使用 (Statins)', desc: '降血脂藥。預防中風與心血管事件，建議持續服用。' },
-
-    // --- U, V ---
-    'uric_acid': { level: 'y', title: '🟡 無症狀高尿酸 (Uric Acid)', desc: '若無痛風發作，不建議為了「延緩腎功能惡化」而單純服用降尿酸藥物。' },
-    'vaccine': { level: 'g', title: '✅ 建議施打 (Vaccines)', desc: '流感與肺炎鏈球菌疫苗。減少因嚴重感染引發急性腎損傷的風險。' },
-    'vit_d': { level: 'y', title: '🟡 需監測 (Vitamin D)', desc: '建議由醫師開立活性維生素 D，需定期監測血鈣與血磷濃度。' }
-};
+        'ras': { level: 'g', title: '✅ 基礎護腎 (ACEi/ARB)', desc: '抗蛋白尿首選血壓藥。剛使用 eGFR 微降 30% 內屬正常，不需停藥。' },
+        'panadol': { level: 'g', title: '✅ 相對安全 (Acetaminophen)', desc: '普拿疼成分。在安全劑量下不傷腎，是腎友止痛退燒首選。' },
+        'mycin': { level: 'r', title: '⚠️ 高風險 (Aminoglycosides)', desc: '部分抗生素具腎毒性，看診時請務必主動告知醫師腎功能。' },
+        'antacid': { level: 'y', title: '🟡 需注意 (Antacids)', desc: '避免長期服用含「鋁」或「鎂」的制酸胃藥，腎臟無法代謝恐導致中毒。' },
+        'contrast': { level: 'r', title: '⚠️ 高風險 (Contrast Media)', desc: '含碘顯影劑。eGFR<30 或急性期高風險。檢查前後需補充足夠水分。' },
+        'diuretic': { level: 'y', title: '🟡 需注意 (Diuretics)', desc: '利尿劑。有助消水腫，但若發燒、腹瀉、嘔吐 (Sick Day) 時需暫停以防脫水。' },
+        'enema': { level: 'y', title: '🟡 需告知 (Enema)', desc: '含磷酸鈉的清腸劑可能造成急性磷腎病變，請告知醫師腎病史。' },
+        'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '腸泌素針劑。針對 T2D 合併 CKD，若血糖未達標，推薦優先使用具心血管實證的藥物。' },
+        'herbal': { level: 'r', title: '🛑 絕對禁止 (Herbal Meds)', desc: '來路不明中草藥/黑藥丸。可能含馬兜鈴酸或重金屬，具高度腎毒性。' },
+        'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: '降糖藥。eGFR < 30 必須停用；30-45 需減量。注意乳酸中毒風險。' },
+        'multi_vit': { level: 'y', title: '🟡 需挑選 (Multivitamins)', desc: '市售綜合維他命可能含高磷、高鉀。透析病患建議補充專用水溶性 B 群。' },
+        'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '強效止痛藥。最強烈的腎臟殺手！會收縮入球小動脈，極易造成急性腎損傷。' },
+        'gout_nsaid': { level: 'r', title: '🛑 痛風急性期 (Avoid NSAIDs)', desc: '痛風發作請避免吃強效止痛藥(NSAID)，應優先諮詢醫師使用秋水仙素或類固醇。' },
+        'ns_mra': { level: 'g', title: '✅ 進階護腎 (ns-MRA)', desc: 'Finerenone。針對糖尿病腎病變且仍有蛋白尿者，可抗發炎抗纖維化。' },
+        'ppi': { level: 'y', title: '🟡 需評估 (PPIs)', desc: '特定胃藥。長期使用可能增加慢性腎病進展風險，應定期評估是否需續用。' },
+        'probiotic': { level: 'g', title: '✅ 輔助推薦 (Probiotics)', desc: '腎臟專用益生菌。部分特定菌株證實有助減少腸道尿毒素前驅物。' },
+        'sglt2': { level: 'g', title: '✅ 核心護腎 (SGLT2i)', desc: '排糖藥。eGFR≧20即可使用，能顯著延緩洗腎、保護心臟。生病脫水時需暫停。' },
+        'statins': { level: 'g', title: '✅ 建議使用 (Statins)', desc: '降血脂藥。預防中風與心血管事件，建議持續服用。' },
+        'uric_acid': { level: 'y', title: '🟡 無症狀高尿酸 (Uric Acid)', desc: '若無痛風發作，不建議為了「延緩腎功能惡化」而單純服用降尿酸藥物。' },
+        'vaccine': { level: 'g', title: '✅ 建議施打 (Vaccines)', desc: '流感與肺炎鏈球菌疫苗。減少因嚴重感染引發急性腎損傷的風險。' },
+        'vit_d': { level: 'y', title: '🟡 需監測 (Vitamin D)', desc: '建議由醫師開立活性維生素 D，需定期監測血鈣與血磷濃度。' }
+    };
     const foodDB = {
         'egg': {t:'🟢 綠燈', d:'優質蛋白質，推薦食用。'}, 'tofu': {t:'🟢 綠燈', d:'植物性蛋白，尿毒素少。'}, 'rice_noodle': {t:'🟢 綠燈', d:'低氮澱粉，補充熱量首選。'}, 'rice': {t:'🟢 綠燈', d:'比糙米低磷，適合晚期腎友。'}, 'veg': {t:'🟢 綠燈', d:'低鉀蔬菜，適合食用。'}, 'fruit_low': {t:'🟢 綠燈', d:'低鉀水果，可適量食用。'}, 'oil': {t:'🟢 綠燈', d:'優質好油，保護心血管。'},
         'spinach': {t:'🟡 黃燈', d:'高鉀，請汆燙過再吃。'}, 'brown_rice': {t:'🟡 黃燈', d:'高磷，晚期建議少吃。'}, 'nuts': {t:'🟡 黃燈', d:'磷鉀皆高，一天限 5 顆。'}, 'coffee': {t:'🟡 黃燈', d:'含鉀且利尿，一天一杯。'}, 'banana': {t:'🟡 黃燈', d:'高鉀水果，血鉀高者避免。'},
@@ -599,27 +582,37 @@
         document.querySelectorAll('.nav-item')[idx].classList.add('active');
         window.scrollTo(0,0);
     }
+    
+    // Unified Calculation Logic for Heatmap and KFRE
+    function updateAllRisks() {
+        // 1. Get Values
+        const age = parseFloat(document.getElementById('kfre-age').value);
+        const sex = parseFloat(document.getElementById('kfre-sex').value); // 1=Male, 0=Female
+        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
+        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+        
+        // Ensure all fields are selected before processing
+        if (isNaN(age) || isNaN(sex) || isNaN(egfr) || isNaN(uacr)) {
+            return;
+        }
 
-    function calcRisk() {
-        const egfr = document.getElementById('egfr-input').value;
-        const uacr = document.getElementById('albumin-input').value;
-        if (!egfr) return; 
-
+        // Show result area and hide hint
         document.getElementById('start-hint').classList.add('hidden');
-        document.getElementById('risk-result-area').classList.remove('hidden');
+        document.getElementById('unified-result').classList.remove('hidden');
+
+        // --- Part A: Heatmap Logic ---
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
 
-        const eVal = parseFloat(egfr);
         let row = '5', stageText = '第5期';
-        if (eVal >= 90) { row = '1'; stageText = '第1期'; }
-        else if (eVal >= 60) { row = '2'; stageText = '第2期'; }
-        else if (eVal >= 45) { row = '3a'; stageText = '第3a期'; }
-        else if (eVal >= 30) { row = '3b'; stageText = '第3b期'; }
-        else if (eVal >= 15) { row = '4'; stageText = '第4期'; }
+        if (egfr >= 90) { row = '1'; stageText = '第1期'; }
+        else if (egfr >= 60) { row = '2'; stageText = '第2期'; }
+        else if (egfr >= 45) { row = '3a'; stageText = '第3a期'; }
+        else if (egfr >= 30) { row = '3b'; stageText = '第3b期'; }
+        else if (egfr >= 15) { row = '4'; stageText = '第4期'; }
 
         let col = '1', uacrText = '正常/輕微';
-        if (uacr === 'A2') { col = '2'; uacrText = '微量蛋白尿'; }
-        if (uacr === 'A3') { col = '3'; uacrText = '嚴重蛋白尿'; }
+        if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } // uacr value is numeric now
+        else if (uacr >= 30) { col = '2'; uacrText = '微量蛋白尿'; }
 
         const cellId = `cell-${row}-${col}`;
         const cell = document.getElementById(cellId);
@@ -637,60 +630,109 @@
         document.getElementById('risk-title').innerText = text;
         document.getElementById('risk-desc').innerText = `腎絲球過濾率${stageText} + ${uacrText}`;
 
-        updateMeds(eVal);
-        updateDiet(eVal);
+        // Update other tabs
+        updateMeds(egfr);
+        updateDiet(egfr);
+
+        // --- Part B: KFRE Calculation ---
+        // Tangri 4-variable equation
+        // 2-Year Baseline Survival = 0.9832, 5-Year = 0.9365
+        const logACR = Math.log(uacr);
+        const sum = -0.2201 * (age/10 - 7.036) 
+                  + 0.2467 * (sex - 0.5642) 
+                  - 0.5567 * (egfr/5 - 7.222) 
+                  + 0.4510 * (logACR - 5.137);
+
+        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
+        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
+
+        const p2 = (risk2 * 100).toFixed(1);
+        const p5 = (risk5 * 100).toFixed(1);
+
+        document.getElementById('res-2yr').innerText = p2 + "%";
+        document.getElementById('res-5yr').innerText = p5 + "%";
+
+        // KFRE Advice
+        const adviceBox = document.getElementById('kfre-advice-box');
+        let adviceHTML = "";
+        let adviceBorder = "#ccc";
+
+        if (risk2 >= 0.4) { 
+            adviceBorder = "#d32f2f"; 
+            adviceHTML = `<strong style="color:#d32f2f;">🔴 極高風險 (準備期)</strong><br>建議開始與醫師討論透析模式（洗腎）的選擇，或評估血管通路（廔管）的建立，亦可諮詢腎臟移植的可能性。`;
+        } else if (risk2 >= 0.1) { 
+            adviceBorder = "#f57c00"; 
+            adviceHTML = `<strong style="color:#f57c00;">🟠 高風險 (多學科照護)</strong><br>建議加入「慢性腎臟病整體照護計畫」，由醫師、衛教師、藥師、營養師團隊共同照護，以延緩惡化。`;
+        } else if (risk5 >= 0.03) { 
+            adviceBorder = "#fbc02d"; 
+            adviceHTML = `<strong style="color:#f9a825;">🟡 中度風險 (轉診與追蹤)</strong><br>若尚未在腎臟科就診，建議轉診至腎臟專科確認病因。請務必嚴格控制血壓與血糖。`;
+        } else {
+            adviceBorder = "#388e3c"; 
+            adviceHTML = `<strong style="color:#388e3c;">🟢 低風險 (定期監測)</strong><br>目前惡化風險較低。請維持健康生活型態，每年定期追蹤腎功能與蛋白尿即可。`;
+        }
+
+        if (egfr >= 60) {
+            adviceHTML += `<br><span style="font-size:0.9rem; color:#777; display:block; margin-top:8px;">(註：此公式主要針對 eGFR < 60 之病患設計，您的腎功能尚佳，數值僅供參考。)</span>`;
+        }
+
+        adviceBox.innerHTML = adviceHTML;
+        adviceBox.style.borderLeftColor = adviceBorder;
     }
 
-function updateMeds(egfr) {
-    document.getElementById('med-placeholder').classList.add('hidden');
-    document.getElementById('med-content').classList.remove('hidden');
-    const sel = document.getElementById('egfr-input');
-    const txt = sel.options[sel.selectedIndex].text;
-    const uacr = document.getElementById('albumin-input').value;
-    document.getElementById('med-egfr-val').innerText = txt;
+    function updateMeds(egfr) {
+        document.getElementById('med-placeholder').classList.add('hidden');
+        document.getElementById('med-content').classList.remove('hidden');
+        // Need to map the numeric eGFR back to text for display if needed, or just show value
+        // Simpler to just show the value range description from the select
+        const sel = document.getElementById('kfre-egfr');
+        const txt = sel.options[sel.selectedIndex].text;
+        document.getElementById('med-egfr-val').innerText = txt;
 
-    const g = document.getElementById('list-med-g');
-    const y = document.getElementById('list-med-y');
-    const r = document.getElementById('list-med-r');
-    g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        const uacr = document.getElementById('kfre-uacr').value; // Using numeric value
 
-    function add(list, title, desc) {
-        list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
+        const g = document.getElementById('list-med-g');
+        const y = document.getElementById('list-med-y');
+        const r = document.getElementById('list-med-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+
+        function add(list, title, desc) {
+            list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
+        }
+
+        // --- 🟢 綠燈建議 ---
+        add(g, "RASi (ACEi / ARB)", "第一線護腎血壓藥，尤其是有蛋白尿時。");
+
+        // SGLT2i
+        if (egfr >= 20) {
+            add(g, "SGLT2i (排糖藥)", "強烈建議！可延緩腎功能惡化與心衰竭住院。");
+        } else {
+            add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議「新起始」使用，但若原先已在服用可續用至透析。");
+        }
+
+        // ns-MRA logic (based on uacr value)
+        // 150 represents "Micro" (A2), 500 represents "Macro" (A3)
+        if (egfr > 25 && uacr >= 30) {
+            add(g, "ns-MRA (Finerenone)", "若已用 RASi 仍有蛋白尿，建議諮詢醫師加用此藥。");
+        }
+
+        // Statins
+        add(g, "Statins (降血脂藥)", "預防中風與心血管事件，建議持續服用。");
+
+        // --- 🟡 黃燈建議 ---
+        add(y, "Diuretics (利尿劑)", "生病(拉肚子/發燒)脫水時需「暫停」以防腎損傷。");
+        
+        // Metformin
+        if (egfr < 30) {
+            add(r, "Metformin (降糖藥)", "eGFR < 30 禁用！乳酸中毒風險高。");
+        } else if (egfr < 45) {
+            add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量使用，每日不超過 1000mg。");
+        }
+
+        // --- 🔴 紅燈建議 ---
+        add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！絕對禁止，急性痛風請改用秋水仙素/類固醇。");
+        add(r, "PPI (特定胃藥)", "長期使用可能增加慢性腎病風險，非必要請停用。");
+        add(r, "含碘顯影劑", "檢查前務必告知醫師，並評估是否需補水。");
     }
-
-    // --- 🟢 綠燈建議 ---
-    add(g, "RASi (ACEi / ARB)", "第一線護腎血壓藥，尤其是有蛋白尿時。");
-
-    // SGLT2i
-    if (egfr >= 20) {
-        add(g, "SGLT2i (排糖藥)", "強烈建議！可延緩腎功能惡化與心衰竭住院。");
-    } else {
-        add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議「新起始」使用，但若原先已在服用可續用至透析。");
-    }
-
-    // ns-MRA
-    if (egfr > 25 && (uacr === 'A2' || uacr === 'A3')) {
-        add(g, "ns-MRA (Finerenone)", "若已用 RASi 仍有蛋白尿，建議諮詢醫師加用此藥。");
-    }
-
-    // Statins
-    add(g, "Statins (降血脂藥)", "預防中風與心血管事件，建議持續服用。");
-
-    // --- 🟡 黃燈建議 ---
-    add(y, "Diuretics (利尿劑)", "生病(拉肚子/發燒)脫水時需「暫停」以防腎損傷。");
-    
-    // Metformin
-    if (egfr < 30) {
-        add(r, "Metformin (降糖藥)", "eGFR < 30 禁用！乳酸中毒風險高。");
-    } else if (egfr < 45) {
-        add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量使用，每日不超過 1000mg。");
-    }
-
-    // --- 🔴 紅燈建議 ---
-    add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！絕對禁止，急性痛風請改用秋水仙素/類固醇。");
-    add(r, "PPI (特定胃藥)", "長期使用可能增加慢性腎病風險，非必要請停用。");
-    add(r, "含碘顯影劑", "檢查前務必告知醫師，並評估是否需補水。");
-}
 
     function updateDiet(egfr) {
         document.getElementById('diet-placeholder').classList.add('hidden');
@@ -799,81 +841,6 @@ function updateMeds(egfr) {
             else comment = "💪 加油，多看幾次衛教資訊喔！";
             document.getElementById('score-comment').innerText = comment;
         }
-    }
-    
-    // === 新增：KFRE Calculation Logic (依據 KDIGO 2024) ===
-    function calculateKFRE() {
-        // 1. 獲取數值
-        const age = parseFloat(document.getElementById('kfre-age').value);
-        const sex = parseFloat(document.getElementById('kfre-sex').value); // 1=男, 0=女
-        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
-        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
-
-        // 2. 驗證輸入
-        if (isNaN(age) || isNaN(egfr) || isNaN(uacr)) {
-            alert("請完整填寫所有欄位喔！");
-            return;
-        }
-
-        // 3. 執行 4 變項公式 (Tangri et al. JAMA 2011)
-        const logACR = Math.log(uacr);
-        
-        // 公式係數
-        const sum = -0.2201 * (age/10 - 7.036) 
-                  + 0.2467 * (sex - 0.5642) 
-                  - 0.5567 * (egfr/5 - 7.222) 
-                  + 0.4510 * (logACR - 5.137);
-
-        // 計算絕對風險
-        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
-        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
-
-        const p2 = (risk2 * 100).toFixed(1);
-        const p5 = (risk5 * 100).toFixed(1);
-
-        // 4. 顯示結果
-        document.getElementById('kfre-result').classList.remove('hidden');
-        document.getElementById('res-2yr').innerText = p2 + "%";
-        document.getElementById('res-5yr').innerText = p5 + "%";
-
-        // 5. 產生建議 (KDIGO 2024 Risk-based Criteria)
-        const adviceBox = document.getElementById('kfre-advice-box');
-        let adviceHTML = "";
-        let borderColor = "#ccc";
-
-        if (risk2 >= 0.4) { // 2年風險 > 40%
-            borderColor = "#d32f2f"; // 紅
-            adviceHTML = `
-                <strong style="color:#d32f2f;">🔴 極高風險 (準備期)</strong><br>
-                建議開始與醫師討論透析模式（洗腎）的選擇，或評估血管通路（廔管）的建立，亦可諮詢腎臟移植的可能性。
-            `;
-        } else if (risk2 >= 0.1) { // 2年風險 > 10%
-            borderColor = "#f57c00"; // 橘
-            adviceHTML = `
-                <strong style="color:#f57c00;">🟠 高風險 (多學科照護)</strong><br>
-                建議加入「慢性腎臟病整體照護計畫」，由醫師、衛教師、藥師、營養師團隊共同照護，以延緩惡化。
-            `;
-        } else if (risk5 >= 0.03) { // 5年風險 > 3%
-            borderColor = "#fbc02d"; // 黃
-            adviceHTML = `
-                <strong style="color:#f9a825;">🟡 中度風險 (轉診與追蹤)</strong><br>
-                若尚未在腎臟科就診，建議轉診至腎臟專科確認病因。請務必嚴格控制血壓與血糖。
-            `;
-        } else {
-            borderColor = "#388e3c"; // 綠
-            adviceHTML = `
-                <strong style="color:#388e3c;">🟢 低風險 (定期監測)</strong><br>
-                目前惡化風險較低。請維持健康生活型態，每年定期追蹤腎功能與蛋白尿即可。
-            `;
-        }
-
-        // 額外提示
-        if (egfr >= 60) {
-            adviceHTML += `<br><span style="font-size:0.9rem; color:#777; display:block; margin-top:8px;">(註：此公式主要針對 eGFR < 60 之病患設計，您的腎功能尚佳，數值僅供參考。)</span>`;
-        }
-
-        adviceBox.innerHTML = adviceHTML;
-        adviceBox.style.borderLeftColor = borderColor;
     }
     
     initQuiz();
