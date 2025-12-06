@@ -686,30 +686,37 @@
         document.getElementById('res-5yr').innerText = p5 + "%";
 
         // KFRE Advice
-        const adviceBox = document.getElementById('kfre-advice-box');
+const adviceBox = document.getElementById('kfre-advice-box');
         let adviceHTML = "";
         let adviceBorder = "#ccc";
 
+        // 我們依然根據機率高低來決定「建議內容」的急迫性，但不再顯示「中度/高度風險」等文字
         if (risk2 >= 0.4) { 
-            adviceBorder = "#d32f2f"; 
-            adviceHTML = `<strong style="color:#d32f2f;">🔴 極高風險 (準備期)</strong><br>建議開始與醫師討論透析模式（洗腎）的選擇，或評估血管通路（廔管）的建立，亦可諮詢腎臟移植的可能性。`;
+            // 2年內洗腎機率 > 40% -> 給予最積極的建議
+            adviceBorder = "#d32f2f"; // 紅色邊框表示重要
+            adviceHTML = `您的相關數值顯示腎功能衰退風險較高。建議開始與醫師討論透析模式（洗腎）的選擇，或評估血管通路（廔管）的建立，亦可諮詢腎臟移植的可能性。`;
         } else if (risk2 >= 0.1) { 
-            adviceBorder = "#f57c00"; 
-            adviceHTML = `<strong style="color:#f57c00;">🟠 高風險 (多學科照護)</strong><br>建議加入「慢性腎臟病整體照護計畫」，由醫師、衛教師、藥師、營養師團隊共同照護，以延緩惡化。`;
+            // 2年內機率 > 10%
+            adviceBorder = "#f57c00"; // 橘色邊框
+            adviceHTML = `建議加入「慢性腎臟病整體照護計畫」，由醫師、衛教師、藥師、營養師團隊共同照護，以延緩腎功能惡化。`;
         } else if (risk5 >= 0.03) { 
-            adviceBorder = "#fbc02d"; 
-            adviceHTML = `<strong style="color:#f9a825;">🟡 中度風險 (轉診與追蹤)</strong><br>若尚未在腎臟科就診，建議轉診至腎臟專科確認病因。請務必嚴格控制血壓與血糖。`;
+            // 5年內機率 > 3%
+            adviceBorder = "#fbc02d"; // 黃色邊框
+            adviceHTML = `若尚未在腎臟科就診，建議轉診至腎臟專科確認病因。請務必嚴格控制血壓與血糖，並定期追蹤。`;
         } else {
-            adviceBorder = "#388e3c"; 
-            adviceHTML = `<strong style="color:#388e3c;">🟢 低風險 (定期監測)</strong><br>目前惡化風險較低。請維持健康生活型態，每年定期追蹤腎功能與蛋白尿即可。`;
+            // 低風險
+            adviceBorder = "#388e3c"; // 綠色邊框
+            adviceHTML = `目前短期內演變至洗腎的機率較低。請維持健康生活型態，每年定期追蹤腎功能與蛋白尿即可。`;
         }
 
+        // 針對 eGFR 較高但仍想計算的人保留備註
         if (egfr >= 60) {
             adviceHTML += `<br><span style="font-size:0.9rem; color:#777; display:block; margin-top:8px;">(註：此公式主要針對 eGFR < 60 之病患設計，您的腎功能尚佳，數值僅供參考。)</span>`;
         }
 
         adviceBox.innerHTML = adviceHTML;
         adviceBox.style.borderLeftColor = adviceBorder;
+        //▲▲▲ 修改結束 ▲▲▲
     }
 
     function updateMeds(egfr) {
@@ -917,5 +924,6 @@ function updateProteinIntake() {
 </script>
 </body>
 </html>
+
 
 
