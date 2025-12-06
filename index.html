@@ -419,6 +419,20 @@
             <div id="diet-content" class="hidden">
                 <div class="list-card" style="border-color: var(--risk-g);">
                     <div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
+                    <div id="protein-calc-display" style="margin: 10px; padding: 12px; background-color: #f0fdf4; border: 1px dashed #16a34a; border-radius: 8px; display: none;">
+                  <p style="margin: 0; font-size: 1.1rem; color: #374151;">
+                      體重 <span id="display-weight" style="font-weight: bold;">--</span> kg，建議每日蛋白質：
+                  </p>
+                  <div style="display: flex; align-items: baseline; margin-top: 5px;">
+                      <span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
+                      <span style="margin: 0 5px;">~</span>
+                      <span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
+                      <span style="margin-left: 5px; font-size: 1rem;">克</span>
+                  </div>
+                  <p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">
+                      (約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)
+                  </p>
+              </div>
                     <div class="list-body" id="list-diet-g"></div>
                 </div>
                 <div class="list-card" style="border-color: var(--risk-y);">
@@ -581,6 +595,9 @@
         const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
         document.querySelectorAll('.nav-item')[idx].classList.add('active');
         window.scrollTo(0,0);
+        if (id === 'diet') {
+      updateProteinIntake();
+  }
     }
     
     // Unified Calculation Logic for Heatmap and KFRE
@@ -843,7 +860,45 @@
         }
     }
     
+    // --- 新增功能：計算蛋白質攝取量 ---
+function updateProteinIntake() {
+    // 1. 嘗試從 localStorage 讀取使用者資料 (假設首頁存了 'userWeight' 和 'ckdStage')
+    // 如果您的變數名稱不同，請在這裡修改
+    var weight = parseFloat(localStorage.getItem('userWeight'));
+    var stage = localStorage.getItem('ckdStage'); 
+
+    var displayDiv = document.getElementById('protein-calc-display');
+    
+    // 如果沒有體重資料，就隱藏這個區塊
+    if (!weight || isNaN(weight)) {
+        if(displayDiv) displayDiv.style.display = 'none';
+        return;
+    }
+
+    // 2. 設定係數 (CKD 3-5期低蛋白0.6-0.8，其他正常0.8-1.0)
+    var factorMin = 0.8, factorMax = 1.0;
+    if (stage && (stage.includes('3') || stage.includes('4') || stage.includes('5'))) {
+        factorMin = 0.6; factorMax = 0.8;
+    }
+    // 如果有透析(洗腎)通常蛋白質要增加，若有此需求可再調整係數
+
+    // 3. 計算數值
+    var pMin = (weight * factorMin).toFixed(1);
+    var pMax = (weight * factorMax).toFixed(1);
+    // 一份蛋白質約7克，取平均值計算份數
+    var portions = Math.round((weight * (factorMin + factorMax) / 2) / 7);
+
+    // 4. 填入數值並顯示
+    document.getElementById('display-weight').innerText = weight;
+    document.getElementById('display-protein-min').innerText = pMin;
+    document.getElementById('display-protein-max').innerText = pMax;
+    document.getElementById('display-protein-portions').innerText = portions;
+    
+    if(displayDiv) displayDiv.style.display = 'block';
+}
+    
     initQuiz();
 </script>
 </body>
 </html>
+
