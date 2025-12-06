@@ -256,38 +256,32 @@
 <div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
             <p style="font-size: 0.9rem; color:#666;">不確定藥品風險？請在此查詢</p>
-            <div class="select-wrapper">
-                <select id="med-select" onchange="checkMed()">
-                    <option value="">🔍 請選擇查詢項目...</option>
-                    <optgroup label="危險 / 禁止 / 需特別注意">
-                        <option value="nsaid">強效止痛藥 (NSAIDs)</option>
-                        <option value="herbal">來路不明中草藥/黑藥丸</option>
-                        <option value="contrast">含碘顯影劑 (檢查)</option>
-                        <option value="mycin">部分抗生素 (Aminoglycosides)</option>
-                        <option value="starfruit_j">楊桃汁/楊桃乾</option>
-                        <option value="smoking">吸菸 (尼古丁)</option>
-                        <option value="hold_urine">長期憋尿</option>
-                    </optgroup>
-                    <optgroup label="謹慎 / 需監測 / 適量">
-                        <option value="diuretic">利尿劑 (Diuretics)</option>
-                        <option value="metformin">降糖藥 (Metformin)</option>
-                        <option value="vit_d">維生素 D (鈣磷平衡)</option>
-                        <option value="multi_vit">綜合維他命</option>
-                        <option value="enema">清腸劑 (大腸鏡)</option>
-                        <option value="antacid">含鋁胃藥/制酸劑</option>
-                        <option value="dehydration">喝水不足/脫水</option>
-                        <option value="constipation">長期便秘</option>
-                    </optgroup>
-                    <optgroup label="推薦 / 安全 / 護腎">
-                        <option value="sglt2">排糖藥 (SGLT2i)</option>
-                        <option value="ras">血壓藥 (ACEi/ARB)</option>
-                        <option value="panadol">普拿疼 (Acetaminophen)</option>
-                        <option value="probiotic">腎臟專用益生菌</option>
-                        <option value="bp_check">每日量血壓</option>
-                        <option value="vaccine">疫苗接種 (流感/肺鏈)</option>
-                    </optgroup>
-                </select>
-            </div>
+<div class="select-wrapper">
+    <select id="med-select" onchange="checkMed()">
+        <option value="">🔍 請選擇藥物名稱...</option>
+        <option value="ras">ACEi / ARB (血壓藥)</option>
+        <option value="panadol">Acetaminophen (普拿疼)</option>
+        <option value="mycin">Aminoglycosides (部分抗生素)</option>
+        <option value="antacid">Antacids (含鋁鎂胃藥)</option>
+        <option value="contrast">Contrast Media (含碘顯影劑)</option>
+        <option value="diuretic">Diuretics (利尿劑)</option>
+        <option value="enema">Enema (清腸劑)</option>
+        <option value="ns_mra">Finerenone (ns-MRA)</option>
+        <option value="glp1">GLP-1 RA (腸泌素針劑)</option>
+        <option value="herbal">Herbal / Unknown (中草藥/黑藥丸)</option>
+        <option value="metformin">Metformin (二甲雙胍降糖藥)</option>
+        <option value="multi_vit">Multivitamins (綜合維他命)</option>
+        <option value="nsaid">NSAIDs (強效止痛藥)</option>
+        <option value="gout_nsaid">NSAIDs (痛風發作時)</option>
+        <option value="ppi">PPIs (質子幫浦抑制劑胃藥)</option>
+        <option value="probiotic">Probiotics (腎臟益生菌)</option>
+        <option value="sglt2">SGLT2i (排糖藥)</option>
+        <option value="statins">Statins (降血脂藥)</option>
+        <option value="uric_acid">Uric Acid Meds (降尿酸藥)</option>
+        <option value="vaccine">Vaccines (疫苗)</option>
+        <option value="vit_d">Vitamin D (活性維生素D)</option>
+    </select>
+</div>
             
             <div class="traffic-container">
                 <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div>
@@ -296,7 +290,56 @@
             </div>
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
+        
         <div class="card">
+            <div class="card" style="border: 3px solid #ff9800; background: #fff3e0;">
+            <h2 style="color:#e65100; border-bottom-color:#ffcc80; margin-bottom:15px;">🤢 生病日停藥守則</h2>
+            
+            <div style="background:white; border-radius:15px; padding:15px; margin-bottom:20px; border:2px dashed #ffb74d;">
+               
+                <p style="font-size:0.9rem; color:#e65100; margin:5px 0 0 0; font-weight:bold;">
+                    口訣：SADMANS (悲傷男人)
+                </p>
+            </div>
+
+            <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">
+                當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況（如：發燒、嚴重嘔吐、腹瀉）無法進食喝水時，請<span style="color:red; font-size:1.5rem; vertical-align:middle;">暫停</span>以下藥物：
+            </p>
+
+            <div style="text-align:left; display:grid; grid-template-columns: 1fr; gap:10px;">
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>S</strong>ulfonylureas <span style="font-size:0.9rem; color:#666; float:right;">(促胰島素降糖藥)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>A</strong>CEi <span style="font-size:0.9rem; color:#666; float:right;">(普利類血壓藥)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>D</strong>iuretics <span style="font-size:0.9rem; color:#666; float:right;">(利尿劑)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>M</strong>etformin <span style="font-size:0.9rem; color:#666; float:right;">(美福明降糖藥)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>A</strong>RBs <span style="font-size:0.9rem; color:#666; float:right;">(沙坦類血壓藥)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>N</strong>SAIDs <span style="font-size:0.9rem; color:#666; float:right;">(強效止痛藥)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
+                    💊 <strong>S</strong>GLT2i <span style="font-size:0.9rem; color:#666; float:right;">(排糖藥)</span>
+                </div>
+            </div>
+            
+            <div style="background:rgba(255,255,255,0.6); padding:15px; border-radius:10px; margin-top:20px; border-left:5px solid #e65100; text-align:left;">
+                <p style="font-size:1rem; color:#bf360c; margin:0; font-weight:bold;">
+                    💡 恢復守則：
+                </p>
+                <p style="font-size:0.95rem; color:#444; margin:5px 0 0 0;">
+                    一旦您<strong>恢復正常飲食</strong>，請記得恢復服用上述藥物 (NSAIDs 除外)。若不確定，請務必諮詢醫師或藥師。
+                </p>
+            </div>
+        </div>
+            
             <h2>🔍 不清楚用什麼藥？</h2>
             <div style="display:flex; gap:15px;">
                 <button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 諮詢藥師</button>
@@ -431,35 +474,39 @@
 
     // --- DB ---
     const medDB = {
-// --- 🔴 紅燈區 (原有 + 更新) ---
-    'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！會收縮入球小動脈，極易造成急性腎損傷。' },
-    'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸或含馬兜鈴酸藥材，具高度腎毒性。' },
-    'contrast': { level: 'r', title: '⚠️ 高風險 (含碘顯影劑)', desc: 'eGFR<30 或急性期高風險。檢查前後需補充足夠水分。' },
-    // 2024指引強調：痛風急性期避免 NSAID，首選秋水仙素或類固醇
-    'gout_nsaid': { level: 'r', title: '🛑 痛風急性期', desc: '痛風發作請避免吃強效止痛藥(NSAID)，應優先諮詢醫師使用秋水仙素或類固醇。' },
+// --- A 開頭 ---
+    'ras': { level: 'g', title: '✅ 基礎護腎 (ACEi/ARB)', desc: '抗蛋白尿首選血壓藥。剛使用 eGFR 微降 30% 內屬正常，不需停藥。' },
+    'panadol': { level: 'g', title: '✅ 相對安全 (Acetaminophen)', desc: '普拿疼成分。在安全劑量下不傷腎，是腎友止痛退燒首選。' },
+    'mycin': { level: 'r', title: '⚠️ 高風險 (Aminoglycosides)', desc: '部分抗生素具腎毒性，看診時請務必主動告知醫師腎功能。' },
+    'antacid': { level: 'y', title: '🟡 需注意 (Antacids)', desc: '避免長期服用含「鋁」或「鎂」的制酸胃藥，腎臟無法代謝恐導致中毒。' },
 
-    // --- 🟡 黃燈區 (原有 + 更新) ---
-    'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: 'eGFR < 30 必須停用；30-45 需減量。注意乳酸中毒風險。' },
-    'diuretic': { level: 'y', title: '🟡 需注意 (利尿劑)', desc: '有助消水腫，但若發燒、腹瀉、嘔吐 (Sick Day) 時需暫停以防脫水。' },
-    'ppi': { level: 'y', title: '🟡 需評估 (胃藥 PPI)', desc: '長期使用可能增加慢性腎病進展風險，應定期評估是否需續用。' },
-    // 2024指引：無症狀高尿酸不建議常規治療
-    'uric_acid': { level: 'y', title: '🟡 無症狀高尿酸', desc: '若無痛風發作，不建議為了「延緩腎功能惡化」而服用降尿酸藥物。' },
+    // --- C, D, E ---
+    'contrast': { level: 'r', title: '⚠️ 高風險 (Contrast Media)', desc: '含碘顯影劑。eGFR<30 或急性期高風險。檢查前後需補充足夠水分。' },
+    'diuretic': { level: 'y', title: '🟡 需注意 (Diuretics)', desc: '利尿劑。有助消水腫，但若發燒、腹瀉、嘔吐 (Sick Day) 時需暫停以防脫水。' },
+    'enema': { level: 'y', title: '🟡 需告知 (Enema)', desc: '含磷酸鈉的清腸劑可能造成急性磷腎病變，請告知醫師腎病史。' },
 
-    // --- 🟢 綠燈區 (核心治療更新) ---
-    // SGLT2i 2024指引：eGFR>=20 即可起始，且可續用至透析
-    'sglt2': { level: 'g', title: '✅ 核心護腎 (SGLT2i)', desc: '排糖藥。eGFR≧20即可使用，能顯著延緩洗腎、保護心臟。生病脫水時需暫停。' },
-    'ras': { level: 'g', title: '✅ 基礎護腎 (ACEi/ARB)', desc: '抗蛋白尿首選。剛使用 eGFR 微降 30% 內屬正常，不需停藥。' },
-    // 新增：ns-MRA (Finerenone)
+    // --- G, H, M ---
+    'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '腸泌素針劑。針對 T2D 合併 CKD，若血糖未達標，推薦優先使用具心血管實證的藥物。' },
+    'herbal': { level: 'r', title: '🛑 絕對禁止 (Herbal Meds)', desc: '來路不明中草藥/黑藥丸。可能含馬兜鈴酸或重金屬，具高度腎毒性。' },
+    'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: '降糖藥。eGFR < 30 必須停用；30-45 需減量。注意乳酸中毒風險。' },
+    'multi_vit': { level: 'y', title: '🟡 需挑選 (Multivitamins)', desc: '市售綜合維他命可能含高磷、高鉀。透析病患建議補充專用水溶性 B 群。' },
+
+    // --- N ---
+    'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '強效止痛藥。最強烈的腎臟殺手！會收縮入球小動脈，極易造成急性腎損傷。' },
+    'gout_nsaid': { level: 'r', title: '🛑 痛風急性期 (Avoid NSAIDs)', desc: '痛風發作請避免吃強效止痛藥(NSAID)，應優先諮詢醫師使用秋水仙素或類固醇。' },
     'ns_mra': { level: 'g', title: '✅ 進階護腎 (ns-MRA)', desc: 'Finerenone。針對糖尿病腎病變且仍有蛋白尿者，可抗發炎抗纖維化。' },
-    // 新增：GLP-1 RA
-    'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '針對 T2D 合併 CKD，若血糖未達標，推薦優先使用具心血管實證的針劑。' },
-    
-    // --- 原有保留 ---
-    'panadol': { level: 'g', title: '✅ 相對安全 (普拿疼)', desc: 'Acetaminophen 在安全劑量下不傷腎，是止痛退燒首選。' },
-    'bp_check': { level: 'g', title: '✅ 每日功課 (量血壓)', desc: '目標 < 120 mmHg (標準化測量)，是延緩惡化最關鍵因素。' },
-    'vaccine': { level: 'g', title: '✅ 建議施打 (疫苗)', desc: '流感與肺炎鏈球菌疫苗，減少感染誘發急性腎損傷風險。' }
-    };
 
+    // --- P, S ---
+    'ppi': { level: 'y', title: '🟡 需評估 (PPIs)', desc: '特定胃藥。長期使用可能增加慢性腎病進展風險，應定期評估是否需續用。' },
+    'probiotic': { level: 'g', title: '✅ 輔助推薦 (Probiotics)', desc: '腎臟專用益生菌。部分特定菌株證實有助減少腸道尿毒素前驅物。' },
+    'sglt2': { level: 'g', title: '✅ 核心護腎 (SGLT2i)', desc: '排糖藥。eGFR≧20即可使用，能顯著延緩洗腎、保護心臟。生病脫水時需暫停。' },
+    'statins': { level: 'g', title: '✅ 建議使用 (Statins)', desc: '降血脂藥。預防中風與心血管事件，建議持續服用。' },
+
+    // --- U, V ---
+    'uric_acid': { level: 'y', title: '🟡 無症狀高尿酸 (Uric Acid)', desc: '若無痛風發作，不建議為了「延緩腎功能惡化」而單純服用降尿酸藥物。' },
+    'vaccine': { level: 'g', title: '✅ 建議施打 (Vaccines)', desc: '流感與肺炎鏈球菌疫苗。減少因嚴重感染引發急性腎損傷的風險。' },
+    'vit_d': { level: 'y', title: '🟡 需監測 (Vitamin D)', desc: '建議由醫師開立活性維生素 D，需定期監測血鈣與血磷濃度。' }
+};
     const foodDB = {
         'egg': {t:'🟢 綠燈', d:'優質蛋白質，推薦食用。'}, 'tofu': {t:'🟢 綠燈', d:'植物性蛋白，尿毒素少。'}, 'rice_noodle': {t:'🟢 綠燈', d:'低氮澱粉，補充熱量首選。'}, 'rice': {t:'🟢 綠燈', d:'比糙米低磷，適合晚期腎友。'}, 'veg': {t:'🟢 綠燈', d:'低鉀蔬菜，適合食用。'}, 'fruit_low': {t:'🟢 綠燈', d:'低鉀水果，可適量食用。'}, 'oil': {t:'🟢 綠燈', d:'優質好油，保護心血管。'},
         'spinach': {t:'🟡 黃燈', d:'高鉀，請汆燙過再吃。'}, 'brown_rice': {t:'🟡 黃燈', d:'高磷，晚期建議少吃。'}, 'nuts': {t:'🟡 黃燈', d:'磷鉀皆高，一天限 5 顆。'}, 'coffee': {t:'🟡 黃燈', d:'含鉀且利尿，一天一杯。'}, 'banana': {t:'🟡 黃燈', d:'高鉀水果，血鉀高者避免。'},
@@ -530,34 +577,56 @@
         updateDiet(eVal);
     }
 
-    function updateMeds(egfr) {
-        document.getElementById('med-placeholder').classList.add('hidden');
-        document.getElementById('med-content').classList.remove('hidden');
-        const sel = document.getElementById('egfr-input');
-        const txt = sel.options[sel.selectedIndex].text;
-        document.getElementById('med-egfr-val').innerText = txt;
+function updateMeds(egfr) {
+    document.getElementById('med-placeholder').classList.add('hidden');
+    document.getElementById('med-content').classList.remove('hidden');
+    const sel = document.getElementById('egfr-input');
+    const txt = sel.options[sel.selectedIndex].text;
+    const uacr = document.getElementById('albumin-input').value;
+    document.getElementById('med-egfr-val').innerText = txt;
 
-        const g = document.getElementById('list-med-g');
-        const y = document.getElementById('list-med-y');
-        const r = document.getElementById('list-med-r');
-        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+    const g = document.getElementById('list-med-g');
+    const y = document.getElementById('list-med-y');
+    const r = document.getElementById('list-med-r');
+    g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
 
-        function add(list, title, desc) {
-            list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
-        }
-
-        add(g, "ACEi / ARB (血壓藥)", "降低蛋白尿，延緩惡化首選。");
-        add(g, "SGLT2 抑制劑 (排糖藥)", "國際強推，保護心臟與腎臟。");
-        add(g, "Statins (降血脂藥)", "預防血管阻塞與中風。");
-        add(y, "Diuretics (利尿劑)", "拉肚子/脫水時需評估暫停。");
-        add(y, "抗生素 (Antibiotics)", "看診請主動告知醫師腎功能。");
-        add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！易導致急性衰竭。");
-        add(r, "來路不明中草藥", "可能含重金屬/馬兜鈴酸，禁止。");
-        add(r, "含碘顯影劑 (CT)", "檢查前告知醫師，事後多喝水。");
-
-        if (egfr < 30) add(r, "Metformin (降糖藥)", "eGFR < 30 禁止使用 (乳酸中毒風險)。");
-        else if (egfr < 45) add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量小心使用。");
+    function add(list, title, desc) {
+        list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`;
     }
+
+    // --- 🟢 綠燈建議 ---
+    add(g, "RASi (ACEi / ARB)", "第一線護腎血壓藥，尤其是有蛋白尿時。");
+
+    // SGLT2i
+    if (egfr >= 20) {
+        add(g, "SGLT2i (排糖藥)", "強烈建議！可延緩腎功能惡化與心衰竭住院。");
+    } else {
+        add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議「新起始」使用，但若原先已在服用可續用至透析。");
+    }
+
+    // ns-MRA
+    if (egfr > 25 && (uacr === 'A2' || uacr === 'A3')) {
+        add(g, "ns-MRA (Finerenone)", "若已用 RASi 仍有蛋白尿，建議諮詢醫師加用此藥。");
+    }
+
+    // Statins
+    add(g, "Statins (降血脂藥)", "預防中風與心血管事件，建議持續服用。");
+
+    // --- 🟡 黃燈建議 ---
+    add(y, "Diuretics (利尿劑)", "生病(拉肚子/發燒)脫水時需「暫停」以防腎損傷。");
+    
+    // Metformin
+    if (egfr < 30) {
+        add(r, "Metformin (降糖藥)", "eGFR < 30 禁用！乳酸中毒風險高。");
+    } else if (egfr < 45) {
+        add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量使用，每日不超過 1000mg。");
+    }
+
+    // --- 🔴 紅燈建議 ---
+    add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！絕對禁止，急性痛風請改用秋水仙素/類固醇。");
+    add(r, "PPI (特定胃藥)", "長期使用可能增加慢性腎病風險，非必要請停用。");
+    add(r, "含碘顯影劑", "檢查前務必告知醫師，並評估是否需補水。");
+}
 
     function updateDiet(egfr) {
         document.getElementById('diet-placeholder').classList.add('hidden');
@@ -671,6 +740,7 @@
 </script>
 </body>
 </html>
+
 
 
 
