@@ -431,27 +431,33 @@
 
     // --- DB ---
     const medDB = {
-        'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！這類止痛藥會收縮入球小動脈，極易造成急性腎損傷。' },
-        'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸或含馬兜鈴酸藥材，是台灣洗腎主因之一。' },
-        'contrast': { level: 'r', title: '⚠️ 高風險 (顯影劑)', desc: '做 CT 檢查前請務必告知醫師您的 eGFR。檢查後需大量喝水幫助代謝。' },
-        'mycin': { level: 'r', title: '⚠️ 高風險 (抗生素)', desc: '某些抗生素具腎毒性，使用時需監測藥物濃度。' },
-        'starfruit_j': { level: 'r', title: '🛑 絕對禁止 (楊桃)', desc: '楊桃含神經毒素，腎友無法排出，會導致打嗝、癲癇甚至昏迷。' },
-        'smoking': { level: 'r', title: '🛑 建議戒除 (吸菸)', desc: '尼古丁會收縮腎臟血管，加速腎絲球硬化。' },
-        'hold_urine': { level: 'r', title: '🛑 壞習慣 (憋尿)', desc: '易引發泌尿道感染，細菌逆行向上恐導致腎盂腎炎。' },
-        'diuretic': { level: 'y', title: '🟡 需注意 (利尿劑)', desc: '有助消水腫，但若脫水或生病 (Sick Day) 時需評估暫停。' },
-        'metformin': { level: 'y', title: '🟡 需注意 (降糖藥)', desc: 'eGFR < 30 分時通常需停用，以免發生乳酸中毒。' },
-        'vit_d': { level: 'y', title: '🟡 需監測 (維生素D)', desc: '建議由醫師開立活性維生素 D，需定期監測血鈣與血磷濃度。' },
-        'multi_vit': { level: 'y', title: '🟡 需挑選 (綜合維他命)', desc: '市售產品可能含高磷、高鉀。透析病患建議補充專用水溶性 B 群。' },
-        'enema': { level: 'y', title: '🟡 需告知 (清腸劑)', desc: '含磷酸鈉的清腸劑可能造成急性磷腎病變。' },
-        'antacid': { level: 'y', title: '🟡 需注意 (胃藥)', desc: '避免長期服用含「鋁」或「鎂」的制酸劑，腎臟無法代謝恐中毒。' },
-        'dehydration': { level: 'y', title: '🟡 需喝水 (脫水)', desc: '除非醫師限水，否則飲水不足會減少腎臟血流。' },
-        'constipation': { level: 'y', title: '🟡 需改善 (便秘)', desc: '便秘會增加腸道尿毒素的吸收，加重腎臟負擔。' },
-        'sglt2': { level: 'g', title: '✅ 強力推薦 (排糖藥)', desc: '新一代護腎神藥！能顯著延緩洗腎時間並保護心臟。' },
-        'ras': { level: 'g', title: '✅ 強力推薦 (ACEi/ARB)', desc: '雖短期可能讓 eGFR 微降，但長期能減少蛋白尿，是核心護腎藥物。' },
-        'panadol': { level: 'g', title: '✅ 相對安全 (普拿疼)', desc: '若需止痛退燒，Acetaminophen 在安全劑量下不傷腎，是首選。' },
-        'probiotic': { level: 'g', title: '✅ 輔助推薦 (益生菌)', desc: '部分特定菌株證實有助減少腸道尿毒素前驅物。' },
-        'bp_check': { level: 'g', title: '✅ 必要行為 (量血壓)', desc: '控制血壓 (<130/80) 是延緩洗腎最重要的一件事。' },
-        'vaccine': { level: 'g', title: '✅ 建議施打 (疫苗)', desc: '預防流感與肺炎，減少因嚴重感染引發急性腎損傷的風險。' }
+// --- 🔴 紅燈區 (原有 + 更新) ---
+    'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '最強烈的腎臟殺手！會收縮入球小動脈，極易造成急性腎損傷 [cite: 725]。' },
+    'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明的黑藥丸或含馬兜鈴酸藥材，具高度腎毒性 [cite: 746]。' },
+    'contrast': { level: 'r', title: '⚠️ 高風險 (含碘顯影劑)', desc: 'eGFR<30 或急性期高風險。檢查前後需補充足夠水分 [cite: 815]。' },
+    // 2024指引強調：痛風急性期避免 NSAID，首選秋水仙素或類固醇
+    'gout_nsaid': { level: 'r', title: '🛑 痛風急性期', desc: '痛風發作請避免吃強效止痛藥(NSAID)，應優先諮詢醫師使用秋水仙素或類固醇 [cite: 760]。' },
+
+    // --- 🟡 黃燈區 (原有 + 更新) ---
+    'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: 'eGFR < 30 必須停用；30-45 需減量。注意乳酸中毒風險 [cite: 736]。' },
+    'diuretic': { level: 'y', title: '🟡 需注意 (利尿劑)', desc: '有助消水腫，但若發燒、腹瀉、嘔吐 (Sick Day) 時需暫停以防脫水 [cite: 1202]。' },
+    'ppi': { level: 'y', title: '🟡 需評估 (胃藥 PPI)', desc: '長期使用可能增加慢性腎病進展風險，應定期評估是否需續用 [cite: 733]。' },
+    // 2024指引：無症狀高尿酸不建議常規治療
+    'uric_acid': { level: 'y', title: '🟡 無症狀高尿酸', desc: '若無痛風發作，不建議為了「延緩腎功能惡化」而服用降尿酸藥物 [cite: 1362]。' },
+
+    // --- 🟢 綠燈區 (核心治療更新) ---
+    // SGLT2i 2024指引：eGFR>=20 即可起始，且可續用至透析
+    'sglt2': { level: 'g', title: '✅ 核心護腎 (SGLT2i)', desc: '排糖藥。eGFR≧20即可使用，能顯著延緩洗腎、保護心臟。生病脫水時需暫停 [cite: 1210]。' },
+    'ras': { level: 'g', title: '✅ 基礎護腎 (ACEi/ARB)', desc: '抗蛋白尿首選。剛使用 eGFR 微降 30% 內屬正常，不需停藥 [cite: 1196]。' },
+    // 新增：ns-MRA (Finerenone)
+    'ns_mra': { level: 'g', title: '✅ 進階護腎 (ns-MRA)', desc: 'Finerenone。針對糖尿病腎病變且仍有蛋白尿者，可抗發炎抗纖維化 [cite: 1352]。' },
+    // 新增：GLP-1 RA
+    'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '針對 T2D 合併 CKD，若血糖未達標，推薦優先使用具心血管實證的針劑 [cite: 1353]。' },
+    
+    // --- 原有保留 ---
+    'panadol': { level: 'g', title: '✅ 相對安全 (普拿疼)', desc: 'Acetaminophen 在安全劑量下不傷腎，是止痛退燒首選。' },
+    'bp_check': { level: 'g', title: '✅ 每日功課 (量血壓)', desc: '目標 < 120 mmHg (標準化測量)，是延緩惡化最關鍵因素 [cite: 1189]。' },
+    'vaccine': { level: 'g', title: '✅ 建議施打 (疫苗)', desc: '流感與肺炎鏈球菌疫苗，減少感染誘發急性腎損傷風險。' }
     };
 
     const foodDB = {
@@ -665,5 +671,6 @@
 </script>
 </body>
 </html>
+
 
 
