@@ -208,6 +208,12 @@
                     </select>
                 </div>
             </div>
+            
+            <div class="input-group">
+                <label>體重 (公斤)</label>
+                <input type="number" id="kfre-weight" placeholder="請輸入體重..." onchange="updateAllRisks()" 
+                       style="width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.2rem; outline: none; font-weight: bold; color: #222;">
+            </div>
 
             <div class="input-group">
                 <label>3. 腎功能 (eGFR)</label>
@@ -600,7 +606,7 @@
   }
     }
     
-    // Unified Calculation Logic for Heatmap and KFRE
+// Unified Calculation Logic for Heatmap and KFRE
     function updateAllRisks() {
         // 1. Get Values
         const age = parseFloat(document.getElementById('kfre-age').value);
@@ -608,7 +614,15 @@
         const egfr = parseFloat(document.getElementById('kfre-egfr').value);
         const uacr = parseFloat(document.getElementById('kfre-uacr').value);
         
+        // ▼▼▼ 新增：取得體重並儲存 ▼▼▼
+        const weight = parseFloat(document.getElementById('kfre-weight').value);
+        if (weight && !isNaN(weight)) {
+            localStorage.setItem('userWeight', weight); // 存入體重供飲食頁使用
+        }
+        // ▲▲▲ 新增結束 ▲▲▲
+        
         // Ensure all fields are selected before processing
+        // (注意：這裡不強制檢查 weight，以免使用者只是想看風險還沒輸體重時程式卡住)
         if (isNaN(age) || isNaN(sex) || isNaN(egfr) || isNaN(uacr)) {
             return;
         }
@@ -626,9 +640,13 @@
         else if (egfr >= 45) { row = '3a'; stageText = '第3a期'; }
         else if (egfr >= 30) { row = '3b'; stageText = '第3b期'; }
         else if (egfr >= 15) { row = '4'; stageText = '第4期'; }
+        
+        // ▼▼▼ 新增：儲存 CKD 分期 ▼▼▼
+        localStorage.setItem('ckdStage', row); 
+        // ▲▲▲ 新增結束 ▲▲▲
 
         let col = '1', uacrText = '正常/輕微';
-        if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } // uacr value is numeric now
+        if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } 
         else if (uacr >= 30) { col = '2'; uacrText = '微量蛋白尿'; }
 
         const cellId = `cell-${row}-${col}`;
@@ -652,8 +670,6 @@
         updateDiet(egfr);
 
         // --- Part B: KFRE Calculation ---
-        // Tangri 4-variable equation
-        // 2-Year Baseline Survival = 0.9832, 5-Year = 0.9365
         const logACR = Math.log(uacr);
         const sum = -0.2201 * (age/10 - 7.036) 
                   + 0.2467 * (sex - 0.5642) 
@@ -901,4 +917,5 @@ function updateProteinIntake() {
 </script>
 </body>
 </html>
+
 
