@@ -160,6 +160,15 @@ header img.header-logo:first-of-type {
     height: 35px;  /* 原本是 50px，這裡改小一點，您可以依需求調整數字 */
     width: auto;
 }
+        /* === 新增：KFRE 輸入框樣式 === */
+    .custom-input {
+        width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
+        font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
+        transition: 0.3s; -webkit-appearance: none;
+    }
+    .custom-input:focus { border-color: #29b6f6; background: #f0fbff; }
+    /* 讓 placeholder 顏色淡一點 */
+    .custom-input::placeholder { color: #bbb; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -226,6 +235,67 @@ header img.header-logo:first-of-type {
                 </p>
             </div>
         </div>
+        <div class="card" style="border-top: 5px solid #29b6f6;">
+            <h2 style="color:#0277bd; border-bottom-color:#e1f5fe;">🧮 未來洗腎風險預測 (KFRE)</h2>
+            <p style="color:#666; font-size:0.95rem; margin-bottom:20px; line-height:1.4;">
+                這是 KDIGO 指引推薦的評估工具，能預測 2~5 年內的洗腎風險。
+            </p>
+
+            <div class="input-group">
+                <label>1. 年齡 (歲)</label>
+                <input type="number" id="kfre-age" class="custom-input" placeholder="例如：65">
+            </div>
+
+            <div class="input-group">
+                <label>2. 性別</label>
+                <div class="select-wrapper">
+                    <select id="kfre-sex">
+                        <option value="1">男</option>
+                        <option value="0">女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>3. 腎功能 (eGFR)</label>
+                <input type="number" id="kfre-egfr" class="custom-input" placeholder="例如：45">
+            </div>
+
+            <div class="input-group">
+                <label>4. 尿液白蛋白/肌酸酐比值 (UACR)</label>
+                <input type="number" id="kfre-uacr" class="custom-input" placeholder="單位：mg/g">
+                <p style="font-size:0.85rem; color:#888; margin-top:5px;">* 若無數據請填寫 30 (預設值)</p>
+            </div>
+
+            <button class="btn" style="background: linear-gradient(135deg, #29b6f6, #0277bd); box-shadow: 0 6px 15px rgba(2,119,189,0.3);" onclick="calculateKFRE()">開始計算</button>
+
+            <div id="kfre-result" class="hidden" style="margin-top:25px; animation: fadeIn 0.5s ease;">
+                <div style="background:#e1f5fe; border-radius:15px; padding:20px; border:2px solid #b3e5fc; text-align:center;">
+                    <h3 style="margin:0; color:#01579b; font-size:1.4rem;">預測結果</h3>
+                    <hr style="border:0; border-top:1px dashed #81d4fa; margin:15px 0;">
+                    
+                    <div style="display:flex; justify-content:space-around; margin-bottom:15px;">
+                        <div>
+                            <span style="font-size:0.9rem; color:#555;">2年內洗腎機率</span><br>
+                            <span id="res-2yr" style="font-size:1.8rem; font-weight:900; color:#0288d1;">--%</span>
+                        </div>
+                        <div>
+                            <span style="font-size:0.9rem; color:#555;">5年內洗腎機率</span><br>
+                            <span id="res-5yr" style="font-size:1.8rem; font-weight:900; color:#0288d1;">--%</span>
+                        </div>
+                    </div>
+
+                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1rem; line-height:1.5; border-left:5px solid #ccc;">
+                        建議載入中...
+                    </div>
+                </div>
+                <p style="font-size:0.8rem; color:#999; margin-top:10px; text-align:center;">
+                    公式來源：Tangri N et al. JAMA. 2011
+                </p>
+            </div>
+        </div>
+         ```
+        
         <div class="page-counter">
             👀 本站累計瀏覽：<span id="busuanzi_value_site_pv">--</span> 人次
         </div>
@@ -739,10 +809,86 @@ function updateMeds(egfr) {
             document.getElementById('score-comment').innerText = comment;
         }
     }
+    ```javascript
+    // --- KFRE Calculation Logic (依據 KDIGO 2024) ---
+    function calculateKFRE() {
+        // 1. 獲取數值
+        const age = parseFloat(document.getElementById('kfre-age').value);
+        const sex = parseFloat(document.getElementById('kfre-sex').value); // 1=男, 0=女
+        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
+        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+
+        // 2. 驗證輸入
+        if (isNaN(age) || isNaN(egfr) || isNaN(uacr)) {
+            alert("請完整填寫所有欄位喔！");
+            return;
+        }
+
+        // 3. 執行 4 變項公式
+        const logACR = Math.log(uacr);
+        
+        // 公式係數
+        const sum = -0.2201 * (age/10 - 7.036) 
+                  + 0.2467 * (sex - 0.5642) 
+                  - 0.5567 * (egfr/5 - 7.222) 
+                  + 0.4510 * (logACR - 5.137);
+
+        // 計算絕對風險
+        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
+        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
+
+        const p2 = (risk2 * 100).toFixed(1);
+        const p5 = (risk5 * 100).toFixed(1);
+
+        // 4. 顯示結果
+        document.getElementById('kfre-result').classList.remove('hidden');
+        document.getElementById('res-2yr').innerText = p2 + "%";
+        document.getElementById('res-5yr').innerText = p5 + "%";
+
+        // 5. 產生建議 (KDIGO 2024 Risk-based Criteria)
+        const adviceBox = document.getElementById('kfre-advice-box');
+        let adviceHTML = "";
+        let borderColor = "#ccc";
+
+        if (risk2 >= 0.4) { // 2年風險 > 40%
+            borderColor = "#d32f2f"; // 紅
+            adviceHTML = `
+                <strong style="color:#d32f2f;">🔴 極高風險 (準備期)</strong><br>
+                建議開始與醫師討論透析模式（洗腎）的選擇，或評估血管通路（廔管）的建立，亦可諮詢腎臟移植的可能性。
+            `;
+        } else if (risk2 >= 0.1) { // 2年風險 > 10%
+            borderColor = "#f57c00"; // 橘
+            adviceHTML = `
+                <strong style="color:#f57c00;">🟠 高風險 (多學科照護)</strong><br>
+                建議加入「慢性腎臟病整體照護計畫」，由醫師、衛教師、藥師、營養師團隊共同照護，以延緩惡化。
+            `;
+        } else if (risk5 >= 0.03) { // 5年風險 > 3%
+            borderColor = "#fbc02d"; // 黃
+            adviceHTML = `
+                <strong style="color:#f9a825;">🟡 中度風險 (轉診與追蹤)</strong><br>
+                若尚未在腎臟科就診，建議轉診至腎臟專科確認病因。請務必嚴格控制血壓與血糖。
+            `;
+        } else {
+            borderColor = "#388e3c"; // 綠
+            adviceHTML = `
+                <strong style="color:#388e3c;">🟢 低風險 (定期監測)</strong><br>
+                目前惡化風險較低。請維持健康生活型態，每年定期追蹤腎功能與蛋白尿即可。
+            `;
+        }
+
+        // 額外提示
+        if (egfr >= 60) {
+            adviceHTML += `<br><span style="font-size:0.9rem; color:#777; display:block; margin-top:8px;">(註：此公式主要針對 eGFR < 60 之病患設計，您的腎功能尚佳，數值僅供參考。)</span>`;
+        }
+
+        adviceBox.innerHTML = adviceHTML;
+        adviceBox.style.borderLeftColor = borderColor;
+    }
     initQuiz();
 </script>
 </body>
 </html>
+
 
 
 
