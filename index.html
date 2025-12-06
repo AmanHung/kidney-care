@@ -36,15 +36,14 @@
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
             background: linear-gradient(90deg, #009ADA 20%, var(--primary) 50%, var(--accent) 80%);
         }
+        
         .header-logo { height: 50px; width: auto; object-fit: contain; }
+        /* 特別指定：縮小左邊 Logo */
+        header img.header-logo:first-of-type { height: 35px; width: auto; }
+
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
         .header-title-box h1 { margin: 0; font-size: 1.9rem; color: var(--primary); font-weight: 900; }
-        .header-title-box p { 
-    margin: 2px 0 0 0; /* 增加一點上方距離 */
-    color: #666; 
-    font-size: 0.85rem; /* 如果標題很大，副標題可以稍微縮小一點點來襯托 */
-    font-weight: bold; 
-}
+        .header-title-box p { margin: 2px 0 0 0; color: #666; font-size: 0.85rem; font-weight: bold; }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -69,6 +68,15 @@
             color: #444; pointer-events: none; font-size: 1.2rem; 
         }
         select:focus { border-color: var(--primary); background: #f9fff9; }
+
+        /* KFRE Input Style */
+        .custom-input {
+            width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
+            font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
+            transition: 0.3s; -webkit-appearance: none;
+        }
+        .custom-input:focus { border-color: #29b6f6; background: #f0fbff; }
+        .custom-input::placeholder { color: #bbb; font-weight: normal; }
 
         /* Buttons */
         .btn { 
@@ -146,7 +154,6 @@
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
 
         /* Others */
-
         .qr-box { width: 220px; height: 220px; margin: 20px auto; border: 2px solid #eee; border-radius: 20px; }
         .qr-img { width: 100%; height: 100%; object-fit: contain; }
         .refill-box { display: flex; align-items: center; background: #fff8e1; border: 3px solid #ffe0b2; padding: 25px; border-radius: 20px; margin-bottom: 30px; gap: 20px; }
@@ -155,20 +162,6 @@
         .light { width: 70px; height: 70px; border-radius: 50%; background: #ddd; opacity: 0.2; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
         .light.on { opacity: 1; transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
-        /* 特別指定：header 裡面的第一張圖片 (也就是左邊那張) */
-header img.header-logo:first-of-type {
-    height: 35px;  /* 原本是 50px，這裡改小一點，您可以依需求調整數字 */
-    width: auto;
-}
-        /* === 新增：KFRE 輸入框樣式 === */
-    .custom-input {
-        width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
-        font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
-        transition: 0.3s; -webkit-appearance: none;
-    }
-    .custom-input:focus { border-color: #29b6f6; background: #f0fbff; }
-    /* 讓 placeholder 顏色淡一點 */
-    .custom-input::placeholder { color: #bbb; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -235,6 +228,7 @@ header img.header-logo:first-of-type {
                 </p>
             </div>
         </div>
+
         <div class="card" style="border-top: 5px solid #29b6f6;">
             <h2 style="color:#0277bd; border-bottom-color:#e1f5fe;">🧮 未來洗腎風險預測 (KFRE)</h2>
             <p style="color:#666; font-size:0.95rem; margin-bottom:20px; line-height:1.4;">
@@ -294,7 +288,6 @@ header img.header-logo:first-of-type {
                 </p>
             </div>
         </div>
-         ```
         
         <div class="page-counter">
             👀 本站累計瀏覽：<span id="busuanzi_value_site_pv">--</span> 人次
@@ -327,35 +320,35 @@ header img.header-logo:first-of-type {
                 </div>
             </div>
         </div>
-<div class="card">
+        <div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
             <p style="font-size: 0.9rem; color:#666;">不確定藥品風險？請在此查詢</p>
-<div class="select-wrapper">
-    <select id="med-select" onchange="checkMed()">
-        <option value="">🔍 請選擇藥物名稱...</option>
-        <option value="ras">ACEi / ARB (血壓藥)</option>
-        <option value="panadol">Acetaminophen (普拿疼)</option>
-        <option value="mycin">Aminoglycosides (部分抗生素)</option>
-        <option value="antacid">Antacids (含鋁鎂胃藥)</option>
-        <option value="contrast">Contrast Media (含碘顯影劑)</option>
-        <option value="diuretic">Diuretics (利尿劑)</option>
-        <option value="enema">Enema (清腸劑)</option>
-        <option value="ns_mra">Finerenone (ns-MRA)</option>
-        <option value="glp1">GLP-1 RA (腸泌素針劑)</option>
-        <option value="herbal">Herbal / Unknown (中草藥/黑藥丸)</option>
-        <option value="metformin">Metformin (二甲雙胍降糖藥)</option>
-        <option value="multi_vit">Multivitamins (綜合維他命)</option>
-        <option value="nsaid">NSAIDs (強效止痛藥)</option>
-        <option value="gout_nsaid">NSAIDs (痛風發作時)</option>
-        <option value="ppi">PPIs (質子幫浦抑制劑胃藥)</option>
-        <option value="probiotic">Probiotics (腎臟益生菌)</option>
-        <option value="sglt2">SGLT2i (排糖藥)</option>
-        <option value="statins">Statins (降血脂藥)</option>
-        <option value="uric_acid">Uric Acid Meds (降尿酸藥)</option>
-        <option value="vaccine">Vaccines (疫苗)</option>
-        <option value="vit_d">Vitamin D (活性維生素D)</option>
-    </select>
-</div>
+            <div class="select-wrapper">
+                <select id="med-select" onchange="checkMed()">
+                    <option value="">🔍 請選擇藥物名稱...</option>
+                    <option value="ras">ACEi / ARB (血壓藥)</option>
+                    <option value="panadol">Acetaminophen (普拿疼)</option>
+                    <option value="mycin">Aminoglycosides (部分抗生素)</option>
+                    <option value="antacid">Antacids (含鋁鎂胃藥)</option>
+                    <option value="contrast">Contrast Media (含碘顯影劑)</option>
+                    <option value="diuretic">Diuretics (利尿劑)</option>
+                    <option value="enema">Enema (清腸劑)</option>
+                    <option value="ns_mra">Finerenone (ns-MRA)</option>
+                    <option value="glp1">GLP-1 RA (腸泌素針劑)</option>
+                    <option value="herbal">Herbal / Unknown (中草藥/黑藥丸)</option>
+                    <option value="metformin">Metformin (二甲雙胍降糖藥)</option>
+                    <option value="multi_vit">Multivitamins (綜合維他命)</option>
+                    <option value="nsaid">NSAIDs (強效止痛藥)</option>
+                    <option value="gout_nsaid">NSAIDs (痛風發作時)</option>
+                    <option value="ppi">PPIs (質子幫浦抑制劑胃藥)</option>
+                    <option value="probiotic">Probiotics (腎臟益生菌)</option>
+                    <option value="sglt2">SGLT2i (排糖藥)</option>
+                    <option value="statins">Statins (降血脂藥)</option>
+                    <option value="uric_acid">Uric Acid Meds (降尿酸藥)</option>
+                    <option value="vaccine">Vaccines (疫苗)</option>
+                    <option value="vit_d">Vitamin D (活性維生素D)</option>
+                </select>
+            </div>
             
             <div class="traffic-container">
                 <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div>
@@ -365,20 +358,18 @@ header img.header-logo:first-of-type {
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
         
-        <div class="card">
-            <div class="card" style="border: 3px solid #ff9800; background: #fff3e0;">
+        <div class="card" style="border: 3px solid #ff9800; background: #fff3e0;">
             <h2 style="color:#e65100; border-bottom-color:#ffcc80; margin-bottom:15px;">🤢 生病日停藥守則</h2>
             
             <div style="background:white; border-radius:15px; padding:15px; margin-bottom:20px; border:2px dashed #ffb74d;">
-               
                 <p style="font-size:0.9rem; color:#e65100; margin:5px 0 0 0; font-weight:bold;">
                     口訣：SADMANS (悲傷男人)
                 </p>
             </div>
 
-<p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">
-    當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況（如：發燒、嚴重嘔吐、腹瀉）無法進食喝水時，請<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">暫停</span>以下藥物，並<span style="background:#ffccbc; color:#0044cc; padding:2px 5px; border-radius:5px;">就醫</span>：
-</p>
+            <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">
+                當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況（如：發燒、嚴重嘔吐、腹瀉）無法進食喝水時，請<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">暫停</span>以下藥物，並<span style="background:#ffccbc; color:#0044cc; padding:2px 5px; border-radius:5px;">就醫</span>：
+            </p>
 
             <div style="text-align:left; display:grid; grid-template-columns: 1fr; gap:10px;">
                 <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
@@ -414,6 +405,7 @@ header img.header-logo:first-of-type {
             </div>
         </div>
             
+        <div class="card">
             <h2>🔍 不清楚自己用什麼藥？</h2>
             <div style="display:flex; gap:15px;">
                 <button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 諮詢藥師</button>
@@ -422,7 +414,7 @@ header img.header-logo:first-of-type {
         </div>
     </div>
 
-<div id="tab-diet" class="section">
+    <div id="tab-diet" class="section">
         <div class="card">
             <h2>🍽️ 個人化飲食建議</h2>
             <div id="diet-placeholder" style="padding:40px 10px; color:#999;">
@@ -465,7 +457,6 @@ header img.header-logo:first-of-type {
                 </select>
             </div>
             <div id="food-result" class="med-result-box hidden"></div>
-        </div>
         </div>
     </div>
 
@@ -809,8 +800,8 @@ function updateMeds(egfr) {
             document.getElementById('score-comment').innerText = comment;
         }
     }
-    ```javascript
-    // --- KFRE Calculation Logic (依據 KDIGO 2024) ---
+    
+    // === 新增：KFRE Calculation Logic (依據 KDIGO 2024) ===
     function calculateKFRE() {
         // 1. 獲取數值
         const age = parseFloat(document.getElementById('kfre-age').value);
@@ -824,7 +815,7 @@ function updateMeds(egfr) {
             return;
         }
 
-        // 3. 執行 4 變項公式
+        // 3. 執行 4 變項公式 (Tangri et al. JAMA 2011)
         const logACR = Math.log(uacr);
         
         // 公式係數
@@ -884,19 +875,8 @@ function updateMeds(egfr) {
         adviceBox.innerHTML = adviceHTML;
         adviceBox.style.borderLeftColor = borderColor;
     }
+    
     initQuiz();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
