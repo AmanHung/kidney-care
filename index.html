@@ -267,14 +267,24 @@
                     <div class="matrix-label">第4期<br>15-29</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
                     <div class="matrix-label">第5期<br><15</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
-                <div style="background:#e1f5fe; border-radius:15px; padding:25px 15px; border:2px solid #b3e5fc; text-align:center; margin-top:25px;">
-                    <h3 style="margin:0 0 20px 0; color:#01579b; font-size:1.5rem;">📅 未來洗腎機率預測</h3>
+                    <div id="kfre-result-box" style="background:#e1f5fe; border-radius:15px; padding:25px 15px; border:3px solid #b3e5fc; text-align:center; margin-top:25px; transition: all 0.3s;">
+                    <h3 id="kfre-result-title" style="margin:0 0 20px 0; color:#01579b; font-size:1.5rem; font-weight:900;">📅 未來洗腎機率預測</h3>
+                    
                     <div style="display:flex; justify-content:space-around; margin-bottom:20px; align-items: flex-start;">
-                        <div style="flex:1;"><span class="kfre-highlight-label">2年內洗腎機率</span><span id="res-2yr" class="kfre-highlight-value">--%</span></div>
-                        <div style="width:2px; background:#81d4fa; height:60px; margin-top:10px;"></div>
-                        <div style="flex:1;"><span class="kfre-highlight-label">5年內洗腎機率</span><span id="res-5yr" class="kfre-highlight-value">--%</span></div>
+                        <div style="flex:1;">
+                            <span class="kfre-highlight-label">2年內洗腎機率</span>
+                            <span id="res-2yr" class="kfre-highlight-value">--%</span>
+                        </div>
+                        <div style="width:2px; background:#ccc; opacity:0.5; height:60px; margin-top:10px;"></div>
+                        <div style="flex:1;">
+                            <span class="kfre-highlight-label">5年內洗腎機率</span>
+                            <span id="res-5yr" class="kfre-highlight-value">--%</span>
+                        </div>
                     </div>
-                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">建議載入中...</div>
+
+                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                        建議載入中...
+                    </div>
                 </div>
                 <p style="color:#d32f2f; font-weight:900; margin-top:25px; font-size:1.1rem;">👇 您的專屬用藥與飲食建議已生成，<br>請點選下方選單切換查看。</p>
             </div>
@@ -543,52 +553,50 @@
         const cell = document.getElementById(cellId);
         if (cell) cell.classList.add('active-cell');
 
+       // 設定預設值 (紅燈)
         let color = '#e03e2e', text = '超高風險';
-        if (cell.classList.contains('bg-g')) { color = '#6bbd45'; text = '低風險 (定期追蹤)'; }
-        else if (cell.classList.contains('bg-y')) { color = '#ffd700'; text = '中度風險 (需注意)'; }
-        else if (cell.classList.contains('bg-o')) { color = '#f58220'; text = '高風險 (嚴格控制)'; }
+        let boxBg = '#ffebee'; // 新增：預測盒背景色 (淺紅)
+        let boxColor = '#b71c1c'; // 新增：預測盒文字色 (深紅)
 
+        // 根據格子顏色判斷風險等級，並設定對應的樣式
+        if (cell.classList.contains('bg-g')) { 
+            color = '#6bbd45'; text = '低風險 (定期追蹤)'; 
+            boxBg = '#f0fdf4'; boxColor = '#1b5e20'; // 綠色系
+        }
+        else if (cell.classList.contains('bg-y')) { 
+            color = '#ffd700'; text = '中度風險 (需注意)'; 
+            boxBg = '#fffde7'; boxColor = '#f57f17'; // 黃色系
+        }
+        else if (cell.classList.contains('bg-o')) { 
+            color = '#f58220'; text = '高風險 (嚴格控制)'; 
+            boxBg = '#fff3e0'; boxColor = '#e65100'; // 橘色系
+        }
+
+        // 1. 更新上方 Banner 顏色
         const banner = document.getElementById('risk-banner');
         banner.style.backgroundColor = color;
         banner.style.color = (color === '#ffd700') ? '#222' : '#fff'; 
         document.getElementById('risk-title').innerText = text;
         document.getElementById('risk-desc').innerText = `腎絲球過濾率${stageText} + ${uacrText}`;
 
-        updateMeds(egfr, hasDM);
-        updateDiet(egfr, hasDM);
-        updateArmorVisibility(hasDM, egfr); 
+        // 2. 更新下方 KFRE 預測盒子的顏色 (同步視覺)
+        const kBox = document.getElementById('kfre-result-box');
+        const kTitle = document.getElementById('kfre-result-title');
+        const res2 = document.getElementById('res-2yr');
+        const res5 = document.getElementById('res-5yr');
 
-        // KFRE
-        const sexNum = parseFloat(sex);
-        const logACR = Math.log(uacr);
-        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
-        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
-        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
-        document.getElementById('res-2yr').innerText = (risk2 * 100).toFixed(1) + "%";
-        document.getElementById('res-5yr').innerText = (risk5 * 100).toFixed(1) + "%";
-
-        const adviceBox = document.getElementById('kfre-advice-box');
-        let adviceHTML = "", adviceBorder = "#ccc";
-        let dmContext = hasDM ? "且合併糖尿病" : "";
-
-        if (risk2 >= 0.4) { 
-            adviceBorder = "#d32f2f";
-            adviceHTML = `您的數值顯示腎功能衰退風險較高${dmContext}。建議開始與醫師討論透析模式選擇，或評估血管通路建立。`;
-        } else if (risk2 >= 0.1) { 
-            adviceBorder = "#f57c00";
-            adviceHTML = `建議加入「慢性腎臟病整體照護計畫」。${hasDM ? "請務必嚴格控制血糖 (HbA1c < 7%)。" : ""}`;
-        } else if (risk5 >= 0.03) { 
-            adviceBorder = "#fbc02d";
-            adviceHTML = `建議轉診至腎臟專科確認病因。${hasDM ? "糖尿病是腎臟惡化主因，請按時服藥。" : "請定期追蹤血壓與尿蛋白。"}`;
-        } else {
-            adviceBorder = "#388e3c";
-            adviceHTML = `目前短期內洗腎機率較低。請維持健康生活，每年定期追蹤即可。`;
+        // 確保元素存在才執行，避免報錯
+        if(kBox && kTitle) {
+            kBox.style.borderColor = color;       // 邊框變色
+            kBox.style.backgroundColor = boxBg;   // 背景變色
+            kTitle.style.color = boxColor;        // 標題變色
+            
+            // 數字顏色也跟著變 (若黃色則用深黃，以免在白底看不清)
+            let numColor = (color === '#ffd700') ? '#f9a825' : color;
+            if(res2) res2.style.color = numColor;
+            if(res5) res5.style.color = numColor;
         }
-        if (egfr >= 60) adviceHTML += `<br><span style="font-size:0.9rem; color:#777; display:block; margin-top:8px;">(註：公式主要針對 eGFR < 60 設計，您的腎功能尚佳，參考即可。)</span>`;
-        adviceBox.innerHTML = adviceHTML;
-        adviceBox.style.borderLeftColor = adviceBorder;
-    }
-
+        
     function updateMeds(egfr, hasDM) {
         document.getElementById('med-placeholder').classList.add('hidden');
         document.getElementById('med-content').classList.remove('hidden');
@@ -859,3 +867,4 @@
 </script>
 </body>
 </html>
+
