@@ -389,8 +389,12 @@
                     <span class="equip-icon">📿</span><span class="equip-name">護心藥</span><span class="equip-desc">Beta-blocker<br>減輕心臟負擔</span><input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
-                <div id="slot-nsmra" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none;">
-                    <span class="equip-icon">🔮</span><span class="equip-name">醛固酮阻斷</span><span class="equip-desc">MRA / ns-MRA<br>抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                <div id="slot-mra-old" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-mra-old')" style="display:none;">
+                    <span class="equip-icon">🧤</span><span class="equip-name">傳統阻斷藥</span><span class="equip-desc">Spironolactone<br>心衰竭第四支柱</span><input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
+                </div>
+
+                <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
+                    <span class="equip-icon">💍</span><span class="equip-name">新型護腎戒</span><span class="equip-desc">Finerenone<br>精準抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
@@ -507,7 +511,8 @@
         'glp1': { level: 'g', title: '✅ 控糖護心 (GLP-1 RA)', desc: '腸泌素。控糖、減重、護心三效合一。' },
         'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: 'eGFR < 30 必須停用；30-45 需減量。' },
         'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '強效止痛藥。最強烈的腎臟殺手！極易造成急性腎損傷。' },
-        'ns_mra': { level: 'g', title: '✅ 進階護腎 (MRA/ns-MRA)', desc: '預防心臟與腎臟纖維化，心衰竭與糖尿病腎病變的重要藥物。' },
+        'mra_old': { level: 'g', title: '🧤 傳統 MRA (Spironolactone)', desc: '心衰竭標準治療藥物(GDMT)。需注意血鉀濃度與男性女乳症副作用。' },
+        'ns_mra': { level: 'g', title: '💍 新型 ns-MRA (Finerenone)', desc: '針對糖尿病腎病變設計。高血鉀風險較傳統藥物低，能抗發炎、抗纖維化。' },
         'sglt2': { level: 'g', title: '✅ 核心神器 (SGLT2i)', desc: '排糖藥。心臟衰竭與慢性腎臟病的救命支柱，KDIGO 與心臟指引雙重推薦。' },
         'statins': { level: 'g', title: '✅ 建議使用 (Statins)', desc: '降血脂藥。預防中風與心血管事件。' },
         'contrast': { level: 'r', title: '⚠️ 高風險 (顯影劑)', desc: '含碘顯影劑可能造成急性腎損傷。' },
@@ -674,8 +679,10 @@
         // 2. RASi / ARNI
         if (hasHF) {
             add(g, "ARNI (雙效神兵)", "心衰竭首選 (GDMT)！優於傳統血壓藥。");
-            add(g, "Beta-blocker (護心藥)", "心衰竭必備，讓心臟跳得更省力。");
-            add(g, "MRA (醛固酮阻斷)", "心衰竭關鍵藥物，需定期監測血鉀。");
+            add(g, "Beta-blocker (護心項鍊)", "心衰竭必備，讓心臟跳得更省力。");
+            
+            // --- 區分：心衰竭推薦傳統 MRA ---
+            add(g, "MRA (傳統阻斷藥)", "Spironolactone 是心衰竭第四支柱，能降低死亡率。需監測血鉀。");
         } else {
             add(g, "RASi (ACEi/ARB)", "護腎首選血壓藥，抗蛋白尿基礎。");
         }
@@ -683,9 +690,13 @@
         // 3. DM
         if (hasDM) {
             add(g, "GLP-1 RA (腸泌素)", "控糖、減重、護心護腎的多效藥物。");
+            
+            // --- 區分：糖尿病腎病變推薦 ns-MRA ---
+            // 條件：有糖尿病 + 無心衰竭(因為有心衰會優先推傳統) + eGFR>25 + 這裡假設有蛋白尿風險
             if (!hasHF && egfr >= 25) {
-                add(g, "ns-MRA (Finerenone)", "針對糖尿病合併蛋白尿，抗纖維化特效。");
+                add(g, "ns-MRA (新型護腎石)", "Finerenone 針對糖尿病腎病變，精準抗發炎且副作用較少。");
             }
+            
             if (egfr < 30) add(r, "Metformin", "eGFR < 30 絕對禁用！乳酸中毒風險。");
             else if (egfr < 45) add(y, "Metformin", "需減量，每日不超過 1000mg。");
         }
@@ -693,7 +704,6 @@
         // 4. 通用
         add(g, "Statins (降血脂藥)", "保護血管，預防中風與心肌梗塞。");
         
-        // 5. 禁忌與注意
         let diureticMsg = hasHF ? "症狀控制重要藥物 (依體重調整)，脫水時暫停。" : "生病 (脫水/發燒) 時需暫停。";
         add(y, "Diuretics (利尿劑)", diureticMsg);
         
@@ -766,7 +776,7 @@
 
     // --- 🛡️ 裝備與稱號 ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
-        // 1. 血壓藥/ARNI 切換邏輯 (更新 ARNI 為 ⛑️ 雙效防護)
+        // 1. 血壓藥/ARNI
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
         const descRasi = document.getElementById('desc-rasi');
@@ -791,14 +801,32 @@
             slotBb.style.display = 'none';
         }
 
-        // 3. MRA
-        const slotNsmra = document.getElementById('slot-nsmra');
-        if (hasHF || (hasDM && egfr >= 25)) {
-            slotNsmra.style.display = 'flex';
-        } else {
+        // 3. MRA 分流邏輯 (修正重點)
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+        
+        // 重置顯示
+        slotMraOld.style.display = 'none';
+        slotNsMra.style.display = 'none';
+
+        if (hasHF) {
+            // 心衰竭：優先顯示傳統 MRA
+            slotMraOld.style.display = 'flex';
+            // 隱藏 ns-MRA 避免混淆 (或取消勾選)
             document.getElementById('drug-nsmra').checked = false;
-            slotNsmra.classList.remove('equipped');
-            slotNsmra.style.display = 'none';
+            slotNsMra.classList.remove('equipped');
+        } else if (hasDM && egfr >= 25) {
+            // 無心衰竭 但有 糖尿病腎病變風險：顯示 ns-MRA
+            slotNsMra.style.display = 'flex';
+            // 隱藏傳統 MRA
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+        } else {
+            // 兩者皆無，都隱藏並取消勾選
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+            document.getElementById('drug-nsmra').checked = false;
+            slotNsMra.classList.remove('equipped');
         }
 
         // 4. GLP-1
@@ -892,12 +920,22 @@
             else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>乙型阻斷劑是心衰竭的四大救命支柱之一，請諮詢醫師。</div>`;
         }
 
-        // 4. MRA (醛固酮阻斷) - HF 或 DM+Proteinuria 顯示
-        const slotNsmra = document.getElementById('slot-nsmra');
-        if (slotNsmra.style.display !== 'none') {
-            const useMra = document.getElementById('drug-nsmra').checked;
-            if (useMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>醛固酮阻斷 (MRA)：</strong>觀念正確！這能對抗心臟與腎臟的纖維化。</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>${hasHF ? '醛固酮阻斷劑是心衰竭重要治療' : 'Finerenone 可預防糖尿病腎病變惡化'}，若血鉀正常建議諮詢。</div>`;
+       // 4. MRA (分流建議)
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+
+        // 情境 A: 傳統 MRA (心衰竭)
+        if (slotMraOld.style.display !== 'none') {
+            const useMraOld = document.getElementById('drug-mra-old').checked;
+            if (useMraOld) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>傳統 MRA：</strong>已裝備！這是降低心衰竭死亡率的關鍵藥物。</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>醛固酮阻斷劑 (Spironolactone) 是心衰竭救命藥，請諮詢醫師。</div>`;
+        }
+        
+        // 情境 B: ns-MRA (糖尿病腎病變)
+        if (slotNsMra.style.display !== 'none') {
+            const useNsMra = document.getElementById('drug-nsmra').checked;
+            if (useNsMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型 ns-MRA：</strong>很棒！您正在使用精準抗發炎藥物保護腎臟。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>若血鉀正常，可諮詢新型藥物 (Finerenone) 以預防腎功能惡化。</div>`;
         }
 
         // 5. Statin (降血脂藥) - 所有人皆顯示 (修復漏字：補上已裝備提示)
@@ -1025,4 +1063,5 @@
 </script>
 </body>
 </html>
+
 
