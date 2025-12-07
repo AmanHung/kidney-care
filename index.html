@@ -159,6 +159,59 @@
         /* 強調 KFRE 結果文字 */
         .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
         .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        /* --- 🎮 遊戲化裝備欄 CSS --- */
+        .equip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 兩欄 */
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .equip-slot {
+            background: #f4f4f4;
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            user-select: none;
+        }
+        .equip-slot:active { transform: scale(0.95); }
+        
+        /* 裝備啟用狀態 (Equipped) */
+        .equip-slot.equipped {
+            background: #e8f5e9;
+            border: 3px solid #2e7d32;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+        }
+        .equip-slot.equipped::after {
+            content: '已裝備';
+            position: absolute;
+            top: -10px; right: -5px;
+            background: #2e7d32; color: white;
+            font-size: 0.8rem; padding: 2px 8px;
+            border-radius: 10px; font-weight: bold;
+        }
+
+        .equip-icon { font-size: 3rem; display: block; margin-bottom: 5px; filter: grayscale(100%); opacity: 0.5; transition: 0.3s; }
+        .equip-slot.equipped .equip-icon { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+
+        .equip-name { font-size: 1.1rem; font-weight: 900; color: #555; display: block; }
+        .equip-slot.equipped .equip-name { color: #2e7d32; }
+        .equip-desc { font-size: 0.85rem; color: #888; display: block; }
+        
+        /* 隱藏原本的 checkbox，改用程式控制 */
+        .hidden-checkbox { display: none; }
+        
+        /* 糖尿病狀態切換按鈕 */
+        .dm-switch {
+            background: #fff; border: 2px solid #ddd; border-radius: 50px;
+            padding: 10px 20px; margin-bottom: 20px; display: inline-flex;
+            align-items: center; gap: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .dm-switch.active { background: #ffebee; border-color: #e53935; color: #c62828; }
     </style>
 </head>
 <body>
@@ -475,49 +528,57 @@
 
 <div id="tab-quiz" class="section">
         
-        <div class="card" style="border: 3px solid #6bbd45; background: #f0fdf4;">
-            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備檢查</h2>
-            <p style="text-align:left; color:#444; font-size:1rem; margin-bottom:15px;">
-                上戰場（測驗）前，先檢查您的護腎裝備是否齊全！<br>
-                <span style="font-size:0.9rem; color:#666;">(KDIGO 2024 指引推薦藥物)</span>
+<div class="card" style="border: 3px solid #6bbd45; background: #fff;">
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備庫</h2>
+            <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">
+                點擊格子「穿戴」您正在使用的藥物<br>看看您的防禦力夠不夠！
             </p>
 
-            <div style="text-align:left; background:white; padding:15px; border-radius:15px; border:2px solid #e0e0e0; margin-bottom:20px;">
-                <div style="margin-bottom:15px;">
-                    <label style="display:flex; align-items:center; font-size:1.2rem; font-weight:900; cursor:pointer;">
-                        <input type="checkbox" id="check-dm" style="transform:scale(1.5); margin-right:10px;"> 
-                        🩸 我有「糖尿病」
-                    </label>
-                </div>
-                <hr style="border:0; border-top:1px dashed #ccc; margin:10px 0;">
-                
-                <div style="display:grid; gap:12px;">
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-rasi" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 血壓藥 (ACEi/ARB) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(字尾 -pril / -sartan)</span>
-                    </label>
-
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-sglt2" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 排糖藥 (SGLT2i) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Forxiga, Jardiance)</span>
-                    </label>
-
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-nsmra" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 新型護腎藥 (ns-MRA) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(Kerendia/Finerenone)</span>
-                    </label>
-                    
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-statin" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 降血脂藥 (Statins) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Lipitor, Crestor)</span>
-                    </label>
+            <div style="text-align:center;">
+                <div class="dm-switch" id="dm-toggle" onclick="toggleDM()">
+                    <span style="font-size:1.5rem;">🩸</span>
+                    <span id="dm-text" style="font-weight:900;">我沒有糖尿病</span>
+                    <input type="checkbox" id="check-dm" class="hidden-checkbox">
                 </div>
             </div>
 
-            <button class="btn" onclick="checkKidneyArmor()">🛡️ 分析我的裝備強度</button>
-            
-            <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;">
+            <div class="equip-grid">
+                
+                <div class="equip-slot" onclick="toggleEquip(this, 'drug-rasi')">
+                    <span class="equip-icon">🛡️</span>
+                    <span class="equip-name">基礎護甲</span>
+                    <span class="equip-desc">血壓藥 ACEi/ARB</span>
+                    <input type="checkbox" id="drug-rasi" class="hidden-checkbox">
                 </div>
+
+                <div class="equip-slot" onclick="toggleEquip(this, 'drug-sglt2')">
+                    <span class="equip-icon">⚔️</span>
+                    <span class="equip-name">核心神盾</span>
+                    <span class="equip-desc">排糖藥 SGLT2i</span>
+                    <input type="checkbox" id="drug-sglt2" class="hidden-checkbox">
+                </div>
+
+                <div class="equip-slot" onclick="toggleEquip(this, 'drug-nsmra')">
+                    <span class="equip-icon">💍</span>
+                    <span class="equip-name">魔法護符</span>
+                    <span class="equip-desc">新型護腎藥 ns-MRA</span>
+                    <input type="checkbox" id="drug-nsmra" class="hidden-checkbox">
+                </div>
+
+                <div class="equip-slot" onclick="toggleEquip(this, 'drug-statin')">
+                    <span class="equip-icon">👢</span>
+                    <span class="equip-name">疾風之靴</span>
+                    <span class="equip-desc">降血脂藥 Statins</span>
+                    <input type="checkbox" id="drug-statin" class="hidden-checkbox">
+                </div>
+
+            </div>
+
+            <button class="btn" onclick="checkKidneyArmor()">📊 分析裝備強度</button>
+            
+            <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;"></div>
+        </div>
+    
         </div>
         <div class="card">
             <h2>🎓 腎利大會考</h2>
@@ -1038,11 +1099,44 @@ function updateProteinIntake() {
         // 自動捲動到結果
         resultDiv.scrollIntoView({ behavior: 'smooth' });
     }
+    // --- 🎮 裝備欄互動邏輯 ---
+    
+    // 1. 切換裝備 (點擊格子 -> 勾選隱藏的 Checkbox -> 改變樣式)
+    function toggleEquip(element, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked; // 切換勾選狀態
+        
+        if(checkbox.checked) {
+            element.classList.add('equipped');
+            playSound(true); // 播放音效增加回饋感
+        } else {
+            element.classList.remove('equipped');
+        }
+    }
+
+    // 2. 切換糖尿病狀態
+    function toggleDM() {
+        var btn = document.getElementById('dm-toggle');
+        var checkbox = document.getElementById('check-dm');
+        var text = document.getElementById('dm-text');
+        
+        checkbox.checked = !checkbox.checked;
+        
+        if(checkbox.checked) {
+            btn.classList.add('active');
+            text.innerText = "我有糖尿病";
+            playSound(true);
+        } else {
+            btn.classList.remove('active');
+            text.innerText = "我沒有糖尿病";
+        }
+    }
     
     initQuiz();
 </script>
 </body>
 </html>
+
 
 
 
