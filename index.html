@@ -590,56 +590,62 @@
 
 <div id="tab-quiz" class="section">
         
-        <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
+<div class="card" style="border: 3px solid #6bbd45; background: #fff;">
             <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備庫</h2>
             <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">
-                點擊格子「穿戴」您正在使用的藥物<br>看看您的防禦力夠不夠！
+                請勾選您目前正在使用的藥物，<br>上方狀態列將自動升級！
             </p>
 
-            <div style="text-align:center;">
-                <div class="dm-switch" id="dm-toggle" onclick="toggleDM()">
-                    <span style="font-size:1.5rem;">🩸</span>
-                    <span id="dm-text" style="font-weight:900;">我沒有糖尿病</span>
-                    <input type="checkbox" id="check-dm" class="hidden-checkbox">
+            <label class="gear-card card-legendary">
+                <input type="checkbox" class="gear-checkbox">
+                <div class="text-group">
+                    <span class="rank-badge badge-legendary">🔥 傳說級神器</span>
+                    <h3 class="gear-title text-legendary">SGLT2 抑制劑</h3>
+                    <p class="gear-desc">俗稱：排糖藥、護腎神器<br>功能：保護心腎的核心引擎</p>
                 </div>
-            </div>
+                <div style="font-size: 3rem;">🛡️</div>
+            </label>
 
-            <div class="equip-grid">
-                
-                <div class="equip-slot" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-icon">🛡️</span>
-                    <span class="equip-name">基礎護甲</span>
-                    <span class="equip-desc">血壓藥 ACEi/ARB</span>
-                    <input type="checkbox" id="drug-rasi" class="hidden-checkbox">
+            <label class="gear-card card-epic">
+                <input type="checkbox" class="gear-checkbox">
+                <div class="text-group">
+                    <span class="rank-badge badge-epic">✨ 史詩級鎧甲</span>
+                    <h3 class="gear-title text-epic">ACEi / ARB</h3>
+                    <p class="gear-desc">俗稱：血壓藥、保腎藥<br>功能：腎臟防護的基礎鎧甲</p>
                 </div>
+                <div style="font-size: 3rem;">🧥</div>
+            </label>
 
-                <div class="equip-slot" onclick="toggleEquip(this, 'drug-sglt2')">
-                    <span class="equip-icon">⚔️</span>
-                    <span class="equip-name">核心神盾</span>
-                    <span class="equip-desc">排糖藥 SGLT2i</span>
-                    <input type="checkbox" id="drug-sglt2" class="hidden-checkbox">
+            <label class="gear-card card-rare">
+                <input type="checkbox" class="gear-checkbox">
+                <div class="text-group">
+                    <span class="rank-badge badge-rare">💎 稀有級寶石</span>
+                    <h3 class="gear-title text-rare">ns-MRA (Finerenone)</h3>
+                    <p class="gear-desc">俗稱：新型護腎藥<br>功能：針對蛋白尿的高階強化</p>
                 </div>
+                <div style="font-size: 3rem;">🔮</div>
+            </label>
 
-                <div class="equip-slot" onclick="toggleEquip(this, 'drug-nsmra')">
-                    <span class="equip-icon">💍</span>
-                    <span class="equip-name">魔法護符</span>
-                    <span class="equip-desc">新型護腎藥 ns-MRA</span>
-                    <input type="checkbox" id="drug-nsmra" class="hidden-checkbox">
+            <label class="gear-card card-uncommon">
+                <input type="checkbox" class="gear-checkbox">
+                <div class="text-group">
+                    <span class="rank-badge badge-uncommon">🌿 精良級護符</span>
+                    <h3 class="gear-title text-uncommon">Statins (他汀類)</h3>
+                    <p class="gear-desc">俗稱：降血脂藥<br>功能：保持血管暢通，預防中風</p>
                 </div>
-
-                <div class="equip-slot" onclick="toggleEquip(this, 'drug-statin')">
-                    <span class="equip-icon">👢</span>
-                    <span class="equip-name">疾風之靴</span>
-                    <span class="equip-desc">降血脂藥 Statins</span>
-                    <input type="checkbox" id="drug-statin" class="hidden-checkbox">
-                </div>
-
-            </div>
+                <div style="font-size: 3rem;">💊</div>
+            </label>
+            
+            <p style="text-align:center; color:#999; font-size:0.9rem; margin-top:10px;">
+                (勾選後請看頁面最上方的玩家稱號變化)
+            </p>
+        </div>
 
             <button class="btn" onclick="checkKidneyArmor()">📊 分析裝備強度</button>
             
             <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;"></div>
         </div>
+    
         <div class="card">
             <h2>🎓 腎利大會考</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
@@ -1193,90 +1199,84 @@ function updateProteinIntake() {
     }
     
     initQuiz();
-    <script>
-  // === 1. 設定等級資料 (可隨時調整文字) ===
-  const ranks = [
-    { 
-      count: 0, 
-      class: 'status-novice', 
-      title: '新手冒險者 (Novice)', 
-      icon: '⚠️',
-      msg: '哎呀！您的腎臟目前完全沒有防護，請盡快諮詢醫師！' 
-    },
-    { 
-      count: 1, 
-      class: 'status-apprentice', 
-      title: '見習衛士 (Apprentice)', 
-      icon: '🛡️',
-      msg: '很好！您穿上了第一件裝備，開始保護腎臟了。' 
-    },
-    { 
-      count: 2, 
-      class: 'status-veteran', 
-      title: '資深騎士 (Veteran)', 
-      icon: '⚔️',
-      msg: '太棒了！您的防禦力大幅提升，已經贏過很多人囉！' 
-    },
-    { 
-      count: 3, 
-      class: 'status-elite', 
-      title: '皇家護衛 (Elite)', 
-      icon: '🏰',
-      msg: '非常優秀！您的腎臟受到嚴密的保護，請繼續保持！' 
-    },
-    { 
-      count: 4, 
-      class: 'status-guardian', 
-      title: '腎臟守護神 (Guardian)', 
-      icon: '🏆',
-      msg: '完美無缺！您擁有最強的裝備陣容，是健康的模範生！' 
+ // 1. 設定等級資料
+    const ranks = [
+        { 
+            count: 0, 
+            class: 'status-novice', 
+            title: '新手冒險者 (Novice)', 
+            icon: '⚠️',
+            msg: '哎呀！您的腎臟目前完全沒有防護，請盡快諮詢醫師！' 
+        },
+        { 
+            count: 1, 
+            class: 'status-apprentice', 
+            title: '見習衛士 (Apprentice)', 
+            icon: '🛡️',
+            msg: '很好！您穿上了第一件裝備，開始保護腎臟了。' 
+        },
+        { 
+            count: 2, 
+            class: 'status-veteran', 
+            title: '資深騎士 (Veteran)', 
+            icon: '⚔️',
+            msg: '太棒了！您的防禦力大幅提升，已經贏過很多人囉！' 
+        },
+        { 
+            count: 3, 
+            class: 'status-elite', 
+            title: '皇家護衛 (Elite)', 
+            icon: '🏰',
+            msg: '非常優秀！您的腎臟受到嚴密的保護，請繼續保持！' 
+        },
+        { 
+            count: 4, 
+            class: 'status-guardian', 
+            title: '腎臟守護神 (Guardian)', 
+            icon: '🏆',
+            msg: '完美無缺！您擁有最強的裝備陣容，是健康的模範生！' 
+        }
+    ];
+
+    // 2. 抓取 HTML 元素
+    const checkboxes = document.querySelectorAll('.gear-checkbox');
+    const statusPanel = document.getElementById('status-panel');
+    const statusIcon = document.getElementById('status-icon');
+    const statusTitle = document.getElementById('status-title');
+    const statusMsg = document.getElementById('status-msg');
+
+    // 3. 更新狀態的核心函式
+    function updateStatus() {
+        let checkedCount = 0;
+        checkboxes.forEach(box => {
+            if (box.checked) checkedCount++;
+        });
+
+        let rankIndex = checkedCount;
+        if (rankIndex >= 4) rankIndex = 4;
+        
+        const data = ranks[rankIndex];
+
+        statusTitle.innerText = data.title;
+        statusIcon.innerText = data.icon;
+        statusMsg.innerText = data.msg;
+
+        // 移除所有舊的 class，只保留 status-panel 和新的等級 class
+        statusPanel.className = 'status-panel ' + data.class;
+
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth; 
+        statusPanel.classList.add('animate-pop');
     }
-  ];
 
-  // === 2. 抓取 HTML 元素 ===
-  const checkboxes = document.querySelectorAll('.gear-checkbox'); // 抓取所有勾選框
-  const statusPanel = document.getElementById('status-panel');
-  const statusIcon = document.getElementById('status-icon');
-  const statusTitle = document.getElementById('status-title');
-  const statusMsg = document.getElementById('status-msg');
-
-  // === 3. 更新狀態的核心函式 ===
-  function updateStatus() {
-    // 計算勾選了幾個
-    let checkedCount = 0;
+    // 4. 監聽事件
     checkboxes.forEach(box => {
-      if (box.checked) checkedCount++;
+        box.addEventListener('change', updateStatus);
     });
 
-    // 判斷等級 (如果超過 4 個，就鎖定在第 4 級的資料)
-    let rankIndex = checkedCount;
-    if (rankIndex >= 4) rankIndex = 4;
-    
-    const data = ranks[rankIndex];
-
-    // 更新文字與圖示
-    statusTitle.innerText = data.title;
-    statusIcon.innerText = data.icon;
-    statusMsg.innerText = data.msg;
-
-    // 更新背景顏色 (先移除舊的等級 class，再加新的)
-    statusPanel.className = 'status-panel ' + data.class;
-
-    // 觸發「彈跳」動畫 (移除 class 後再加回去，讓動畫重跑)
-    statusPanel.classList.remove('animate-pop');
-    void statusPanel.offsetWidth; // 這一行是為了強制瀏覽器重繪 (Magic trick)
-    statusPanel.classList.add('animate-pop');
-  }
-
-  // === 4. 監聽事件：只要有人勾選或取消，就執行更新 ===
-  checkboxes.forEach(box => {
-    box.addEventListener('change', updateStatus);
-  });
-
-</script>
-</script>
-</body>
+</script> </body>
 </html>
+
 
 
 
