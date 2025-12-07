@@ -212,6 +212,60 @@
             align-items: center; gap: 10px; cursor: pointer; transition: 0.3s;
         }
         .dm-switch.active { background: #ffebee; border-color: #e53935; color: #c62828; }
+        /* === [新增樣式] 玩家狀態列 === */
+.status-panel {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  color: white;
+  transition: all 0.5s ease; /* 顏色轉換時的平滑效果 */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.status-icon {
+  font-size: 3.5rem;
+  margin-right: 20px;
+  animation: none;
+}
+
+.status-title {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 5px;
+}
+
+.status-msg {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* === 動態等級配色 (由 JS 切換) === */
+/* 0個: 危險灰/紅 */
+.status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
+/* 1個: 綠色 (見習) */
+.status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
+/* 2個: 藍色 (資深) */
+.status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
+/* 3個: 紫色 (皇家) */
+.status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
+/* 4個+: 金色 (傳說) */
+.status-guardian { 
+  background: linear-gradient(135deg, #F2994A, #F2C94C); 
+  box-shadow: 0 0 20px #F2C94C; /* 金色發光 */
+}
+
+/* === 升級時的彈跳動畫 === */
+@keyframes pop-effect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); } /* 瞬間放大 */
+  100% { transform: scale(1); }
+}
+
+.animate-pop {
+  animation: pop-effect 0.4s ease-out;
+}
     </style>
 </head>
 <body>
@@ -226,6 +280,14 @@
 </header>
 
 <div class="container">
+    <div id="status-panel" class="status-panel status-novice">
+  <div class="status-icon" id="status-icon">⚠️</div>
+  <div class="status-info">
+    <div class="status-label">目前稱號</div>
+    <div class="status-title" id="status-title">新手冒險者</div>
+    <div class="status-msg" id="status-msg">哎呀！您的腎臟目前完全沒有防護，風險極高！</div>
+  </div>
+</div>
 
     <div id="tab-home" class="section active">
         <div class="card" style="border-top: 5px solid #29b6f6;">
@@ -1131,9 +1193,91 @@ function updateProteinIntake() {
     }
     
     initQuiz();
+    <script>
+  // === 1. 設定等級資料 (可隨時調整文字) ===
+  const ranks = [
+    { 
+      count: 0, 
+      class: 'status-novice', 
+      title: '新手冒險者 (Novice)', 
+      icon: '⚠️',
+      msg: '哎呀！您的腎臟目前完全沒有防護，請盡快諮詢醫師！' 
+    },
+    { 
+      count: 1, 
+      class: 'status-apprentice', 
+      title: '見習衛士 (Apprentice)', 
+      icon: '🛡️',
+      msg: '很好！您穿上了第一件裝備，開始保護腎臟了。' 
+    },
+    { 
+      count: 2, 
+      class: 'status-veteran', 
+      title: '資深騎士 (Veteran)', 
+      icon: '⚔️',
+      msg: '太棒了！您的防禦力大幅提升，已經贏過很多人囉！' 
+    },
+    { 
+      count: 3, 
+      class: 'status-elite', 
+      title: '皇家護衛 (Elite)', 
+      icon: '🏰',
+      msg: '非常優秀！您的腎臟受到嚴密的保護，請繼續保持！' 
+    },
+    { 
+      count: 4, 
+      class: 'status-guardian', 
+      title: '腎臟守護神 (Guardian)', 
+      icon: '🏆',
+      msg: '完美無缺！您擁有最強的裝備陣容，是健康的模範生！' 
+    }
+  ];
+
+  // === 2. 抓取 HTML 元素 ===
+  const checkboxes = document.querySelectorAll('.gear-checkbox'); // 抓取所有勾選框
+  const statusPanel = document.getElementById('status-panel');
+  const statusIcon = document.getElementById('status-icon');
+  const statusTitle = document.getElementById('status-title');
+  const statusMsg = document.getElementById('status-msg');
+
+  // === 3. 更新狀態的核心函式 ===
+  function updateStatus() {
+    // 計算勾選了幾個
+    let checkedCount = 0;
+    checkboxes.forEach(box => {
+      if (box.checked) checkedCount++;
+    });
+
+    // 判斷等級 (如果超過 4 個，就鎖定在第 4 級的資料)
+    let rankIndex = checkedCount;
+    if (rankIndex >= 4) rankIndex = 4;
+    
+    const data = ranks[rankIndex];
+
+    // 更新文字與圖示
+    statusTitle.innerText = data.title;
+    statusIcon.innerText = data.icon;
+    statusMsg.innerText = data.msg;
+
+    // 更新背景顏色 (先移除舊的等級 class，再加新的)
+    statusPanel.className = 'status-panel ' + data.class;
+
+    // 觸發「彈跳」動畫 (移除 class 後再加回去，讓動畫重跑)
+    statusPanel.classList.remove('animate-pop');
+    void statusPanel.offsetWidth; // 這一行是為了強制瀏覽器重繪 (Magic trick)
+    statusPanel.classList.add('animate-pop');
+  }
+
+  // === 4. 監聽事件：只要有人勾選或取消，就執行更新 ===
+  checkboxes.forEach(box => {
+    box.addEventListener('change', updateStatus);
+  });
+
+</script>
 </script>
 </body>
 </html>
+
 
 
 
