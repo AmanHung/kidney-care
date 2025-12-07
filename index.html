@@ -386,7 +386,7 @@
                 </div>
                 
                 <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
-                    <span class="equip-icon">📿</span><span class="equip-name">護心項鍊</span><span class="equip-desc">Beta-blocker<br>減輕心臟負擔</span><input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">📿</span><span class="equip-name">護心藥</span><span class="equip-desc">Beta-blocker<br>減輕心臟負擔</span><input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-nsmra" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none;">
@@ -500,7 +500,7 @@
     const medDB = {
         'ras': { level: 'g', title: '✅ 基礎防禦 (ACEi/ARB)', desc: '腎臟與心臟的基礎保養藥物。剛使用 eGFR 微降屬正常。' },
         'arni': { level: 'g', title: '🏆 雙效神兵 (ARNI)', desc: '心衰竭治療首選！同時保護心臟與腎臟，顯著降低住院風險。' },
-        'bb': { level: 'g', title: '❤️ 護心盾牌 (Beta-blocker)', desc: '減輕心臟負擔，讓心跳變慢、跳得更有力。' },
+        'bb': { level: 'g', title: '❤️ 護心藥 (Beta-blocker)', desc: '減輕心臟負擔，讓心跳變慢、跳得更有力。' },
         'panadol': { level: 'g', title: '✅ 相對安全 (Acetaminophen)', desc: '普拿疼成分。在安全劑量下不傷腎。' },
         'mycin': { level: 'r', title: '⚠️ 高風險 (Aminoglycosides)', desc: '部分抗生素具腎毒性，看診時請務必主動告知醫師腎功能。' },
         'diuretic': { level: 'y', title: '🟡 需注意 (Diuretics)', desc: '利尿劑。有助消水腫，但若脫水 (Sick Day) 時需暫停。' },
@@ -674,7 +674,7 @@
         // 2. RASi / ARNI
         if (hasHF) {
             add(g, "ARNI (雙效神兵)", "心衰竭首選 (GDMT)！優於傳統血壓藥。");
-            add(g, "Beta-blocker (護心盾牌)", "心衰竭必備，讓心臟跳得更省力。");
+            add(g, "Beta-blocker (護心藥)", "心衰竭必備，讓心臟跳得更省力。");
             add(g, "MRA (醛固酮阻斷)", "心衰竭關鍵藥物，需定期監測血鉀。");
         } else {
             add(g, "RASi (ACEi/ARB)", "護腎首選血壓藥，抗蛋白尿基礎。");
@@ -857,7 +857,7 @@
         updateStatusAndAdvice();
     }
 
-    // --- 💡 全面覆蓋的裝備建議邏輯 ---
+   // --- 💡 全面修復版：裝備建議邏輯 ---
     function generateAdvice() {
         const hfVal = document.getElementById('kfre-hf').value;
         const dmVal = document.getElementById('kfre-dm').value;
@@ -866,7 +866,7 @@
         
         let adviceHTML = "";
         
-        // 1. SGLT2i (排糖藥)
+        // 1. SGLT2i (排糖藥) - 所有人皆顯示
         const useSglt2 = document.getElementById('drug-sglt2').checked;
         if (useSglt2) {
             adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>很好！這是 KDIGO 與心臟學會一致推薦的救命藥物。</div>`;
@@ -874,41 +874,49 @@
             adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 極重要建議</span><br><strong style="color:#d84315;">請諮詢醫師：</strong>排糖藥(SGLT2i)能顯著降低心衰竭住院與洗腎風險，是治療的基石。</div>`;
         }
 
-        // 2. RASi / ARNI
+        // 2. RASi / ARNI (血壓藥/雙效防護) - 所有人皆顯示
         const useRasi = document.getElementById('drug-rasi').checked;
         if (hasHF) {
-            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>ARNI/RASi：</strong>您使用了正確的心臟保護藥物！</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>心衰竭患者建議優先使用 ARNI (雙效藥) 或 ACEi/ARB。</div>`;
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>雙效防護 (ARNI/RASi)：</strong>您使用了正確的心臟保護藥物！</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>心衰竭患者建議優先使用 ARNI (雙效防護) 或 ACEi/ARB。</div>`;
         } else {
             if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>血壓藥 (RASi)：</strong>這對保護腎臟、減少蛋白尿非常重要。</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>ACEi/ARB 類藥物是保護腎臟的基礎裝備。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>基礎建議：</strong>ACEi/ARB 類藥物是保護腎臟的基礎裝備。</div>`;
         }
 
-        // 3. Beta-blocker (僅 HF)
-        if (hasHF) {
+        // 3. Beta-blocker (護心藥) - 僅 HF 顯示
+        const slotBb = document.getElementById('slot-bb');
+        if (slotBb.style.display !== 'none') {
             const useBb = document.getElementById('drug-bb').checked;
-            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>乙型阻斷劑：</strong>護心盾牌已裝備，能減輕心臟負擔。</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>乙型阻斷劑 (Beta-blocker) 是心衰竭的四大救命支柱之一。</div>`;
+            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>護心藥 (Beta-blocker)：</strong>已裝備！能有效減輕心臟負擔，讓心跳更穩定。</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>乙型阻斷劑是心衰竭的四大救命支柱之一，請諮詢醫師。</div>`;
         }
 
-        // 4. MRA (HF or DM)
+        // 4. MRA (醛固酮阻斷) - HF 或 DM+Proteinuria 顯示
         const slotNsmra = document.getElementById('slot-nsmra');
         if (slotNsmra.style.display !== 'none') {
             const useMra = document.getElementById('drug-nsmra').checked;
-            if (useMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>MRA/ns-MRA：</strong>您正在使用抗纖維化藥物，觀念正確！</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>${hasHF ? '醛固酮阻斷劑是心衰竭重要治療' : 'Finerenone 可預防糖尿病腎病變惡化'}，建議諮詢醫師。</div>`;
+            if (useMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>醛固酮阻斷 (MRA)：</strong>觀念正確！這能對抗心臟與腎臟的纖維化。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>${hasHF ? '醛固酮阻斷劑是心衰竭重要治療' : 'Finerenone 可預防糖尿病腎病變惡化'}，若血鉀正常建議諮詢。</div>`;
         }
 
-        // 5. Statin (All)
+        // 5. Statin (降血脂藥) - 所有人皆顯示 (修復漏字：補上已裝備提示)
         const useStatin = document.getElementById('drug-statin').checked;
-        if (!useStatin) {
+        if (useStatin) {
+             adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statins)：</strong>持續服用！穩定血管斑塊，遠離中風與心肌梗塞威脅。</div>`;
+        } else {
              adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>血管保護：</strong>腎友心血管風險高，使用 Statin 可預防中風。</div>`;
         }
 
-        // 6. GLP-1 (DM)
-        if (hasDM) {
+        // 6. GLP-1 (腸泌素) - 僅 DM 顯示 (修復漏字：補上未裝備提示)
+        const slotGlp1 = document.getElementById('slot-glp1');
+        if (slotGlp1.style.display !== 'none') {
              const useGlp1 = document.getElementById('drug-glp1').checked;
-             if (useGlp1) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素：</strong>控糖同時減重護心，是非常棒的選擇。</div>`;
+             if (useGlp1) {
+                 adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>控糖同時減重護心，是非常棒的選擇。</div>`;
+             } else {
+                 adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>控糖升級：</strong>若體重或血糖未達標，腸泌素是兼具護心、護腎與減重的強力選項。</div>`;
+             }
         }
 
         var adviceDiv = document.getElementById('dynamic-advice');
@@ -1017,3 +1025,4 @@
 </script>
 </body>
 </html>
+
