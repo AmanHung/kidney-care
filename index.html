@@ -294,7 +294,7 @@
         </div>
     </div>
 
-    <div id="tab-meds" class="section">
+<div id="tab-meds" class="section">
         <div class="card">
             <h2>💊 個人化用藥建議</h2>
             <div id="med-placeholder" style="padding:40px 10px; color:#999;">
@@ -302,142 +302,43 @@
                 <p style="font-size:1.3rem;">請先至「首頁」選擇腎功能<br>系統將自動產生建議</p>
                 <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
             </div>
-            <div class="card" style="border: 3px solid #6bbd45; background: #f0fdf4;">
-            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 我的護腎裝備檢查</h2>
-            <p style="text-align:left; color:#444; font-size:1rem; margin-bottom:15px;">
-                KDIGO 2024 指引建議使用「護腎神盾」藥物來延緩惡化。請勾選您目前<strong>正在服用</strong>的藥物：
-            </p>
-
-            <div style="text-align:left; background:white; padding:15px; border-radius:15px; border:2px solid #e0e0e0; margin-bottom:20px;">
-                <div style="margin-bottom:15px;">
-                    <label style="display:flex; align-items:center; font-size:1.2rem; font-weight:900; cursor:pointer;">
-                        <input type="checkbox" id="check-dm" style="transform:scale(1.5); margin-right:10px;"> 
-                        🩸 我有「糖尿病」
-                    </label>
+            
+            <div class="card" style="border: 3px solid #6bbd45; background: #f0fdf4; margin-top: 20px;">
+                <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 我的護腎裝備檢查</h2>
+                <p style="text-align:left; color:#444; font-size:1rem; margin-bottom:15px;">
+                    KDIGO 2024 指引建議使用「護腎神盾」藥物來延緩惡化。請勾選您目前<strong>正在服用</strong>的藥物：
+                </p>
+                <div style="text-align:left; background:white; padding:15px; border-radius:15px; border:2px solid #e0e0e0; margin-bottom:20px;">
+                    <div style="margin-bottom:15px;">
+                        <label style="display:flex; align-items:center; font-size:1.2rem; font-weight:900; cursor:pointer;">
+                            <input type="checkbox" id="check-dm" style="transform:scale(1.5); margin-right:10px;"> 
+                            🩸 我有「糖尿病」
+                        </label>
+                    </div>
+                    <hr style="border:0; border-top:1px dashed #ccc; margin:10px 0;">
+                    <div style="display:grid; gap:12px;">
+                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                            <input type="checkbox" id="drug-rasi" style="transform:scale(1.5); margin-right:10px;"> 
+                            💊 血壓藥 (ACEi/ARB) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(學名結尾 -pril 或 -sartan)</span>
+                        </label>
+                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                            <input type="checkbox" id="drug-sglt2" style="transform:scale(1.5); margin-right:10px;"> 
+                            💊 排糖藥 (SGLT2i) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Forxiga, Jardiance)</span>
+                        </label>
+                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                            <input type="checkbox" id="drug-nsmra" style="transform:scale(1.5); margin-right:10px;"> 
+                            💊 新型護腎藥 (ns-MRA) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(Kerendia/Finerenone)</span>
+                        </label>
+                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                            <input type="checkbox" id="drug-statin" style="transform:scale(1.5); margin-right:10px;"> 
+                            💊 降血脂藥 (Statins) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Lipitor, Crestor)</span>
+                        </label>
+                    </div>
                 </div>
-                <hr style="border:0; border-top:1px dashed #ccc; margin:10px 0;">
-                
-                <div style="display:grid; gap:12px;">
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-rasi" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 血壓藥 (ACEi/ARB) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(學名結尾 -pril 或 -sartan)</span>
-                    </label>
-
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-sglt2" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 排糖藥 (SGLT2i) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Forxiga, Jardiance)</span>
-                    </label>
-
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-nsmra" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 新型護腎藥 (ns-MRA) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(Kerendia/Finerenone)</span>
-                    </label>
-                    
-                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                        <input type="checkbox" id="drug-statin" style="transform:scale(1.5); margin-right:10px;"> 
-                        💊 降血脂藥 (Statins) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Lipitor, Crestor)</span>
-                    </label>
-                </div>
+                <button class="btn" onclick="checkKidneyArmor()">🛡️ 分析我的裝備強度</button>
+                <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;"></div>
             </div>
 
-            <button class="btn" onclick="checkKidneyArmor()">🛡️ 分析我的裝備強度</button>
-            
-            <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;">
-                </div>
-        </div>
-        ```
-
-### 第二步：修改 JavaScript (增加分析邏輯)
-
-請將以下 `checkKidneyArmor` 函式加到 `<script>` 標籤內的最後面（在 `initQuiz();` 之前）。
-
-這個邏輯嚴格遵循 **KDIGO 2024 指引**：
-* **SGLT2i**：推薦用於 eGFR $\ge$ 20 的 CKD 患者 [cite: 1211, 1350]。
-* **ns-MRA**：推薦用於 T2D + CKD (eGFR > 25) + 蛋白尿 。
-* **Statins**：推薦用於年齡 $\ge$ 50 的 CKD 患者 。
-
-```javascript
-    // --- 新增功能：護腎裝備檢查邏輯 (KDIGO 2024 Medication Stewardship) ---
-    function checkKidneyArmor() {
-        // 1. 取得使用者輸入 (來自首頁與勾選)
-        // 注意：eGFR 和 UACR 需從首頁的選單獲取。若使用者未填，預設為安全值以免報錯，但會提示。
-        var egfrSel = document.getElementById('kfre-egfr');
-        var uacrSel = document.getElementById('kfre-uacr');
-        var ageSel = document.getElementById('kfre-age');
-        
-        var egfr = egfrSel.value ? parseFloat(egfrSel.value) : 0;
-        var uacr = uacrSel.value ? parseFloat(uacrSel.value) : 0;
-        var age = ageSel.value ? parseFloat(ageSel.value) : 0;
-        
-        // 若首頁未填寫，提示使用者
-        if(!egfrSel.value) {
-            alert("請先至「首頁」填寫 eGFR 腎功能數值，才能進行精準分析喔！");
-            switchTab('home');
-            return;
-        }
-
-        var hasDM = document.getElementById('check-dm').checked;
-        var useRasi = document.getElementById('drug-rasi').checked;
-        var useSglt2 = document.getElementById('drug-sglt2').checked;
-        var useNsmra = document.getElementById('drug-nsmra').checked;
-        var useStatin = document.getElementById('drug-statin').checked;
-
-        var resultDiv = document.getElementById('armor-result');
-        var feedbackHTML = "";
-        var score = 0; // 裝備強度分數
-
-        // --- 邏輯判斷 (基於 KDIGO 2024) ---
-
-        // 1. SGLT2i (排糖藥) - 核心裝備
-        // 指引: eGFR >= 20 推薦使用 [cite: 1211]
-        if (useSglt2) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾，能顯著延緩洗腎風險。</div>`;
-            score++;
-        } else if (egfr >= 20) {
-            feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>根據 KDIGO 指引，您的 eGFR 適合使用 SGLT2i 排糖藥來保護腎臟與心臟。建議下次門診諮詢醫師：「我適合加這個藥嗎？」</div>`;
-        }
-
-        // 2. RASi (血壓藥) - 基礎裝備
-        // 指引: 有蛋白尿建議使用 [cite: 734]
-        // UACR 150 (微量) 或 500 (嚴重) 代表有蛋白尿
-        if (useRasi) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>RASi 血壓藥：</strong>這是基礎護甲，對抗蛋白尿不可或缺。</div>`;
-            score++;
-        } else if (uacr >= 30) { 
-             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療，能降低腎臟壓力。</div>`;
-        }
-
-        // 3. ns-MRA (Finerenone) - 進階裝備
-        // 指引: T2D + eGFR > 25 + 蛋白尿 [cite: 741]
-        if (useNsmra) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>這是進階裝備！能進一步抗發炎、抗纖維化。</div>`;
-            score++;
-        } else if (hasDM && egfr > 25 && uacr >= 30) {
-            // 如果已用 RASi 但仍有蛋白尿，強烈建議
-             feedbackHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px;">ℹ️ <strong>新藥資訊：</strong>您符合「糖尿病+蛋白尿」條件。若血鉀正常，可諮詢醫師是否加上 Finerenone (拿舒) 來強化保護。</div>`;
-        }
-
-        // 4. Statin (血脂藥)
-        // 指引: 年齡 >= 50 建議使用 
-        if (useStatin) {
-             feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風與心肌梗塞。</div>`;
-             score++;
-        } else if (age >= 50) {
-             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>針對 50 歲以上 CKD 腎友，指引建議使用 Statin 預防心血管疾病。</div>`;
-        }
-
-        // 總評
-        let summary = "";
-        if (score >= 3) summary = "<h3 style='color:#2e7d32; text-align:center;'>🏆 您的護腎裝備：大師級！</h3><p style='text-align:center;'>防護非常完善，請繼續保持！</p>";
-        else if (score >= 1) summary = "<h3 style='color:#f57c00; text-align:center;'>🛡️ 您的護腎裝備：基礎級</h3><p style='text-align:center;'>還有升級空間，請參考上方建議諮詢醫師。</p>";
-        else summary = "<h3 style='color:#555; text-align:center;'>⚠️ 您的護腎裝備：尚未著裝</h3><p style='text-align:center;'>別擔心，好的治療能改變命運，快拿著建議去問藥師或醫師！</p>";
-
-        resultDiv.innerHTML = summary + feedbackHTML;
-        resultDiv.classList.remove('hidden');
-        
-        // 自動捲動到結果
-        resultDiv.scrollIntoView({ behavior: 'smooth' });
-    }
             <div id="med-content" class="hidden">
                 <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">
                     依據您的 <strong>eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span></strong> 分析：
@@ -456,6 +357,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
             <p style="font-size: 0.9rem; color:#666;">不確定藥品風險？請在此查詢</p>
@@ -502,11 +404,9 @@
                     口訣：SADMANS (悲傷男人)
                 </p>
             </div>
-
             <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">
                 當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況（如：發燒、嚴重嘔吐、腹瀉）無法進食喝水時，請<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">暫停</span>以下藥物，並<span style="background:#ffccbc; color:#0044cc; padding:2px 5px; border-radius:5px;">就醫</span>：
             </p>
-
             <div style="text-align:left; display:grid; grid-template-columns: 1fr; gap:10px;">
                 <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">
                     💊 <strong>S</strong>ulfonylureas <span style="font-size:0.9rem; color:#666; float:right;">(促胰島素降糖藥)</span>
@@ -530,7 +430,6 @@
                     💊 <strong>S</strong>GLT2i <span style="font-size:0.9rem; color:#666; float:right;">(排糖藥)</span>
                 </div>
             </div>
-            
             <div style="background:rgba(255,255,255,0.6); padding:15px; border-radius:10px; margin-top:20px; border-left:5px solid #e65100; text-align:left;">
                 <p style="font-size:1rem; color:#bf360c; margin:0; font-weight:bold;">
                     💡 恢復守則：
@@ -1056,10 +955,85 @@ function updateProteinIntake() {
     if(displayDiv) displayDiv.style.display = 'block';
 }
     
+    function checkKidneyArmor() {
+        // 1. 取得使用者輸入 (來自首頁與勾選)
+        var egfrSel = document.getElementById('kfre-egfr');
+        var uacrSel = document.getElementById('kfre-uacr');
+        var ageSel = document.getElementById('kfre-age');
+        
+        var egfr = egfrSel.value ? parseFloat(egfrSel.value) : 0;
+        var uacr = uacrSel.value ? parseFloat(uacrSel.value) : 0;
+        var age = ageSel.value ? parseFloat(ageSel.value) : 0;
+        
+        // 若首頁未填寫，提示使用者
+        if(!egfrSel.value) {
+            alert("請先至「首頁」填寫 eGFR 腎功能數值，才能進行精準分析喔！");
+            switchTab('home');
+            return;
+        }
+
+        var hasDM = document.getElementById('check-dm').checked;
+        var useRasi = document.getElementById('drug-rasi').checked;
+        var useSglt2 = document.getElementById('drug-sglt2').checked;
+        var useNsmra = document.getElementById('drug-nsmra').checked;
+        var useStatin = document.getElementById('drug-statin').checked;
+
+        var resultDiv = document.getElementById('armor-result');
+        var feedbackHTML = "";
+        var score = 0; // 裝備強度分數
+
+        // --- 邏輯判斷 (基於 KDIGO 2024) ---
+
+        // 1. SGLT2i (排糖藥) - 核心裝備
+        if (useSglt2) {
+            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾，能顯著延緩洗腎風險。</div>`;
+            score++;
+        } else if (egfr >= 20) {
+            feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>根據 KDIGO 指引，您的 eGFR 適合使用 SGLT2i 排糖藥來保護腎臟與心臟。建議下次門診諮詢醫師：「我適合加這個藥嗎？」</div>`;
+        }
+
+        // 2. RASi (血壓藥) - 基礎裝備
+        if (useRasi) {
+            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>RASi 血壓藥：</strong>這是基礎護甲，對抗蛋白尿不可或缺。</div>`;
+            score++;
+        } else if (uacr >= 30) { 
+             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療，能降低腎臟壓力。</div>`;
+        }
+
+        // 3. ns-MRA (Finerenone) - 進階裝備
+        if (useNsmra) {
+            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>這是進階裝備！能進一步抗發炎、抗纖維化。</div>`;
+            score++;
+        } else if (hasDM && egfr > 25 && uacr >= 30) {
+             feedbackHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px;">ℹ️ <strong>新藥資訊：</strong>您符合「糖尿病+蛋白尿」條件。若血鉀正常，可諮詢醫師是否加上 Finerenone (拿舒) 來強化保護。</div>`;
+        }
+
+        // 4. Statin (血脂藥)
+        if (useStatin) {
+             feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風與心肌梗塞。</div>`;
+             score++;
+        } else if (age >= 50) {
+             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>針對 50 歲以上 CKD 腎友，指引建議使用 Statin 預防心血管疾病。</div>`;
+        }
+
+        // 總評
+        let summary = "";
+        if (score >= 3) summary = "<h3 style='color:#2e7d32; text-align:center;'>🏆 您的護腎裝備：大師級！</h3><p style='text-align:center;'>防護非常完善，請繼續保持！</p>";
+        else if (score >= 1) summary = "<h3 style='color:#f57c00; text-align:center;'>🛡️ 您的護腎裝備：基礎級</h3><p style='text-align:center;'>還有升級空間，請參考上方建議諮詢醫師。</p>";
+        else summary = "<h3 style='color:#555; text-align:center;'>⚠️ 您的護腎裝備：尚未著裝</h3><p style='text-align:center;'>別擔心，好的治療能改變命運，快拿著建議去問藥師或醫師！</p>";
+
+        resultDiv.innerHTML = summary + feedbackHTML;
+        resultDiv.classList.remove('hidden');
+        
+        // 自動捲動到結果
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+    
     initQuiz();
 </script>
 </body>
 </html>
+
 
 
 
