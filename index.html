@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v7.2 (完整修復版)</title>
+    <title>腎利管家 v7.4 (邏輯校正版)</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
@@ -48,7 +48,6 @@
         .input-group { margin-bottom: 25px; text-align: left; }
         .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
         
-        /* 下拉選單 */
         .select-wrapper { position: relative; width: 100%; }
         select { 
             width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
@@ -66,7 +65,7 @@
             font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
         }
 
-        /* --- 按鈕式選項樣式 (Pill Buttons) --- */
+        /* 按鈕式選項 (Pill Buttons) */
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn {
             flex: 1; padding: 15px 5px; 
@@ -538,7 +537,7 @@
 
         let col = '1', uacrText = '正常/輕微';
         if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } 
-        else if (uacr >= 30) { col = '2'; uacrText = '微量蛋白尿'; }
+        else if (uacr >= 300) { col = '2'; uacrText = '微量蛋白尿'; }
 
         const cellId = `cell-${row}-${col}`;
         const cell = document.getElementById(cellId);
@@ -557,7 +556,7 @@
 
         updateMeds(egfr, hasDM);
         updateDiet(egfr, hasDM);
-        updateArmorVisibility(hasDM, egfr); // 傳入 egfr
+        updateArmorVisibility(hasDM, egfr); 
 
         // KFRE
         const sexNum = parseFloat(sex);
@@ -606,9 +605,9 @@
             add(g, "SGLT2i (排糖藥)", msg);
         } else add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議新起始，但若原先已服用可續用。");
 
-        // ns-MRA 邏輯修正：eGFR > 25 且蛋白尿異常
         if (hasDM) {
-            if (egfr > 25 && uacr >= 30) add(g, "ns-MRA (Finerenone)", "針對糖尿病合併蛋白尿，建議諮詢醫師加用。");
+            // 用藥建議修正：eGFR >= 25 且蛋白尿異常 (30) 才會建議
+            if (egfr >= 25 && uacr >= 30) add(g, "ns-MRA (Finerenone)", "針對糖尿病合併蛋白尿，建議諮詢醫師加用。");
             add(g, "GLP-1 RA (腸泌素)", "針對糖尿病腎病變，具優秀的護腎與護心實證。");
         }
         add(g, "Statins (降血脂藥)", "預防中風與心血管事件，建議持續服用。");
@@ -746,8 +745,7 @@
         const slotGlp1 = document.getElementById('slot-glp1');
         const slotNsmra = document.getElementById('slot-nsmra');
         
-        // ns-MRA: 必須有糖尿病 且 eGFR > 25 才顯示 (否則隱藏)
-        // 這樣就能與用藥建議邏輯一致
+        // ns-MRA: 必須有糖尿病 且 eGFR >= 25 才顯示 (與用藥建議同步)
         if (!hasDM || egfr < 25) {
             document.getElementById('drug-nsmra').checked = false;
             slotNsmra.classList.remove('equipped');
@@ -808,7 +806,7 @@
         updateStatusAndAdvice();
     }
 
-function generateAdvice() {
+    function generateAdvice() {
         var egfrSel = document.getElementById('kfre-egfr');
         var uacrSel = document.getElementById('kfre-uacr');
         var dmSel = document.getElementById('kfre-dm');
@@ -826,81 +824,38 @@ function generateAdvice() {
 
         // 1. SGLT2 (特殊強調 KDIGO 2024)
         if (useSglt2) {
-            // 已裝備：維持綠色，但文字加強肯定
-            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">
-                ✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是 KDIGO 指引認證最強的護腎神盾。
-            </div>`;
+            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是 KDIGO 指引認證最強的護腎神盾。</div>`;
         } else if (egfr >= 20) {
-            // 未裝備：使用特殊的「高亮樣式」 (淺紅/金底 + 紅框 + 標籤)
             let tip = hasDM ? "您有糖尿病" : "即使沒有糖尿病";
-            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 143, 0, 0.15);">
-                <span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold; display:inline-block; margin-bottom:5px;">🔥 KDIGO 2024 新指引首選</span>
-                <br>
-                <strong style="color:#d84315; font-size:1.1rem;">建議優先諮詢！</strong>
-                <p style="margin:5px 0 0 0; color:#333;">${tip}，此藥物已被證實能顯著延緩腎功能惡化與保護心臟，是目前的治療核心。</p>
-            </div>`;
+            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(255, 143, 0, 0.15);"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold; display:inline-block; margin-bottom:5px;">🔥 KDIGO 2024 新指引首選</span><br><strong style="color:#d84315; font-size:1.1rem;">建議優先諮詢！</strong><p style="margin:5px 0 0 0; color:#333;">${tip}，此藥物已被證實能顯著延緩腎功能惡化與保護心臟，是目前的治療核心。</p></div>`;
         }
 
-        // 2. GLP-1 (樣式回歸統一：黃色建議)
+        // 2. GLP-1
         if (hasDM) {
-            if (useGlp1) {
-                adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">
-                    ✅ <strong>腸泌素 (GLP-1 RA)：</strong>強大的控糖魔杖！保護腎臟同時控制體重。
-                </div>`;
-            } else {
-                // 這裡改回與其他建議一樣的黃色背景 (原本是藍色)
-                adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">
-                    💡 <strong>新藥趨勢：</strong>GLP-1 腸泌素是糖尿病護腎新支柱，若血糖或體重控制不佳，可諮詢醫師。
-                </div>`;
-            }
+            if (useGlp1) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>強大的控糖魔杖！保護腎臟同時控制體重。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>新藥趨勢：</strong>GLP-1 腸泌素是糖尿病護腎新支柱，若血糖或體重控制不佳，可諮詢醫師。</div>`;
         }
 
-        // 3. RASi (標準樣式)
-        if (useRasi) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">
-                ✅ <strong>RASi 血壓藥：</strong>基礎護甲，對抗蛋白尿不可或缺。
-            </div>`;
-        } else if (uacr >= 30) {
-            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">
-                💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。
-            </div>`;
-        }
+        // 3. RASi
+        if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi 血壓藥：</strong>基礎護甲，對抗蛋白尿不可或缺。</div>`;
+        else if (uacr >= 30) adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。</div>`;
 
-        // 4. ns-MRA (標準樣式)
+        // 4. ns-MRA (eGFR >= 25 才顯示建議)
         if (hasDM && egfr >= 25) { 
-            if (useNsmra) {
-                adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">
-                    ✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。
-                </div>`;
-            } else if (uacr >= 30) {
-                adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">
-                    💡 <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。
-                </div>`;
-            }
+            if (useNsmra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。</div>`;
+            else if (uacr >= 30) adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。</div>`;
         }
 
-        // 5. Statin (標準樣式)
-        if (useStatin) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">
-                ✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。
-            </div>`;
-        } else if (egfr < 60) {
-            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">
-                💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。
-            </div>`;
-        }
+        // 5. Statin
+        if (useStatin) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。</div>`;
+        else if (egfr < 60) adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。</div>`;
 
         var adviceDiv = document.getElementById('dynamic-advice');
-        if (adviceHTML !== "") { 
-            adviceDiv.innerHTML = adviceHTML; 
-            adviceDiv.classList.remove('hidden'); 
-        } else { 
-            adviceDiv.classList.add('hidden'); 
-        }
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
     }
 
     initQuiz();
 </script>
 </body>
 </html>
-
