@@ -539,21 +539,12 @@
         </div>
     </div>
 
-    <div id="tab-quiz" class="section">
+<div id="tab-quiz" class="section">
         
-        <div id="status-panel" class="status-panel status-novice">
-            <div class="status-icon" id="status-icon">⚠️</div>
-            <div class="status-info">
-                <div class="status-label">目前稱號</div>
-                <div class="status-title" id="status-title">新手冒險者</div>
-                <div class="status-msg" id="status-msg">哎呀！您的腎臟目前完全沒有防護，風險極高！</div>
-            </div>
-        </div>
-
         <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
             <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備庫</h2>
             <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">
-                點擊方塊「穿戴」您正在使用的藥物<br>上方狀態列將自動升級！
+                點擊方塊「穿戴」您正在使用的藥物<br>稱號與建議將會即時更新！
             </p>
 
             <div style="text-align:center;">
@@ -565,39 +556,44 @@
             </div>
 
             <div class="equip-grid">
-                
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
                     <span class="equip-icon">🛡️</span>
                     <span class="equip-name">排糖藥</span>
                     <span class="equip-desc">核心神器 SGLT2i</span>
                     <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
                     <span class="equip-icon">🧥</span>
                     <span class="equip-name">血壓藥</span>
                     <span class="equip-desc">基礎鎧甲 ACEi/ARB</span>
                     <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-nsmra')">
                     <span class="equip-icon">🔮</span>
                     <span class="equip-name">新型護腎藥</span>
                     <span class="equip-desc">高階強化 ns-MRA</span>
                     <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
                     <span class="equip-icon">💊</span>
                     <span class="equip-name">降血脂藥</span>
                     <span class="equip-desc">血管護符 Statins</span>
                     <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
-
             </div>
 
-            <button class="btn" onclick="checkKidneyArmor()">📊 分析裝備強度</button>
-            <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;"></div>
+            <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
+                <div class="status-icon" id="status-icon">⚠️</div>
+                <div class="status-info">
+                    <div class="status-label">目前稱號</div>
+                    <div class="status-title" id="status-title">新手冒險者</div>
+                    <div class="status-msg" id="status-msg">哎呀！您的腎臟目前完全沒有防護，風險極高！</div>
+                </div>
+            </div>
+
+            <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;">
+                </div>
+
         </div>
 
         <div class="card">
@@ -942,7 +938,7 @@
         if(displayDiv) displayDiv.style.display = 'block';
     }
 
-    // --- 護腎裝備與等級連動邏輯 ---
+// --- 護腎裝備與等級連動邏輯 (修正版) ---
     const ranks = [
         { count: 0, class: 'status-novice', title: '新手冒險者 (Novice)', icon: '⚠️', msg: '哎呀！您的腎臟目前完全沒有防護，請盡快諮詢醫師！' },
         { count: 1, class: 'status-apprentice', title: '見習衛士 (Apprentice)', icon: '🛡️', msg: '很好！您穿上了第一件裝備，開始保護腎臟了。' },
@@ -951,45 +947,115 @@
         { count: 4, class: 'status-guardian', title: '腎臟守護神 (Guardian)', icon: '🏆', msg: '完美無缺！您擁有最強的裝備陣容，是健康的模範生！' }
     ];
 
-    function updateStatus() {
+    // 主要更新函式：同時處理「稱號」與「建議文字」
+    function updateStatusAndAdvice() {
         const checkboxes = document.querySelectorAll('.gear-checkbox');
-        const statusPanel = document.getElementById('status-panel');
-        const statusIcon = document.getElementById('status-icon');
-        const statusTitle = document.getElementById('status-title');
-        const statusMsg = document.getElementById('status-msg');
-
+        
+        // 1. 計算數量與更新稱號
         let checkedCount = 0;
         checkboxes.forEach(box => { if (box.checked) checkedCount++; });
+        
         let rankIndex = checkedCount;
         if (rankIndex >= 4) rankIndex = 4;
         
         const data = ranks[rankIndex];
-        statusTitle.innerText = data.title;
-        statusIcon.innerText = data.icon;
-        statusMsg.innerText = data.msg;
+        
+        // 更新 UI 稱號區塊
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        
+        // 更新背景色與動畫
         statusPanel.className = 'status-panel ' + data.class;
         statusPanel.classList.remove('animate-pop');
-        void statusPanel.offsetWidth; 
+        void statusPanel.offsetWidth; // Trigger Reflow
         statusPanel.classList.add('animate-pop');
+
+        // 2. 產生動態建議 (取代原本的分析按鈕功能)
+        generateAdvice();
     }
 
+    function generateAdvice() {
+        // 取得使用者資料
+        var egfrSel = document.getElementById('kfre-egfr');
+        var uacrSel = document.getElementById('kfre-uacr');
+        var egfr = egfrSel.value ? parseFloat(egfrSel.value) : 0;
+        var uacr = uacrSel.value ? parseFloat(uacrSel.value) : 0;
+        var hasDM = document.getElementById('check-dm').checked;
+
+        // 取得裝備狀態
+        var useSglt2 = document.getElementById('drug-sglt2').checked;
+        var useRasi = document.getElementById('drug-rasi').checked;
+        var useNsmra = document.getElementById('drug-nsmra').checked;
+        var useStatin = document.getElementById('drug-statin').checked;
+
+        var adviceHTML = "";
+
+        // 邏輯判斷 (產生 HTML)
+        
+        // SGLT2
+        if (useSglt2) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾。</div>`;
+        } else if (egfr >= 20) {
+            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>根據指引，您的 eGFR 適合使用 SGLT2i 排糖藥保護腎臟。</div>`;
+        }
+
+        // RASi
+        if (useRasi) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi 血壓藥：</strong>這是基礎護甲，對抗蛋白尿不可或缺。</div>`;
+        } else if (uacr >= 30) {
+            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。</div>`;
+        }
+
+        // ns-MRA
+        if (useNsmra) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。</div>`;
+        } else if (hasDM && egfr > 25 && uacr >= 30) {
+            adviceHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px; border-radius:5px;">ℹ️ <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。</div>`;
+        }
+
+        // Statin
+        if (useStatin) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。</div>`;
+        } else if (egfr < 60) {
+            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。</div>`;
+        }
+
+        // 顯示結果
+        var adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") {
+            adviceDiv.innerHTML = adviceHTML;
+            adviceDiv.classList.remove('hidden');
+        } else {
+            adviceDiv.classList.add('hidden');
+        }
+    }
+
+    // 點擊裝備格子的動作
     function toggleEquip(element, checkboxId) {
         var checkbox = document.getElementById(checkboxId);
         checkbox.checked = !checkbox.checked;
+        
         if(checkbox.checked) {
             element.classList.add('equipped');
             playSound(true);
         } else {
             element.classList.remove('equipped');
         }
-        updateStatus(); // 點擊時立即更新上方的稱號
+        
+        // 立即更新狀態與建議
+        updateStatusAndAdvice();
     }
 
+    // 切換糖尿病的動作
     function toggleDM() {
         var btn = document.getElementById('dm-toggle');
         var checkbox = document.getElementById('check-dm');
         var text = document.getElementById('dm-text');
+        
         checkbox.checked = !checkbox.checked;
+        
         if(checkbox.checked) {
             btn.classList.add('active');
             text.innerText = "我有糖尿病";
@@ -998,63 +1064,13 @@
             btn.classList.remove('active');
             text.innerText = "我沒有糖尿病";
         }
-    }
-
-    function checkKidneyArmor() {
-        var egfrSel = document.getElementById('kfre-egfr');
-        var uacrSel = document.getElementById('kfre-uacr');
-        var egfr = egfrSel.value ? parseFloat(egfrSel.value) : 0;
-        var uacr = uacrSel.value ? parseFloat(uacrSel.value) : 0;
         
-        if(!egfrSel.value) {
-            alert("請先至「首頁」填寫 eGFR 腎功能數值，才能進行精準分析喔！");
-            switchTab('home');
-            return;
-        }
-
-        var hasDM = document.getElementById('check-dm').checked;
-        var useRasi = document.getElementById('drug-rasi').checked;
-        var useSglt2 = document.getElementById('drug-sglt2').checked;
-        var useNsmra = document.getElementById('drug-nsmra').checked;
-        var useStatin = document.getElementById('drug-statin').checked;
-        var resultDiv = document.getElementById('armor-result');
-        var feedbackHTML = "";
-        var score = 0;
-
-        if (useSglt2) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾。</div>`; score++;
-        } else if (egfr >= 20) {
-            feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>根據指引，您的 eGFR 適合使用 SGLT2i 排糖藥保護腎臟。</div>`;
-        }
-
-        if (useRasi) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>RASi 血壓藥：</strong>這是基礎護甲，對抗蛋白尿不可或缺。</div>`; score++;
-        } else if (uacr >= 30) { 
-             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。</div>`;
-        }
-
-        if (useNsmra) {
-            feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。</div>`; score++;
-        } else if (hasDM && egfr > 25 && uacr >= 30) {
-             feedbackHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px;">ℹ️ <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。</div>`;
-        }
-
-        if (useStatin) {
-             feedbackHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。</div>`; score++;
-        } else if (egfr < 60) {
-             feedbackHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px;">💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。</div>`;
-        }
-
-        let summary = "";
-        if (score >= 3) summary = "<h3 style='color:#2e7d32; text-align:center;'>🏆 您的護腎裝備：大師級！</h3><p style='text-align:center;'>防護完善，請繼續保持！</p>";
-        else if (score >= 1) summary = "<h3 style='color:#f57c00; text-align:center;'>🛡️ 您的護腎裝備：基礎級</h3><p style='text-align:center;'>還有升級空間，請參考上方建議諮詢醫師。</p>";
-        else summary = "<h3 style='color:#555; text-align:center;'>⚠️ 您的護腎裝備：尚未著裝</h3><p style='text-align:center;'>別擔心，好的治療能改變命運，快拿著建議去問藥師或醫師！</p>";
-        resultDiv.innerHTML = summary + feedbackHTML;
-        resultDiv.classList.remove('hidden');
-        resultDiv.scrollIntoView({ behavior: 'smooth' });
+        // 糖尿病狀態改變也會影響建議 (例如 ns-MRA)
+        updateStatusAndAdvice();
     }
 
     initQuiz();
 </script>
 </body>
 </html>
+
