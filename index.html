@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v7.0 (糖尿病整合版)</title>
+    <title>腎利管家 v7.0 (最終修正版)</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
@@ -51,20 +51,33 @@
         .card { background: var(--white); border-radius: 20px; padding: 25px 20px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
         .card h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; font-weight: 900; border-bottom: 3px solid #f0f4f8; padding-bottom: 15px; margin-bottom: 20px; }
 
-        /* Inputs */
+        /* Inputs & Selects (修復下拉選單樣式) */
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
-        .select-wrapper { position: relative; }
+        
+        .select-wrapper { position: relative; width: 100%; }
+        
         select { 
             width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
             font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222;
-            -webkit-appearance: none; appearance: none;
+            -webkit-appearance: none; appearance: none; /* 移除預設箭頭 */
+            cursor: pointer;
         }
+        
+        /* 自定義箭頭 */
         .select-wrapper::after { 
-            content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
-            color: #444; pointer-events: none; font-size: 1.2rem; 
+            content: '▼'; 
+            position: absolute; 
+            right: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: #444; 
+            pointer-events: none; /* 讓點擊穿透到 select */
+            font-size: 1.2rem; 
         }
+        
         select:focus { border-color: var(--primary); background: #f9fff9; }
+        
         input[type="number"] {
             width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
             font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
