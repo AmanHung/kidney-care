@@ -303,42 +303,6 @@
                 <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
             </div>
             
-            <div class="card" style="border: 3px solid #6bbd45; background: #f0fdf4; margin-top: 20px;">
-                <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 我的護腎裝備檢查</h2>
-                <p style="text-align:left; color:#444; font-size:1rem; margin-bottom:15px;">
-                    KDIGO 2024 指引建議使用「護腎神盾」藥物來延緩惡化。請勾選您目前<strong>正在服用</strong>的藥物：
-                </p>
-                <div style="text-align:left; background:white; padding:15px; border-radius:15px; border:2px solid #e0e0e0; margin-bottom:20px;">
-                    <div style="margin-bottom:15px;">
-                        <label style="display:flex; align-items:center; font-size:1.2rem; font-weight:900; cursor:pointer;">
-                            <input type="checkbox" id="check-dm" style="transform:scale(1.5); margin-right:10px;"> 
-                            🩸 我有「糖尿病」
-                        </label>
-                    </div>
-                    <hr style="border:0; border-top:1px dashed #ccc; margin:10px 0;">
-                    <div style="display:grid; gap:12px;">
-                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                            <input type="checkbox" id="drug-rasi" style="transform:scale(1.5); margin-right:10px;"> 
-                            💊 血壓藥 (ACEi/ARB) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(學名結尾 -pril 或 -sartan)</span>
-                        </label>
-                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                            <input type="checkbox" id="drug-sglt2" style="transform:scale(1.5); margin-right:10px;"> 
-                            💊 排糖藥 (SGLT2i) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Forxiga, Jardiance)</span>
-                        </label>
-                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                            <input type="checkbox" id="drug-nsmra" style="transform:scale(1.5); margin-right:10px;"> 
-                            💊 新型護腎藥 (ns-MRA) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(Kerendia/Finerenone)</span>
-                        </label>
-                        <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
-                            <input type="checkbox" id="drug-statin" style="transform:scale(1.5); margin-right:10px;"> 
-                            💊 降血脂藥 (Statins) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Lipitor, Crestor)</span>
-                        </label>
-                    </div>
-                </div>
-                <button class="btn" onclick="checkKidneyArmor()">🛡️ 分析我的裝備強度</button>
-                <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;"></div>
-            </div>
-
             <div id="med-content" class="hidden">
                 <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">
                     依據您的 <strong>eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span></strong> 分析：
@@ -509,7 +473,52 @@
         </div>
     </div>
 
-    <div id="tab-quiz" class="section">
+<div id="tab-quiz" class="section">
+        
+        <div class="card" style="border: 3px solid #6bbd45; background: #f0fdf4;">
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備檢查</h2>
+            <p style="text-align:left; color:#444; font-size:1rem; margin-bottom:15px;">
+                上戰場（測驗）前，先檢查您的護腎裝備是否齊全！<br>
+                <span style="font-size:0.9rem; color:#666;">(KDIGO 2024 指引推薦藥物)</span>
+            </p>
+
+            <div style="text-align:left; background:white; padding:15px; border-radius:15px; border:2px solid #e0e0e0; margin-bottom:20px;">
+                <div style="margin-bottom:15px;">
+                    <label style="display:flex; align-items:center; font-size:1.2rem; font-weight:900; cursor:pointer;">
+                        <input type="checkbox" id="check-dm" style="transform:scale(1.5); margin-right:10px;"> 
+                        🩸 我有「糖尿病」
+                    </label>
+                </div>
+                <hr style="border:0; border-top:1px dashed #ccc; margin:10px 0;">
+                
+                <div style="display:grid; gap:12px;">
+                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                        <input type="checkbox" id="drug-rasi" style="transform:scale(1.5); margin-right:10px;"> 
+                        💊 血壓藥 (ACEi/ARB) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(字尾 -pril / -sartan)</span>
+                    </label>
+
+                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                        <input type="checkbox" id="drug-sglt2" style="transform:scale(1.5); margin-right:10px;"> 
+                        💊 排糖藥 (SGLT2i) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Forxiga, Jardiance)</span>
+                    </label>
+
+                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                        <input type="checkbox" id="drug-nsmra" style="transform:scale(1.5); margin-right:10px;"> 
+                        💊 新型護腎藥 (ns-MRA) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(Kerendia/Finerenone)</span>
+                    </label>
+                    
+                    <label style="display:flex; align-items:center; font-size:1.15rem; font-weight:bold; color:#0277bd; cursor:pointer;">
+                        <input type="checkbox" id="drug-statin" style="transform:scale(1.5); margin-right:10px;"> 
+                        💊 降血脂藥 (Statins) <br><span style="font-size:0.85rem; color:#666; margin-left:5px;">(如 Lipitor, Crestor)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkKidneyArmor()">🛡️ 分析我的裝備強度</button>
+            
+            <div id="armor-result" class="hidden" style="margin-top:20px; text-align:left; animation: fadeIn 0.5s;">
+                </div>
+        </div>
         <div class="card">
             <h2>🎓 腎利大會考</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
@@ -518,6 +527,7 @@
                 <h3 id="quiz-question" style="min-height:70px; font-size:1.4rem;">載入中...</h3>
                 <div id="quiz-options"></div>
             </div>
+            
             <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
                 <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900; margin-bottom:15px;"></div>
                 <div id="quiz-exp" style="background:#fff; padding:20px; border-radius:15px; border:2px solid #ccc; color:#444; font-size:1.2rem;"></div>
@@ -1033,6 +1043,7 @@ function updateProteinIntake() {
 </script>
 </body>
 </html>
+
 
 
 
