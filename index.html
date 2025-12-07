@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>腎利管家 v7.0 (最終修正版)</title>
+    <title>腎利管家 v7.1 (完美修復版)</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
-            --primary: #009045;
-            --primary-dark: #007035;
-            --accent: #F58220;
-            --bg: #fdfdfd;
-            --white: #ffffff;
-            --text: #222;
+            --primary: #009045; --primary-dark: #007035; --accent: #F58220;
+            --bg: #fdfdfd; --white: #ffffff; --text: #222;
             --risk-g: #6bbd45; --risk-y: #ffd700; --risk-o: #f58220; --risk-r: #e03e2e;
             --nav-height: 85px;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-            background: var(--bg); margin: 0; padding: 0; 
-            padding-bottom: calc(var(--nav-height) + 20px); 
+            background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); 
             color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; 
         }
-
         /* Header */
         header { 
             background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
@@ -51,33 +43,20 @@
         .card { background: var(--white); border-radius: 20px; padding: 25px 20px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
         .card h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; font-weight: 900; border-bottom: 3px solid #f0f4f8; padding-bottom: 15px; margin-bottom: 20px; }
 
-        /* Inputs & Selects (修復下拉選單樣式) */
+        /* Inputs */
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
-        
-        .select-wrapper { position: relative; width: 100%; }
-        
+        .select-wrapper { position: relative; }
         select { 
             width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
             font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222;
-            -webkit-appearance: none; appearance: none; /* 移除預設箭頭 */
-            cursor: pointer;
+            -webkit-appearance: none; appearance: none;
         }
-        
-        /* 自定義箭頭 */
         .select-wrapper::after { 
-            content: '▼'; 
-            position: absolute; 
-            right: 20px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: #444; 
-            pointer-events: none; /* 讓點擊穿透到 select */
-            font-size: 1.2rem; 
+            content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
+            color: #444; pointer-events: none; font-size: 1.2rem; 
         }
-        
         select:focus { border-color: var(--primary); background: #f9fff9; }
-        
         input[type="number"] {
             width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
             font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
@@ -98,31 +77,14 @@
         .btn-next { background: linear-gradient(135deg, var(--accent), #e07010); margin-top: 20px; box-shadow: 0 6px 15px rgba(245,130,32,0.3); }
 
         /* Risk Matrix */
-        .risk-matrix { 
-            display: grid; grid-template-columns: 60px 1fr 1fr 1fr; 
-            gap: 3px; margin: 25px auto; background: #fff; font-size: 0.9rem; 
-        }
-        .matrix-cell { 
-            display: flex; align-items: center; justify-content: center; text-align: center; 
-            padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.3); 
-            height: 55px; position: relative; 
-        }
+        .risk-matrix { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; background: #fff; font-size: 0.9rem; }
+        .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.3); height: 55px; position: relative; }
         .matrix-header { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.85rem; padding: 5px 0; }
         .matrix-label { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.8rem; flex-direction: column; justify-content: center; display: flex; align-items: center; }
-        
-        .bg-g { background-color: var(--risk-g); }
-        .bg-y { background-color: var(--risk-y); }
-        .bg-o { background-color: var(--risk-o); }
-        .bg-r { background-color: var(--risk-r); }
-        .matrix-cell.active-cell { 
-            border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); 
-            z-index: 10; transform: scale(1.1); 
-        }
+        .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
+        .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
 
-        .risk-banner {
-            padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeIn 0.3s ease;
-        }
+        .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeIn 0.3s ease; }
         .risk-banner h3 { margin: 0; font-size: 1.8rem; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .risk-banner p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; opacity: 0.95; }
 
@@ -145,11 +107,7 @@
         .page-counter { text-align: center; font-size: 1.2rem; color: #555; margin: 20px 0; font-weight: 900; }
 
         /* Quiz */
-        .quiz-option { 
-            background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px;
-            margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444;
-            cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: 0.2s; position: relative; text-align: left;
-        }
+        .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: 0.2s; position: relative; text-align: left; }
         .quiz-option:active { transform: scale(0.98); background: #f9f9f9; }
         .quiz-option.correct { border-color: #6bbd45; background: #f0fff4; color: #2e7d32; }
         .quiz-option.correct::after { content: '✅'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; }
@@ -165,77 +123,30 @@
         .light { width: 70px; height: 70px; border-radius: 50%; background: #ddd; opacity: 0.2; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
         .light.on { opacity: 1; transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
-        
-        /* KFRE Style */
         .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
         .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         
         /* --- 🎮 裝備欄 CSS --- */
-        .equip-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2欄 */
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .equip-slot {
-            background: #fff;
-            border: 3px dashed #ccc; /* 預設邊框 */
-            border-radius: 15px;
-            padding: 15px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            user-select: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .equip-slot:active { transform: scale(0.95); }
 
-        /* --- 裝備稀有度顏色定義 --- */
-        /* 傳說 (SGLT2) - 橘色 */
-        .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; }
-        .slot-legendary .equip-name { color: #E65100; }
-        /* 史詩 (RASi) - 紫色 */
-        .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; }
-        .slot-epic .equip-name { color: #4A148C; }
-        /* 稀有 (ns-MRA) - 藍色 */
-        .slot-rare { border-color: #2196F3; background-color: #E3F2FD; }
-        .slot-rare .equip-name { color: #0D47A1; }
-        /* 精良 (Statin) - 綠色 */
-        .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; }
-        .slot-uncommon .equip-name { color: #1B5E20; }
-        /* 秘法 (GLP-1) - 青色 */
-        .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; }
-        .slot-arcane .equip-name { color: #006064; }
+        /* 裝備稀有度 */
+        .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; } .slot-legendary .equip-name { color: #E65100; }
+        .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; } .slot-epic .equip-name { color: #4A148C; }
+        .slot-rare { border-color: #2196F3; background-color: #E3F2FD; } .slot-rare .equip-name { color: #0D47A1; }
+        .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; } .slot-uncommon .equip-name { color: #1B5E20; }
+        .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; } .slot-arcane .equip-name { color: #006064; }
 
-        /* 裝備啟用狀態 (Equipped) */
-        .equip-slot.equipped {
-            border-style: solid; /* 變成實線 */
-            border-width: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            background: #fff; /* 背景反白突顯 */
-        }
-        /* 針對不同顏色的啟用發光 */
+        /* 裝備啟用狀態 */
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
         .slot-legendary.equipped { box-shadow: 0 0 15px rgba(255, 140, 0, 0.4); }
         .slot-epic.equipped { box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
         .slot-rare.equipped { box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
         .slot-uncommon.equipped { box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
         .slot-arcane.equipped { box-shadow: 0 0 15px rgba(0, 188, 212, 0.4); }
 
-        /* 已裝備標籤 */
-        .equip-slot.equipped::after {
-            content: '已裝備';
-            position: absolute;
-            top: -12px; right: -5px;
-            color: white;
-            font-size: 0.8rem; padding: 3px 8px;
-            border-radius: 10px; font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        /* 標籤顏色 */
+        .equip-slot.equipped::after { content: '已裝備'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
         .slot-rare.equipped::after { background: #2196F3; }
@@ -244,36 +155,23 @@
 
         .equip-icon { font-size: 3rem; display: block; margin-bottom: 5px; filter: grayscale(100%); opacity: 0.5; transition: 0.3s; }
         .equip-slot.equipped .equip-icon { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
-
         .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
         .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
-        
         .hidden-checkbox { display: none; }
         
-        /* 讓最後一個裝備在單行時置中 (當裝備數量是奇數時) */
-        .equip-grid > .equip-slot:last-child:nth-child(odd) {
-            grid-column: span 2;
-            width: 60%;
-            margin: 0 auto;
-        }
+        /* 置中最後一個 */
+        .equip-grid > .equip-slot:last-child:nth-child(odd) { grid-column: span 2; width: 60%; margin: 0 auto; }
 
-        /* === 玩家狀態列 === */
-        .status-panel {
-            display: flex; align-items: center; padding: 20px; border-radius: 15px;
-            margin-bottom: 30px; color: white; transition: all 0.5s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+        /* 玩家狀態列 */
+        .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .status-icon { font-size: 3.5rem; margin-right: 20px; }
         .status-title { font-size: 2rem; font-weight: 900; margin-bottom: 5px; }
         .status-msg { font-size: 1.1rem; opacity: 0.9; }
-
-        /* 動態等級配色 */
         .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
         .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
         .status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
         .status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
         .status-guardian { background: linear-gradient(135deg, #F2994A, #F2C94C); box-shadow: 0 0 20px #F2C94C; }
-
         @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .animate-pop { animation: pop-effect 0.4s ease-out; }
     </style>
@@ -298,87 +196,44 @@
                 請輸入以下資料，系統將自動計算您的腎臟病分期以及未來洗腎風險。
             </p>
 
-            <div class="input-group">
-                <label>1. 年齡</label>
-                <div class="select-wrapper">
-                    <select id="kfre-age" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇年齡...</option>
-                        <option value="20">20-29 歲</option>
-                        <option value="30">30-39 歲</option>
-                        <option value="40">40-49 歲</option>
-                        <option value="50">50-59 歲</option>
-                        <option value="60">60-69 歲</option>
-                        <option value="70">70-79 歲</option>
-                        <option value="80">80-89 歲</option>
-                        <option value="90">90 歲以上</option>
-                    </select>
-                </div>
-            </div>
+            <div class="input-group"><label>1. 年齡</label><div class="select-wrapper">
+                <select id="kfre-age" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇年齡...</option><option value="20">20-29 歲</option><option value="30">30-39 歲</option><option value="40">40-49 歲</option><option value="50">50-59 歲</option><option value="60">60-69 歲</option><option value="70">70-79 歲</option><option value="80">80-89 歲</option><option value="90">90 歲以上</option>
+                </select>
+            </div></div>
 
-            <div class="input-group">
-                <label>2. 性別</label>
-                <div class="select-wrapper">
-                    <select id="kfre-sex" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇性別...</option>
-                        <option value="1">男</option>
-                        <option value="0">女</option>
-                    </select>
-                </div>
-            </div>
+            <div class="input-group"><label>2. 性別</label><div class="select-wrapper">
+                <select id="kfre-sex" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇性別...</option><option value="1">男</option><option value="0">女</option>
+                </select>
+            </div></div>
             
-            <div class="input-group">
-                <label>體重 (公斤)</label>
-                <input type="number" id="kfre-weight" placeholder="請輸入體重..." onchange="updateAllRisks()">
-            </div>
+            <div class="input-group"><label>體重 (公斤)</label><input type="number" id="kfre-weight" placeholder="請輸入體重..." onchange="updateAllRisks()"></div>
 
-            <div class="input-group">
-                <label>3. 腎功能 (eGFR)</label>
-                <div class="select-wrapper">
-                    <select id="kfre-egfr" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇數值區間...</option>
-                        <option value="90">正常 (eGFR ≥ 90)</option>
-                        <option value="75">第2期 (eGFR 60-89)</option>
-                        <option value="52">第3a期 (eGFR 45-59)</option>
-                        <option value="37">第3b期 (eGFR 30-44)</option>
-                        <option value="22">第4期 (eGFR 15-29)</option>
-                        <option value="10">第5期 (eGFR < 15)</option>
-                    </select>
-                </div>
-            </div>
+            <div class="input-group"><label>3. 腎功能 (eGFR)</label><div class="select-wrapper">
+                <select id="kfre-egfr" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
+                </select>
+            </div></div>
 
-            <div class="input-group">
-                <label>4. 蛋白尿狀況 (UACR)</label>
-                <div class="select-wrapper">
-                    <select id="kfre-uacr" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇檢驗結果...</option>
-                        <option value="10">正常/輕微 (<30)</option>
-                        <option value="150">微量蛋白尿 (30-299)</option>
-                        <option value="500">嚴重蛋白尿 (>300)</option>
-                    </select>
-                </div>
-            </div>
+            <div class="input-group"><label>4. 蛋白尿狀況 (UACR)</label><div class="select-wrapper">
+                <select id="kfre-uacr" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇檢驗結果...</option><option value="10">正常/輕微 (<30)</option><option value="150">微量蛋白尿 (30-299)</option><option value="500">嚴重蛋白尿 (>300)</option>
+                </select>
+            </div></div>
 
-            <div class="input-group">
-                <label>5. 是否有糖尿病 (DM)</label>
-                <div class="select-wrapper">
-                    <select id="kfre-dm" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇...</option>
-                        <option value="1">有糖尿病</option>
-                        <option value="0">無糖尿病</option>
-                    </select>
-                </div>
-            </div>
+            <div class="input-group"><label>5. 是否有糖尿病 (DM)</label><div class="select-wrapper">
+                <select id="kfre-dm" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇...</option><option value="1">有糖尿病</option><option value="0">無糖尿病</option>
+                </select>
+            </div></div>
 
-            <p id="start-hint" style="color:#888; font-size:1.1rem; margin-top:20px; font-weight:bold;">
-                👆 資料填寫完整後，結果將自動顯示
-            </p>
+            <p id="start-hint" style="color:#888; font-size:1.1rem; margin-top:20px; font-weight:bold;">👆 資料填寫完整後，結果將自動顯示</p>
 
             <div id="unified-result" class="hidden">
                 <div id="risk-banner" class="risk-banner" style="background:#ccc; margin-bottom:20px;">
-                    <h3 id="risk-title" style="margin-bottom:5px;">--</h3>
-                    <p id="risk-desc" style="font-size:1rem;">--</p>
+                    <h3 id="risk-title" style="margin-bottom:5px;">--</h3><p id="risk-desc" style="font-size:1rem;">--</p>
                 </div>
-
                 <div class="risk-matrix">
                     <div class="matrix-header"></div><div class="matrix-header">正常<br><30</div><div class="matrix-header">微量<br>30-299</div><div class="matrix-header">嚴重<br>>300</div>
                     <div class="matrix-label">第1期<br>>90</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
@@ -388,60 +243,33 @@
                     <div class="matrix-label">第4期<br>15-29</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
                     <div class="matrix-label">第5期<br><15</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
-
                 <div style="background:#e1f5fe; border-radius:15px; padding:25px 15px; border:2px solid #b3e5fc; text-align:center; margin-top:25px;">
                     <h3 style="margin:0 0 20px 0; color:#01579b; font-size:1.5rem;">📅 未來洗腎機率預測</h3>
                     <div style="display:flex; justify-content:space-around; margin-bottom:20px; align-items: flex-start;">
-                        <div style="flex:1;">
-                            <span class="kfre-highlight-label">2年內洗腎機率</span>
-                            <span id="res-2yr" class="kfre-highlight-value">--%</span>
-                        </div>
+                        <div style="flex:1;"><span class="kfre-highlight-label">2年內洗腎機率</span><span id="res-2yr" class="kfre-highlight-value">--%</span></div>
                         <div style="width:2px; background:#81d4fa; height:60px; margin-top:10px;"></div>
-                        <div style="flex:1;">
-                            <span class="kfre-highlight-label">5年內洗腎機率</span>
-                            <span id="res-5yr" class="kfre-highlight-value">--%</span>
-                        </div>
+                        <div style="flex:1;"><span class="kfre-highlight-label">5年內洗腎機率</span><span id="res-5yr" class="kfre-highlight-value">--%</span></div>
                     </div>
-                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                        建議載入中...
-                    </div>
+                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">建議載入中...</div>
                 </div>
-                
-                <p style="color:#d32f2f; font-weight:900; margin-top:25px; font-size:1.1rem;">
-                    👇 您的專屬用藥與飲食建議已生成，<br>請點選下方選單切換查看。
-                </p>
+                <p style="color:#d32f2f; font-weight:900; margin-top:25px; font-size:1.1rem;">👇 您的專屬用藥與飲食建議已生成，<br>請點選下方選單切換查看。</p>
             </div>
         </div>
-        <div class="page-counter">
-            👀 本站累計瀏覽：<span id="busuanzi_value_site_pv">--</span> 人次
-        </div>
+        <div class="page-counter">👀 本站累計瀏覽：<span id="busuanzi_value_site_pv">--</span> 人次</div>
     </div>
 
     <div id="tab-meds" class="section">
         <div class="card">
             <h2>💊 個人化用藥建議</h2>
             <div id="med-placeholder" style="padding:40px 10px; color:#999;">
-                <div style="font-size:4rem;">📉</div>
-                <p style="font-size:1.3rem;">請先至「首頁」選擇腎功能<br>系統將自動產生建議</p>
+                <div style="font-size:4rem;">📉</div><p style="font-size:1.3rem;">請先至「首頁」選擇腎功能<br>系統將自動產生建議</p>
                 <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
             </div>
-            
             <div id="med-content" class="hidden">
-                <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">
-                    依據您的 <strong>eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span></strong> 分析：
-                </p>
-                <div class="list-card" style="border-color: var(--risk-g);">
-                    <div class="list-head" style="background: var(--risk-g);">🟢 建議用藥 (放心使用)</div>
-                    <div class="list-body" id="list-med-g"></div>
-                </div>
-                <div class="list-card" style="border-color: var(--risk-y);">
-                    <div class="list-head" style="background: var(--risk-y); color:#333;">🟡 須注意 (小心副作用)</div>
-                    <div class="list-body" id="list-med-y"></div>
-                </div>
-                <div class="list-card" style="border-color: var(--risk-r);">
-                    <div class="list-head" style="background: var(--risk-r);">🔴 不建議服用 (傷腎)</div>
-                    <div class="list-body" id="list-med-r"></div>
-                </div>
+                <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">依據您的 <strong>eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span></strong> 分析：</p>
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 建議用藥 (放心使用)</div><div class="list-body" id="list-med-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 須注意 (小心副作用)</div><div class="list-body" id="list-med-y"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 不建議服用 (傷腎)</div><div class="list-body" id="list-med-r"></div></div>
             </div>
         </div>
 
@@ -449,100 +277,43 @@
             <h2>🚦 藥物安全紅綠燈</h2>
             <div class="select-wrapper">
                 <select id="med-select" onchange="checkMed()">
-                    <option value="">🔍 請選擇藥物名稱...</option>
-                    <option value="ras">ACEi / ARB (血壓藥)</option>
-                    <option value="panadol">Acetaminophen (普拿疼)</option>
-                    <option value="mycin">Aminoglycosides (部分抗生素)</option>
-                    <option value="antacid">Antacids (含鋁鎂胃藥)</option>
-                    <option value="contrast">Contrast Media (含碘顯影劑)</option>
-                    <option value="diuretic">Diuretics (利尿劑)</option>
-                    <option value="enema">Enema (清腸劑)</option>
-                    <option value="ns_mra">Finerenone (ns-MRA)</option>
-                    <option value="glp1">GLP-1 RA (腸泌素針劑)</option>
-                    <option value="herbal">Herbal (中草藥/黑藥丸)</option>
-                    <option value="metformin">Metformin (二甲雙胍降糖藥)</option>
-                    <option value="multi_vit">Multivitamins (綜合維他命)</option>
-                    <option value="nsaid">NSAIDs (強效止痛藥)</option>
-                    <option value="gout_nsaid">NSAIDs (痛風發作時)</option>
-                    <option value="ppi">PPIs (質子幫浦抑制劑胃藥)</option>
-                    <option value="probiotic">Probiotics (腎臟益生菌)</option>
-                    <option value="sglt2">SGLT2i (排糖藥)</option>
-                    <option value="statins">Statins (降血脂藥)</option>
-                    <option value="uric_acid">Uric Acid Meds (降尿酸藥)</option>
-                    <option value="vaccine">Vaccines (疫苗)</option>
-                    <option value="vit_d">Vitamin D (活性維生素D)</option>
+                    <option value="">🔍 請選擇藥物名稱...</option><option value="ras">ACEi / ARB (血壓藥)</option><option value="panadol">Acetaminophen (普拿疼)</option><option value="mycin">Aminoglycosides (部分抗生素)</option><option value="antacid">Antacids (含鋁鎂胃藥)</option><option value="contrast">Contrast Media (含碘顯影劑)</option><option value="diuretic">Diuretics (利尿劑)</option><option value="enema">Enema (清腸劑)</option><option value="ns_mra">Finerenone (ns-MRA)</option><option value="glp1">GLP-1 RA (腸泌素針劑)</option><option value="herbal">Herbal (中草藥/黑藥丸)</option><option value="metformin">Metformin (二甲雙胍降糖藥)</option><option value="multi_vit">Multivitamins (綜合維他命)</option><option value="nsaid">NSAIDs (強效止痛藥)</option><option value="gout_nsaid">NSAIDs (痛風發作時)</option><option value="ppi">PPIs (質子幫浦抑制劑胃藥)</option><option value="probiotic">Probiotics (腎臟益生菌)</option><option value="sglt2">SGLT2i (排糖藥)</option><option value="statins">Statins (降血脂藥)</option><option value="uric_acid">Uric Acid Meds (降尿酸藥)</option><option value="vaccine">Vaccines (疫苗)</option><option value="vit_d">Vitamin D (活性維生素D)</option>
                 </select>
             </div>
-            
             <div class="traffic-container">
-                <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div>
-                <div id="light-y" class="light" style="color: var(--risk-y); background: var(--risk-y);"></div>
-                <div id="light-g" class="light" style="color: var(--risk-g); background: var(--risk-g);"></div>
+                <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div><div id="light-y" class="light" style="color: var(--risk-y); background: var(--risk-y);"></div><div id="light-g" class="light" style="color: var(--risk-g); background: var(--risk-g);"></div>
             </div>
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
         
         <div class="card" style="border: 3px solid #ff9800; background: #fff3e0;">
             <h2 style="color:#e65100; border-bottom-color:#ffcc80; margin-bottom:15px;">🤢 生病日停藥守則</h2>
-            <div style="background:white; border-radius:15px; padding:15px; margin-bottom:20px; border:2px dashed #ffb74d;">
-                <p style="font-size:0.9rem; color:#e65100; margin:5px 0 0 0; font-weight:bold;">口訣：SADMANS (悲傷男人)</p>
-            </div>
-            <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">
-                當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況時，請暫停以下藥物：
-            </p>
+            <div style="background:white; border-radius:15px; padding:15px; margin-bottom:20px; border:2px dashed #ffb74d;"><p style="font-size:0.9rem; color:#e65100; margin:5px 0 0 0; font-weight:bold;">口訣：SADMANS (悲傷男人)</p></div>
+            <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px;">當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">嚴重脫水</span>情況時，請暫停以下藥物：</p>
             <div style="text-align:left; display:grid; grid-template-columns: 1fr; gap:10px;">
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>S</strong>ulfonylureas (降糖藥)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>A</strong>CEi (血壓藥)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>D</strong>iuretics (利尿劑)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>M</strong>etformin (降糖藥)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>A</strong>RBs (血壓藥)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>N</strong>SAIDs (止痛藥)</div>
-                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>S</strong>GLT2i (排糖藥)</div>
+                <div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>S</strong>ulfonylureas (降糖藥)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>A</strong>CEi (血壓藥)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>D</strong>iuretics (利尿劑)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>M</strong>etformin (降糖藥)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>A</strong>RBs (血壓藥)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>N</strong>SAIDs (止痛藥)</div><div class="quiz-option" style="margin:0; padding:12px; font-size:1.1rem; border-color:#ffcc80; color:#e65100;">💊 <strong>S</strong>GLT2i (排糖藥)</div>
             </div>
         </div>
         
         <div class="card">
             <h2>🔍 不清楚自己用什麼藥？</h2>
-            <div style="display:flex; gap:15px;">
-                <button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 諮詢藥師</button>
-                <a href="https://www.fyh.mohw.gov.tw/?aid=519" target="_blank" class="btn btn-outline" style="margin:0; flex:1; display:flex; align-items:center; justify-content:center;">🏥 藥品查詢</a>
-            </div>
+            <div style="display:flex; gap:15px;"><button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 諮詢藥師</button><a href="https://www.fyh.mohw.gov.tw/?aid=519" target="_blank" class="btn btn-outline" style="margin:0; flex:1; display:flex; align-items:center; justify-content:center;">🏥 藥品查詢</a></div>
         </div>
     </div>
 
     <div id="tab-diet" class="section">
         <div class="card">
             <h2>🍽️ 個人化飲食建議</h2>
-            <div id="diet-placeholder" style="padding:40px 10px; color:#999;">
-                <div style="font-size:4rem;">🥣</div>
-                <p style="font-size:1.3rem;">請先至「首頁」選擇腎功能<br>以取得專屬飲食清單</p>
-                <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
-            </div>
+            <div id="diet-placeholder" style="padding:40px 10px; color:#999;"><div style="font-size:4rem;">🥣</div><p style="font-size:1.3rem;">請先至「首頁」選擇腎功能<br>以取得專屬飲食清單</p><button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button></div>
             <div id="diet-content" class="hidden">
-                <div class="list-card" style="border-color: var(--risk-g);">
-                    <div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
                     <div id="protein-calc-display" style="margin: 10px; padding: 12px; background-color: #f0fdf4; border: 1px dashed #16a34a; border-radius: 8px; display: none;">
-                        <p style="margin: 0; font-size: 1.1rem; color: #374151;">
-                            體重 <span id="display-weight" style="font-weight: bold;">--</span> kg，建議每日蛋白質：
-                        </p>
-                        <div style="display: flex; align-items: baseline; margin-top: 5px;">
-                            <span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
-                            <span style="margin: 0 5px;">~</span>
-                            <span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
-                            <span style="margin-left: 5px; font-size: 1rem;">克</span>
-                        </div>
-                        <p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">(約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)</p>
-                    </div>
-                    <div class="list-body" id="list-diet-g"></div>
+                        <p style="margin: 0; font-size: 1.1rem; color: #374151;">體重 <span id="display-weight" style="font-weight: bold;">--</span> kg，建議每日蛋白質：</p>
+                        <div style="display: flex; align-items: baseline; margin-top: 5px;"><span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span><span style="margin: 0 5px;">~</span><span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span><span style="margin-left: 5px; font-size: 1rem;">克</span></div><p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">(約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)</p>
+                    </div><div class="list-body" id="list-diet-g"></div>
                 </div>
-                <div class="list-card" style="border-color: var(--risk-y);">
-                    <div class="list-head" style="background: var(--risk-y); color:#333;">🟡 須注意/減量</div>
-                    <div class="list-body" id="list-diet-y"></div>
-                </div>
-                <div class="list-card" style="border-color: var(--risk-r);">
-                    <div class="list-head" style="background: var(--risk-r);">🔴 不建議攝取</div>
-                    <div class="list-body" id="list-diet-r"></div>
-                </div>
+                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 須注意/減量</div><div class="list-body" id="list-diet-y"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 不建議攝取</div><div class="list-body" id="list-diet-r"></div></div>
             </div>
 
             <div style="margin: 40px 0 20px 0; text-align: center; border-top: 3px solid #f0f4f8; padding-top: 30px;">
@@ -555,11 +326,7 @@
             <div class="select-wrapper">
                 <select id="food-select" onchange="checkFood()">
                     <option value="">請點此選擇食物...</option>
-                    <optgroup label="常見食材">
-                        <option value="egg">雞蛋白</option><option value="tofu">嫩豆腐</option><option value="rice_noodle">冬粉/米粉</option><option value="rice">白飯</option><option value="veg">高麗菜/洋蔥</option><option value="fruit_low">蘋果/鳳梨</option><option value="oil">橄欖油/苦茶油</option>
-                        <option value="spinach">菠菜/地瓜葉</option><option value="brown_rice">糙米/五穀米</option><option value="nuts">堅果</option><option value="coffee">黑咖啡</option><option value="banana">香蕉</option>
-                        <option value="starfruit">楊桃</option><option value="sausage">香腸/火腿</option><option value="organs">內臟(豬肝)</option><option value="cola">可樂/汽水</option><option value="chicken">雞精</option>
-                    </optgroup>
+                    <optgroup label="常見食材"><option value="egg">雞蛋白</option><option value="tofu">嫩豆腐</option><option value="rice_noodle">冬粉/米粉</option><option value="rice">白飯</option><option value="veg">高麗菜/洋蔥</option><option value="fruit_low">蘋果/鳳梨</option><option value="oil">橄欖油/苦茶油</option><option value="spinach">菠菜/地瓜葉</option><option value="brown_rice">糙米/五穀米</option><option value="nuts">堅果</option><option value="coffee">黑咖啡</option><option value="banana">香蕉</option><option value="starfruit">楊桃</option><option value="sausage">香腸/火腿</option><option value="organs">內臟(豬肝)</option><option value="cola">可樂/汽水</option><option value="chicken">雞精</option></optgroup>
                 </select>
             </div>
             <div id="food-result" class="med-result-box hidden"></div>
@@ -567,84 +334,44 @@
     </div>
 
     <div id="tab-quiz" class="section">
-        
         <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
             <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 護腎裝備庫</h2>
-            <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">
-                點擊方塊「穿戴」您正在使用的藥物<br>稱號與建議將會即時更新！
-            </p>
+            <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">點擊方塊「穿戴」您正在使用的藥物<br>稱號與建議將會即時更新！</p>
 
             <div class="equip-grid">
-                
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
-                    <span class="equip-icon">🛡️</span>
-                    <span class="equip-name">排糖藥</span>
-                    <span class="equip-desc">核心神器 SGLT2i</span>
-                    <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🛡️</span><span class="equip-name">排糖藥</span><span class="equip-desc">核心神器 SGLT2i</span><input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-icon">🧥</span>
-                    <span class="equip-name">血壓藥</span>
-                    <span class="equip-desc">基礎鎧甲 ACEi/ARB</span>
-                    <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🧥</span><span class="equip-name">血壓藥</span><span class="equip-desc">基礎鎧甲 ACEi/ARB</span><input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div id="slot-nsmra" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-nsmra')">
-                    <span class="equip-icon">🔮</span>
-                    <span class="equip-name">新型護腎藥</span>
-                    <span class="equip-desc">高階強化 ns-MRA</span>
-                    <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🔮</span><span class="equip-name">新型護腎藥</span><span class="equip-desc">高階強化 ns-MRA</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
-                    <span class="equip-icon">👢</span>
-                    <span class="equip-name">降血脂藥</span>
-                    <span class="equip-desc">疾風之靴 Statins</span>
-                    <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">👢</span><span class="equip-name">降血脂藥</span><span class="equip-desc">疾風之靴 Statins</span><input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
-
                 <div id="slot-glp1" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-glp1')">
-                    <span class="equip-icon">🪄</span>
-                    <span class="equip-name">腸泌素</span>
-                    <span class="equip-desc">控糖魔杖 GLP-1 RA</span>
-                    <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🪄</span><span class="equip-name">腸泌素</span><span class="equip-desc">控糖魔杖 GLP-1 RA</span><input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
                 </div>
-
             </div>
 
             <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
-                <div class="status-info">
-                    <div class="status-label">目前稱號</div>
-                    <div class="status-title" id="status-title">新手冒險者</div>
-                    <div class="status-msg" id="status-msg">哎呀！您的腎臟目前完全沒有防護，風險極高！</div>
-                </div>
+                <div class="status-info"><div class="status-label">目前稱號</div><div class="status-title" id="status-title">新手冒險者</div><div class="status-msg" id="status-msg">哎呀！您的腎臟目前完全沒有防護，風險極高！</div></div>
             </div>
-
-            <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;">
-                </div>
-
+            <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;"></div>
         </div>
 
         <div class="card">
             <h2>🎓 腎利大會考</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
             <p id="quiz-counter" style="text-align:right; color:#666; font-size:1.1rem; font-weight:bold;">Q1/10</p>
-            <div id="quiz-area">
-                <h3 id="quiz-question" style="min-height:70px; font-size:1.4rem;">載入中...</h3>
-                <div id="quiz-options"></div>
-            </div>
+            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.4rem;">載入中...</h3><div id="quiz-options"></div></div>
             <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
-                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900; margin-bottom:15px;"></div>
-                <div id="quiz-exp" style="background:#fff; padding:20px; border-radius:15px; border:2px solid #ccc; color:#444; font-size:1.2rem;"></div>
-                <button class="btn btn-next" onclick="nextQ()">下一題 ➜</button>
+                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900; margin-bottom:15px;"></div><div id="quiz-exp" style="background:#fff; padding:20px; border-radius:15px; border:2px solid #ccc; color:#444; font-size:1.2rem;"></div><button class="btn btn-next" onclick="nextQ()">下一題 ➜</button>
             </div>
-            <div id="quiz-score" class="hidden">
-                <h3 style="font-size:3rem; color:var(--primary);">得分：<span id="final-score">0</span></h3>
-                <p id="score-comment" style="font-size:1.4rem; font-weight:900; color:#555;"></p>
-                <button class="btn" onclick="initQuiz()">🔄 再測一次</button>
-            </div>
+            <div id="quiz-score" class="hidden"><h3 style="font-size:3rem; color:var(--primary);">得分：<span id="final-score">0</span></h3><p id="score-comment" style="font-size:1.4rem; font-weight:900; color:#555;"></p><button class="btn" onclick="initQuiz()">🔄 再測一次</button></div>
         </div>
     </div>
 
@@ -652,19 +379,12 @@
         <div class="card">
             <h2>💬 藥師諮詢室</h2>
             <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:3px solid #eee; margin-bottom:30px;">
-                <h3 style="color:#06c755; margin-top:0; display:flex; align-items:center; justify-content:center; gap:10px;">
-                    <span style="font-size:2rem;">LINE</span> 官方帳號
-                </h3>
-                <div class="qr-box">
-                    <img src="line_qr.png" class="qr-img" onerror="this.style.display='none'">
-                </div>
-                <p style="font-size:1.1rem; color:#666; font-weight:bold; margin-bottom:20px;">(長按儲存或掃描上方 QR Code)</p>
-                <a href="https://lin.ee/zwLjX1Lb" target="_blank" class="btn btn-line">📲 加入好友 (線上諮詢)</a>
+                <h3 style="color:#06c755; margin-top:0; display:flex; align-items:center; justify-content:center; gap:10px;"><span style="font-size:2rem;">LINE</span> 官方帳號</h3>
+                <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
+                <p style="font-size:1.1rem; color:#666; font-weight:bold; margin-bottom:20px;">(長按儲存或掃描上方 QR Code)</p><a href="https://lin.ee/zwLjX1Lb" target="_blank" class="btn btn-line">📲 加入好友 (線上諮詢)</a>
             </div>
             <div style="background:#fff8e1; padding:25px; border-radius:20px; border:3px solid #ffe0b2;">
-                <h3 style="color:var(--accent); margin-top:0; font-size:1.6rem;">慢箋預約</h3>
-                <p style="font-weight:bold; color:#555; font-size:1.2rem;">不用排隊，手機預約領藥</p>
-                <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">前往預約 ➜</a>
+                <h3 style="color:var(--accent); margin-top:0; font-size:1.6rem;">慢箋預約</h3><p style="font-weight:bold; color:#555; font-size:1.2rem;">不用排隊，手機預約領藥</p><a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">前往預約 ➜</a>
             </div>
         </div>
     </div>
@@ -756,25 +476,22 @@
         if (id === 'diet') updateProteinIntake();
     }
     
-    // 1. 風險計算與全站狀態更新
     function updateAllRisks() {
         const age = parseFloat(document.getElementById('kfre-age').value);
         const sex = parseFloat(document.getElementById('kfre-sex').value);
         const egfr = parseFloat(document.getElementById('kfre-egfr').value);
         const uacr = parseFloat(document.getElementById('kfre-uacr').value);
         const weight = parseFloat(document.getElementById('kfre-weight').value);
-        const hasDM = document.getElementById('kfre-dm').value === '1'; // 取得糖尿病狀態 (true/false)
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasDM = dmVal === '1'; 
         
-        // 儲存體重與分期供飲食計算用
         if (weight && !isNaN(weight)) localStorage.setItem('userWeight', weight);
-        
-        // 檢查必填欄位
-        if (isNaN(age) || isNaN(sex) || isNaN(egfr) || isNaN(uacr) || document.getElementById('kfre-dm').value === "") return;
+        if (isNaN(age) || isNaN(sex) || isNaN(egfr) || isNaN(uacr) || dmVal === "") return;
 
         document.getElementById('start-hint').classList.add('hidden');
         document.getElementById('unified-result').classList.remove('hidden');
 
-        // 計算 CKD 分期 (Heatmap)
+        // Heatmap
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
         let row = '5', stageText = '第5期';
         if (egfr >= 90) { row = '1'; stageText = '第1期'; }
@@ -803,12 +520,11 @@
         document.getElementById('risk-title').innerText = text;
         document.getElementById('risk-desc').innerText = `腎絲球過濾率${stageText} + ${uacrText}`;
 
-        // 更新各區塊建議
         updateMeds(egfr, hasDM);
         updateDiet(egfr, hasDM);
-        updateArmorVisibility(hasDM); // 控制裝備顯示
+        updateArmorVisibility(hasDM); 
 
-        // KFRE 洗腎風險計算
+        // KFRE
         const logACR = Math.log(uacr);
         const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sex - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
         const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
@@ -838,7 +554,6 @@
         adviceBox.style.borderLeftColor = adviceBorder;
     }
 
-    // 2. 用藥建議 (根據 DM 動態調整)
     function updateMeds(egfr, hasDM) {
         document.getElementById('med-placeholder').classList.add('hidden');
         document.getElementById('med-content').classList.remove('hidden');
@@ -849,35 +564,27 @@
         g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
         function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
 
-        // --- 綠燈區 ---
         add(g, "RASi (ACEi / ARB)", "第一線護腎血壓藥，抗蛋白尿首選。");
-        
         if (egfr >= 20) {
             let msg = hasDM ? "強烈建議！控糖同時護腎、護心。" : "強烈建議！雖無糖尿病，但對改善蛋白尿與護腎效果顯著。";
             add(g, "SGLT2i (排糖藥)", msg);
-        } else {
-            add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議新起始，但若原先已服用可續用。");
-        }
+        } else add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議新起始，但若原先已服用可續用。");
 
         if (hasDM) {
             if (egfr > 25 && uacr >= 30) add(g, "ns-MRA (Finerenone)", "針對糖尿病合併蛋白尿，建議諮詢醫師加用。");
             add(g, "GLP-1 RA (腸泌素)", "針對糖尿病腎病變，具優秀的護腎與護心實證。");
         }
-
         add(g, "Statins (降血脂藥)", "預防中風與心血管事件，建議持續服用。");
 
-        // --- 黃/紅燈區 ---
         if (hasDM) {
             if (egfr < 30) add(r, "Metformin (降糖藥)", "eGFR < 30 禁用！乳酸中毒風險高。");
             else if (egfr < 45) add(y, "Metformin (降糖藥)", "eGFR 30-45 需減量，每日不超過 1000mg。");
         }
-
         add(y, "Diuretics (利尿劑)", "生病(脫水)時需暫停。");
         add(r, "NSAIDs (強效止痛藥)", "傷腎地雷！絕對禁止。");
         add(r, "含碘顯影劑", "檢查前務必告知醫師。");
     }
 
-    // 3. 飲食建議 (根據 DM 動態調整)
     function updateDiet(egfr, hasDM) {
         document.getElementById('diet-placeholder').classList.add('hidden');
         document.getElementById('diet-content').classList.remove('hidden');
@@ -887,52 +594,111 @@
 
         add(g, "優質蛋白質", "雞蛋、豆腐、魚肉。");
         add(g, "天然好油", "橄欖油、苦茶油。");
-        
         if (hasDM) {
             add(y, "精緻糖/甜食", "血糖控制不佳會加速腎功能惡化，請嚴格忌口。");
             add(g, "低升糖(GI)食物", "全穀雜糧、蔬菜，有助血糖穩定。");
         } else {
             add(g, "適量水果", "若血糖正常，可適量攝取低鉀水果。");
         }
-
         if (egfr < 45) { 
             add(g, "低氮澱粉", "冬粉、米粉。補充熱量不傷腎。");
             add(y, "糙米/五穀米", "磷含量高，晚期建議少吃。");
             add(y, "深綠色蔬菜", "鉀高，建議切段汆燙。");
             add(r, "低鈉鹽", "通常是「高鉀鹽」，恐致心律不整。");
         }
-        
         add(r, "楊桃", "絕對禁止！含神經毒素。");
         add(r, "加工肉品", "香腸火腿含高磷。");
     }
 
-    // 4. 裝備欄顯示控制 (根據 DM 隱藏/顯示)
+    function checkMed() {
+        const val = document.getElementById('med-select').value;
+        const lights = document.querySelectorAll('.light');
+        const res = document.getElementById('med-result');
+        lights.forEach(l => l.classList.remove('on'));
+        res.classList.add('hidden');
+        if(!val) return;
+        const data = medDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
+        if (data.level === 'r') { document.getElementById('light-r').classList.add('on'); res.style.borderColor = "var(--risk-r)"; res.style.background = "#fff5f5"; }
+        else if (data.level === 'y') { document.getElementById('light-y').classList.add('on'); res.style.borderColor = "var(--risk-y)"; res.style.background = "#fffbf0"; }
+        else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--risk-g)"; res.style.background = "#e6fffa"; }
+    }
+
+    function checkFood() {
+        const val = document.getElementById('food-select').value;
+        const res = document.getElementById('food-result');
+        res.classList.add('hidden');
+        if(!val) return;
+        const data = foodDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong style="font-size:1.4rem;">${data.t}</strong><br>${data.d}`;
+        if(data.t.includes('紅')) { res.style.borderColor = 'red'; res.style.background = '#fff5f5'; }
+        else if(data.t.includes('黃')) { res.style.borderColor = 'gold'; res.style.background = '#fffbe6'; }
+        else { res.style.borderColor = 'green'; res.style.background = '#e8f5e9'; }
+    }
+
+    function initQuiz() { 
+        qIdx=0; score=0; 
+        document.getElementById('quiz-score').classList.add('hidden'); 
+        document.getElementById('quiz-area').classList.remove('hidden'); 
+        renderQ(); 
+    }
+    let qIdx = 0, score = 0;
+    function renderQ() {
+        const q = quizData[qIdx];
+        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}/${quizData.length}`;
+        document.getElementById('quiz-question').innerText = q.q;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        const div = document.getElementById('quiz-options');
+        div.innerHTML = '';
+        q.a.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'quiz-option';
+            btn.innerText = opt.t;
+            btn.onclick = () => {
+                playSound(opt.c);
+                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
+                if(opt.c) { btn.classList.add('correct'); score+=10; document.getElementById('quiz-res-text').innerText="🎉 答對了！"; document.getElementById('quiz-res-text').style.color="green"; }
+                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 答錯囉！"; document.getElementById('quiz-res-text').style.color="red"; }
+                document.getElementById('quiz-exp').innerText = q.exp;
+                document.getElementById('quiz-feedback').classList.remove('hidden');
+            };
+            div.appendChild(btn);
+        });
+        document.querySelector('.progress-fill').style.width = `${((qIdx)/quizData.length)*100}%`;
+    }
+    function nextQ() {
+        qIdx++;
+        if(qIdx < quizData.length) renderQ();
+        else {
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-score').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+            document.querySelector('.progress-fill').style.width = '100%';
+            let comment = "";
+            if (score === 100) comment = "🏆 太強了！你是護腎達人！";
+            else if (score >= 60) comment = "👍 很不錯，繼續保持！";
+            else comment = "💪 加油，多看幾次衛教資訊喔！";
+            document.getElementById('score-comment').innerText = comment;
+        }
+    }
+
     function updateArmorVisibility(hasDM) {
         const slotGlp1 = document.getElementById('slot-glp1');
         const slotNsmra = document.getElementById('slot-nsmra');
-        
-        // 重置勾選狀態 (避免隱藏了還被選中)
         if (!hasDM) {
             document.getElementById('drug-glp1').checked = false;
             document.getElementById('drug-nsmra').checked = false;
             slotGlp1.classList.remove('equipped');
             slotNsmra.classList.remove('equipped');
         }
-
-        // 控制顯示
-        if (hasDM) {
-            slotGlp1.style.display = 'flex';
-            slotNsmra.style.display = 'flex';
-        } else {
-            slotGlp1.style.display = 'none';
-            slotNsmra.style.display = 'none';
-        }
-
-        // 觸發一次狀態更新
+        if (hasDM) { slotGlp1.style.display = 'flex'; slotNsmra.style.display = 'flex'; } 
+        else { slotGlp1.style.display = 'none'; slotNsmra.style.display = 'none'; }
         updateStatusAndAdvice();
     }
 
-    // --- 護腎裝備與建議產生邏輯 ---
     const ranks = [
         { count: 0, class: 'status-novice', title: '新手冒險者 (Novice)', icon: '⚠️', msg: '哎呀！您的腎臟目前完全沒有防護，請盡快諮詢醫師！' },
         { count: 1, class: 'status-apprentice', title: '見習衛士 (Apprentice)', icon: '🛡️', msg: '很好！您穿上了第一件裝備，開始保護腎臟了。' },
@@ -944,19 +710,9 @@
     function updateStatusAndAdvice() {
         const checkboxes = document.querySelectorAll('.gear-checkbox');
         let checkedCount = 0;
-        
-        // 計算勾選數量 (只計算目前顯示出來的)
-        checkboxes.forEach(box => { 
-            // 如果父層被隱藏(display:none)，就不計入
-            if (box.parentElement.style.display !== 'none' && box.checked) {
-                checkedCount++; 
-            }
-        });
-        
-        let rankIndex = checkedCount;
-        if (rankIndex >= 4) rankIndex = 4;
+        checkboxes.forEach(box => { if (box.parentElement.style.display !== 'none' && box.checked) checkedCount++; });
+        let rankIndex = checkedCount; if (rankIndex >= 4) rankIndex = 4;
         const data = ranks[rankIndex];
-        
         const statusPanel = document.getElementById('status-panel');
         document.getElementById('status-title').innerText = data.title;
         document.getElementById('status-icon').innerText = data.icon;
@@ -965,20 +721,14 @@
         statusPanel.classList.remove('animate-pop');
         void statusPanel.offsetWidth;
         statusPanel.classList.add('animate-pop');
-
         generateAdvice();
     }
 
     function toggleEquip(element, checkboxId) {
         var checkbox = document.getElementById(checkboxId);
         checkbox.checked = !checkbox.checked;
-        
-        if(checkbox.checked) {
-            element.classList.add('equipped');
-            playSound(true);
-        } else {
-            element.classList.remove('equipped');
-        }
+        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
+        else { element.classList.remove('equipped'); }
         updateStatusAndAdvice();
     }
 
@@ -986,7 +736,6 @@
         var egfrSel = document.getElementById('kfre-egfr');
         var uacrSel = document.getElementById('kfre-uacr');
         var dmSel = document.getElementById('kfre-dm');
-        
         var egfr = egfrSel.value ? parseFloat(egfrSel.value) : 0;
         var uacr = uacrSel.value ? parseFloat(uacrSel.value) : 0;
         var hasDM = dmSel.value === '1'; 
@@ -999,53 +748,31 @@
 
         var adviceHTML = "";
 
-        // SGLT2 (通用)
-        if (useSglt2) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾。</div>`;
-        } else if (egfr >= 20) {
+        if (useSglt2) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>太棒了！這是目前最強的護腎神盾。</div>`;
+        else if (egfr >= 20) {
             let tip = hasDM ? "適合使用 SGLT2i 排糖藥保護腎臟。" : "研究顯示，即使無糖尿病，SGLT2i 也能顯著保護腎臟與心臟。";
             adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>根據指引，您的情況${tip}</div>`;
         }
 
-        // GLP-1 (限 DM)
         if (hasDM) {
-            if (useGlp1) {
-                adviceHTML += `<div style="background:#e0f7fa; padding:10px; border-left:5px solid #00bcd4; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>強大的控糖魔杖！保護腎臟同時控制體重。</div>`;
-            } else {
-                adviceHTML += `<div style="background:#e0f7fa; padding:10px; border-left:5px solid #00bcd4; margin-bottom:10px; border-radius:5px;">ℹ️ <strong>新藥趨勢：</strong>GLP-1 腸泌素是糖尿病護腎新支柱，可諮詢醫師。</div>`;
-            }
+            if (useGlp1) adviceHTML += `<div style="background:#e0f7fa; padding:10px; border-left:5px solid #00bcd4; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>強大的控糖魔杖！保護腎臟同時控制體重。</div>`;
+            else adviceHTML += `<div style="background:#e0f7fa; padding:10px; border-left:5px solid #00bcd4; margin-bottom:10px; border-radius:5px;">ℹ️ <strong>新藥趨勢：</strong>GLP-1 腸泌素是糖尿病護腎新支柱，可諮詢醫師。</div>`;
         }
 
-        // RASi (通用)
-        if (useRasi) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi 血壓藥：</strong>基礎護甲，對抗蛋白尿不可或缺。</div>`;
-        } else if (uacr >= 30) {
-            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。</div>`;
-        }
+        if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi 血壓藥：</strong>基礎護甲，對抗蛋白尿不可或缺。</div>`;
+        else if (uacr >= 30) adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>您有蛋白尿，RASi 類血壓藥是首選治療。</div>`;
 
-        // ns-MRA (限 DM)
         if (hasDM) {
-            if (useNsmra) {
-                adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。</div>`;
-            } else if (egfr > 25 && uacr >= 30) {
-                adviceHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px; border-radius:5px;">ℹ️ <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。</div>`;
-            }
+            if (useNsmra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型護腎藥 (ns-MRA)：</strong>進階裝備！能抗發炎、抗纖維化。</div>`;
+            else if (egfr > 25 && uacr >= 30) adviceHTML += `<div style="background:#e3f2fd; padding:10px; border-left:5px solid #2196f3; margin-bottom:10px; border-radius:5px;">ℹ️ <strong>新藥資訊：</strong>糖尿病+蛋白尿，若血鉀正常，可諮詢是否使用 Finerenone。</div>`;
         }
 
-        // Statin (通用)
-        if (useStatin) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。</div>`;
-        } else if (egfr < 60) {
-            adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。</div>`;
-        }
+        if (useStatin) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statin)：</strong>保護血管，預防中風。</div>`;
+        else if (egfr < 60) adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>建議諮詢：</strong>腎友心血管風險高，Statin 是重要防護。</div>`;
 
         var adviceDiv = document.getElementById('dynamic-advice');
-        if (adviceHTML !== "") {
-            adviceDiv.innerHTML = adviceHTML;
-            adviceDiv.classList.remove('hidden');
-        } else {
-            adviceDiv.classList.add('hidden');
-        }
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
     }
 
     initQuiz();
