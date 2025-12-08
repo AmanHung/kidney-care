@@ -341,33 +341,71 @@
     <div id="tab-diet" class="section">
         <div class="card">
             <h2>🍽️ 專屬飲食建議</h2>
-            <div id="diet-placeholder" style="padding:40px 10px; color:#999;"><div style="font-size:4rem;">🥣</div><p style="font-size:1.3rem;">請先至「首頁」填寫資料<br>以取得 CKD/DM/HF 綜合建議</p><button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button></div>
+            <div id="diet-placeholder" style="padding:40px 10px; color:#999;">
+                <div style="font-size:4rem;">🥣</div>
+                <p style="font-size:1.3rem;">請先至「首頁」填寫資料<br>以取得 CKD/DM/HF 綜合建議</p>
+                <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
+            </div>
             <div id="diet-content" class="hidden">
-                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
+                <div class="list-card" style="border-color: var(--risk-g);">
+                    <div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
                     <div id="protein-calc-display" style="margin: 10px; padding: 12px; background-color: #f0fdf4; border: 1px dashed #16a34a; border-radius: 8px; display: none;">
                         <p style="margin: 0; font-size: 1.1rem; color: #374151;">體重 <span id="display-weight" style="font-weight: bold;">--</span> kg，建議每日蛋白質：</p>
-                        <div style="display: flex; align-items: baseline; margin-top: 5px;"><span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span><span style="margin: 0 5px;">~</span><span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span><span style="margin-left: 5px; font-size: 1rem;">克</span></div><p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">(約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)</p>
+                        <div style="display: flex; align-items: baseline; margin-top: 5px;">
+                            <span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
+                            <span style="margin: 0 5px;">~</span>
+                            <span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
+                            <span style="margin-left: 5px; font-size: 1rem;">克</span>
+                        </div>
+                        <p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">(約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)</p>
                     </div>
                     <div class="list-body" id="list-diet-g"></div>
                 </div>
+
+                <div class="list-card" style="border-color: #00bcd4;">
+                    <div class="list-head" style="background: #00bcd4;">⚡ 補充熱量小幫手</div>
+                    <div class="list-body" style="font-size: 1rem;">
+                        [cite_start]<p style="margin-top:0;"><strong>為什麼要補充？</strong><br>熱量攝取不足會分解肌肉，反而產生更多尿毒素！請多利用「低氮澱粉」填補肚子 [cite: 37, 49]。</p>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                            <div class="option-btn" style="font-size:0.95rem; background:#e0f7fa; border:none; color:#006064;">🍜 冬粉/米粉</div>
+                            <div class="option-btn" style="font-size:0.95rem; background:#e0f7fa; border:none; color:#006064;">🍮 西谷米/粉圓</div>
+                            <div class="option-btn" style="font-size:0.95rem; background:#e0f7fa; border:none; color:#006064;">🥣 藕粉/太白粉</div>
+                            <div class="option-btn" style="font-size:0.95rem; background:#fff3e0; border:none; color:#e65100;">🍬 冰糖/蜂蜜</div>
+                        </div>
+                        [cite_start]<p style="margin-bottom:0; margin-top:10px; font-size:0.9rem; color:#666;">💡 糖尿病患需注意糖份攝取；烹調時可多用植物油 (橄欖油) 增加熱量 [cite: 38]。</p>
+                    </div>
+                </div>
+
                 <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 須注意/減量</div><div class="list-body" id="list-diet-y"></div></div>
                 <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 不建議攝取</div><div class="list-body" id="list-diet-r"></div></div>
             </div>
             
-            <div style="margin: 40px 0 20px 0; text-align: center; border-top: 3px solid #f0f4f8; padding-top: 30px;">
-                <h3 style="color: var(--primary); font-size: 1.5rem; font-weight: 900; margin: 0 0 20px 0;">🍽️ 護腎餐盤</h3>
-                <img src="CKD_food.png" alt="護腎餐盤" style="width: 100%; max-width: 400px; height: auto; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 3px solid #eee;">
+            <div style="margin: 30px 0; text-align: center;">
+                <h3 style="color: var(--primary); font-size: 1.5rem; font-weight: 900; margin: 0 0 15px 0;">🍽️ 護腎餐盤</h3>
+                <img src="CKD_food.png" alt="護腎餐盤" style="width: 100%; max-width: 350px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
             </div>
 
             <hr style="margin: 30px 0; border:0; border-top:2px dashed #ddd;">
-            <h3 style="color:var(--primary); margin-bottom:15px;">🔎 單項食物查詢</h3>
-            <div class="select-wrapper">
-                <select id="food-select" onchange="checkFood()">
-                    <option value="">請點此選擇食物...</option>
-                    <optgroup label="常見食材"><option value="egg">雞蛋白</option><option value="tofu">嫩豆腐</option><option value="rice_noodle">冬粉/米粉</option><option value="rice">白飯</option><option value="veg">高麗菜/洋蔥</option><option value="fruit_low">蘋果/鳳梨</option><option value="oil">橄欖油/苦茶油</option><option value="spinach">菠菜/地瓜葉</option><option value="brown_rice">糙米/五穀米</option><option value="nuts">堅果</option><option value="coffee">黑咖啡</option><option value="banana">香蕉</option><option value="starfruit">楊桃</option><option value="sausage">香腸/火腿</option><option value="organs">內臟(豬肝)</option><option value="cola">可樂/汽水</option><option value="chicken">雞精</option></optgroup>
-                </select>
+            
+            <h3 style="color:var(--primary); margin-bottom:15px;">🔎 食物紅綠燈查詢</h3>
+            <div style="position: sticky; top: 75px; background: #fff; padding: 10px 0; z-index: 10;">
+                <input type="text" id="food-search-input" placeholder="輸入關鍵字 (如: 香蕉、冬粉)..." onkeyup="filterFood()" 
+                    style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; font-size: 1.1rem; outline: none; transition: 0.3s; font-weight:bold;">
+                <div id="food-tags" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch;">
+                    </div>
             </div>
-            <div id="food-result" class="med-result-box hidden"></div>
+
+            <div id="food-list-area" style="min-height: 200px;">
+                <p style="text-align:center; color:#999; margin-top:20px;">👇 請輸入名稱或點選上方分類</p>
+            </div>
+            
+            <div id="food-result-modal" class="hidden" onclick="closeFoodModal()" 
+                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s;">
+                <div class="med-result-box" style="width: 90%; max-width: 400px; margin: 0; position: relative; animation: pop-effect 0.3s;" onclick="event.stopPropagation()">
+                    <button onclick="closeFoodModal()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #666;">✕</button>
+                    <div id="food-result-content"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -520,12 +558,176 @@
         'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明藥物可能含重金屬或馬兜鈴酸。' }
     };
 
-    // 恢復：Food DB
+// --- 🥬 擴充後的食物資料庫 (依據豐原醫院衛教單張) ---
     const foodDB = {
-        'egg': {t:'🟢 綠燈', d:'優質蛋白質，推薦食用。'}, 'tofu': {t:'🟢 綠燈', d:'植物性蛋白，尿毒素少。'}, 'rice_noodle': {t:'🟢 綠燈', d:'低氮澱粉，補充熱量首選。'}, 'rice': {t:'🟢 綠燈', d:'比糙米低磷，適合晚期腎友。'}, 'veg': {t:'🟢 綠燈', d:'低鉀蔬菜，適合食用。'}, 'fruit_low': {t:'🟢 綠燈', d:'低鉀水果，可適量食用。'}, 'oil': {t:'🟢 綠燈', d:'優質好油，保護心血管。'},
-        'spinach': {t:'🟡 黃燈', d:'高鉀，請汆燙過再吃。'}, 'brown_rice': {t:'🟡 黃燈', d:'高磷，晚期建議少吃。'}, 'nuts': {t:'🟡 黃燈', d:'磷鉀皆高，一天限 5 顆。'}, 'coffee': {t:'🟡 黃燈', d:'含鉀且利尿，一天一杯。'}, 'banana': {t:'🟡 黃燈', d:'高鉀水果，血鉀高者避免。'},
-        'starfruit': {t:'🔴 紅燈', d:'絕對禁止！含神經毒素。'}, 'sausage': {t:'🔴 紅燈', d:'加工肉品含無機磷，極傷腎。'}, 'organs': {t:'🔴 紅燈', d:'內臟高毒素、高磷。'}, 'cola': {t:'🔴 紅燈', d:'含大量磷酸，隱形殺手。'}, 'chicken': {t:'🔴 紅燈', d:'濃縮鉀與普林，加重負擔。'}
+        // --- 🟢 低氮澱粉 / 補充熱量區 ---
+        [cite_start]'dongfen': { n: '冬粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。熱量來源首選，蛋白質極低，適合需限制蛋白質者補充熱量。 [cite: 19, 59]' },
+        [cite_start]'sago': { n: '西谷米', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。適合做成甜點補充熱量。 [cite: 19, 59]' },
+        [cite_start]'lotus': { n: '藕粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。可勾芡取代太白粉，或沖泡食用。 [cite: 19, 59]' },
+        [cite_start]'cornstarch': { n: '玉米粉/太白粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。烹調勾芡時可使用，增加熱量攝取。 [cite: 59]' },
+        'rice_noodle': { n: '米粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '蛋白質含量低於麵條，是較好的主食選擇。' },
+        'rice': { n: '白飯', c: 'staple', t: '🟢 綠燈', d: '磷含量比糙米低，適合晚期腎友的主食。' },
+        
+        // --- 🟡 全穀雜糧 (高磷/高鉀注意) ---
+        [cite_start]'brown_rice': { n: '糙米/五穀米', c: 'staple', t: '🟡 黃燈', tags: ['high_p'], d: '雖然健康，但「磷」含量較高。建議與白飯搭配或依血磷狀況減量。 [cite: 12, 31]' },
+        [cite_start]'oat': { n: '燕麥/麥片', c: 'staple', t: '🟡 黃燈', tags: ['high_p'], d: '屬於高磷穀類，食用時需注意份量，避免血磷過高。 [cite: 12, 31]' },
+        [cite_start]'bread': { n: '麵包/麵食', c: 'staple', t: '🟡 黃燈', tags: ['high_na'], d: '麵粉製品通常含有鹽(鈉)，且麵筋為低生理價蛋白，產生含氮廢物多。 [cite: 8, 27]' },
+        [cite_start]'taro': { n: '芋頭/地瓜', c: 'staple', t: '🟡 黃燈', tags: ['high_k'], d: '屬於高鉀主食。食用時需減少白飯份量(做代換)，並注意血鉀。 [cite: 5]' },
+
+        // --- 🟢 優質蛋白質 (加工豆製品/肉類) ---
+        [cite_start]'egg': { n: '雞蛋白', c: 'protein', t: '🟢 綠燈', d: '高生理價蛋白質首選，利用率高，產生的尿毒素少。 [cite: 25]' },
+        [cite_start]'tofu': { n: '豆腐/豆干', c: 'protein', t: '🟢 綠燈', d: '加工後的黃豆製品(如豆腐)屬於高生理價蛋白，且磷含量較原豆低，推薦食用。 [cite: 12]' }, // Note: Tofu is not explicitly listed as high P in source 12, unlike unprocessed beans.
+        [cite_start]'fish': { n: '新鮮魚肉', c: 'protein', t: '🟢 綠燈', d: '優質蛋白質。請選擇新鮮魚類，避免鹹魚或魚罐頭。 [cite: 25]' },
+        [cite_start]'pork': { n: '豬/雞/牛肉', c: 'protein', t: '🟢 綠燈', d: '優質蛋白質。請吃原肉，避免肉湯(含高鉀/磷)。 [cite: 25]' },
+
+        // --- 🔴 高風險蛋白質 (內臟/加工/普林) ---
+        [cite_start]'organs': { n: '內臟 (肝/心)', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'gout'], d: '絕對禁止！高磷、高膽固醇且高普林，極易誘發痛風與高血磷。 [cite: 8, 31]' },
+        [cite_start]'processed_meat': { n: '香腸/火腿/貢丸', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'high_na'], d: '含「無機磷」添加劑，吸收率100%，極傷腎！高鹽分亦導致高血壓。 [cite: 8, 12, 51]' },
+        [cite_start]'fish_dry': { n: '小魚干/蝦米', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'gout'], d: '含磷量極高且高普林。常用於熬湯或配菜，腎友應避免。 [cite: 5, 8, 12]' },
+        [cite_start]'gluten': { n: '麵筋/麵腸/烤麩', c: 'protein', t: '🔴 紅燈', d: '屬於「低生理價」植物蛋白，利用率差，會產生大量尿毒素，應少吃。 [cite: 27]' },
+
+        // --- 🟢 蔬果類 ---
+        [cite_start]'veg_general': { n: '一般葉菜 (高麗菜/絲瓜)', c: 'veg', t: '🟢 綠燈', d: '每餐需攝取。若血鉀偏高，請「汆燙」後讓鉀離子流失再以油拌炒。 [cite: 44]' },
+        'fruit_low': { n: '蘋果/鳳梨/葡萄', c: 'fruit', t: '🟢 綠燈', d: '鉀含量相對較低的水果。仍需注意每日份量。' }, // Inferring low potassium based on exclusion from high K lists in sources 5 & 42.
+
+        // --- 🔴 高鉀蔬果警示 ---
+        [cite_start]'banana': { n: '香蕉', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。血鉀偏高或尿量少者應避免。 [cite: 42]' },
+        [cite_start]'tomato': { n: '番茄 (含聖女番茄)', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。番茄汁或番茄醬鉀含量更高，應避免。 [cite: 5, 8, 42]' },
+        [cite_start]'starfruit': { n: '楊桃', c: 'fruit', t: '🔴 紅燈', tags: ['toxin'], d: '絕對禁止！含神經毒素，腎友無法代謝，食用恐致抽搐昏迷。 [cite: 42]' },
+        [cite_start]'melon': { n: '哈密瓜/美濃瓜', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '瓜類水果通常鉀離子較高，建議少量淺嚐。 [cite: 5, 42]' },
+        [cite_start]'kiwi': { n: '奇異果', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。建議切小塊限量食用。 [cite: 5, 42]' },
+        [cite_start]'soup': { n: '菜湯/精力湯', c: 'veg', t: '🔴 紅燈', tags: ['high_k', 'gout'], d: '蔬菜的鉀離子都溶在湯裡，且普林高。請吃菜、不喝湯。 [cite: 45]' },
+
+        // --- 🥤 點心/調味/其他 ---
+        [cite_start]'oil': { n: '植物油', c: 'snack', t: '🟢 綠燈', d: '橄欖油、芥花油。腎友補充熱量的好幫手，且不含磷鉀。 [cite: 58]' },
+        [cite_start]'candy': { n: '冰糖/蜂蜜/水果糖', c: 'snack', t: '🟡 黃燈', d: '低蛋白熱量來源。糖尿病患需注意血糖，非糖尿病者可適量補充熱量。 [cite: 60]' },
+        [cite_start]'nuts': { n: '堅果/花生/瓜子', c: 'snack', t: '🟡 黃燈', tags: ['high_p'], d: '含磷量高。雖然是好油，但腎友一天建議不超過5顆，或配合磷結合劑。 [cite: 5, 12, 31]' },
+        [cite_start]'yeast': { n: '酵母粉/健素糖', c: 'snack', t: '🔴 紅燈', tags: ['high_p', 'gout'], d: '含高量磷與普林。常添加於保健食品中，請務必看清標示。 [cite: 12, 31]' },
+        [cite_start]'cola': { n: '可樂/汽水', c: 'snack', t: '🔴 紅燈', tags: ['high_p'], d: '含「無機磷」酸，吸收率100%，是高磷垃圾食物。 [cite: 17, 31]' },
+        [cite_start]'coffee_mix': { n: '三合一咖啡/奶茶', c: 'snack', t: '🔴 紅燈', tags: ['high_p'], d: '奶精粉含高量磷酸鹽，是典型的「高磷垃圾食物」。 [cite: 17]' },
+        [cite_start]'chicken_essence': { n: '雞精/蜆精', c: 'snack', t: '🔴 紅燈', tags: ['high_k', 'high_p', 'gout'], d: '濃縮了肉類的鉀、磷與普林。腎功能不全者無法代謝，恐加重負擔。 [cite: 5, 8]' }
     };
+
+    const foodCategories = {
+        'all': '全部', 'staple': '🍚 主食', 'protein': '🍖 蛋豆魚肉', 
+        'veg': '🥦 蔬菜', 'fruit': '🍎 水果', 'snack': '🍦 點心/調味'
+    };
+
+    // --- 🔍 食物搜尋功能 (UX優化) ---
+    let currentCategory = 'all';
+
+    function initFoodSearch() {
+        const tagContainer = document.getElementById('food-tags');
+        if(!tagContainer) return;
+        tagContainer.innerHTML = '';
+        Object.keys(foodCategories).forEach(key => {
+            const btn = document.createElement('button');
+            btn.innerText = foodCategories[key];
+            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
+            btn.style.flex = '0 0 auto'; // 不壓縮
+            btn.style.padding = '8px 15px';
+            btn.style.fontSize = '0.95rem';
+            btn.onclick = () => {
+                document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = key;
+                filterFood();
+            };
+            tagContainer.appendChild(btn);
+        });
+        filterFood(); // 預設顯示全部或清空
+    }
+
+    function filterFood() {
+        const inputEl = document.getElementById('food-search-input');
+        if(!inputEl) return;
+        const input = inputEl.value.toLowerCase().trim();
+        const listArea = document.getElementById('food-list-area');
+        listArea.innerHTML = '';
+
+        let count = 0;
+        Object.keys(foodDB).forEach(key => {
+            const item = foodDB[key];
+            // 篩選邏輯：分類符合 且 (搜尋框為空 或 關鍵字匹配)
+            const catMatch = currentCategory === 'all' || item.c === currentCategory;
+            const keyMatch = input === '' || item.n.includes(input) || key.includes(input);
+
+            if (catMatch && keyMatch) {
+                // 如果沒搜尋且分類是 All，不要一次顯示全部(太長)，只顯示提示
+                if (currentCategory === 'all' && input === '') {
+                    return; 
+                }
+
+                const div = document.createElement('div');
+                div.className = 'quiz-option'; // 借用 quiz 的樣式 (卡片感)
+                div.style.padding = '15px';
+                div.style.marginBottom = '10px';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                
+                // 燈號顏色
+                let dotColor = '#ddd';
+                if(item.t.includes('綠')) dotColor = 'var(--risk-g)';
+                if(item.t.includes('黃')) dotColor = 'var(--risk-y)';
+                if(item.t.includes('紅')) dotColor = 'var(--risk-r)';
+
+                div.innerHTML = `
+                    <div style="font-weight:bold; font-size:1.1rem;">
+                        <span style="color:${dotColor}; margin-right:8px;">●</span>${item.n}
+                    </div>
+                    <span style="font-size:0.9rem; color:#888;">查看 ></span>
+                `;
+                div.onclick = () => showFoodDetail(item);
+                listArea.appendChild(div);
+                count++;
+            }
+        });
+
+        if (currentCategory === 'all' && input === '') {
+            listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">👇 請輸入名稱 (如：香蕉) 或點選上方分類</p>';
+        } else if (count === 0) {
+            listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">找不到相關食物 😅<br>試試其他關鍵字？</p>';
+        }
+    }
+
+    function showFoodDetail(item) {
+        const modal = document.getElementById('food-result-modal');
+        const content = document.getElementById('food-result-content');
+        
+        let bg = '#fff', border = '#ccc';
+        if(item.t.includes('紅')) { bg='#fff5f5'; border='var(--risk-r)'; }
+        else if(item.t.includes('黃')) { bg='#fffbe6'; border='var(--risk-y)'; }
+        else { bg='#e8f5e9'; border='var(--risk-g)'; }
+
+        // 標籤顯示
+        let tagHtml = '';
+        if(item.tags) {
+            item.tags.forEach(t => {
+                if(t==='high_p') tagHtml += `<span style="background:#607d8b; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ 高磷</span>`;
+                if(t==='high_k') tagHtml += `<span style="background:#795548; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ 高鉀</span>`;
+                if(t==='gout') tagHtml += `<span style="background:#e91e63; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ 痛風注意</span>`;
+                if(t==='low_n') tagHtml += `<span style="background:#00bcd4; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚡ 低氮澱粉</span>`;
+                if(t==='high_na') tagHtml += `<span style="background:#ef6c00; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">🧂 高鈉</span>`;
+                if(t==='toxin') tagHtml += `<span style="background:black; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">☠️ 神經毒素</span>`;
+            });
+        }
+
+        content.parentElement.style.background = bg;
+        content.parentElement.style.borderLeft = `8px solid ${border}`;
+        
+        content.innerHTML = `
+            <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
+            <div style="margin-bottom:15px;">${item.t} ${tagHtml}</div>
+            <p style="font-size:1.15rem; line-height:1.6; color:#444; font-weight:bold;">${item.d}</p>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeFoodModal() {
+        document.getElementById('food-result-modal').classList.add('hidden');
+    }
 
     // 擴充題庫至 15 題，確保能篩選出 10 題
     const quizPool = [
@@ -549,14 +751,22 @@
     let currentQuizData = [];
 
     // --- Logic ---
-    function switchTab(id) {
+   function switchTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
         const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
-        document.querySelectorAll('.nav-item')[idx].classList.add('active');
+        const navItems = document.querySelectorAll('.nav-item');
+        if(navItems[idx]) navItems[idx].classList.add('active');
+        
         window.scrollTo(0,0);
-        if (id === 'diet') updateProteinIntake();
+        
+        // 呼叫個別頁面的初始化功能
+        if (id === 'diet') {
+            updateProteinIntake();
+            initFoodSearch(); // 🆕 新增：初始化食物搜尋與分類按鈕
+        }
         if (id === 'quiz') initQuiz();
     }
     
@@ -760,21 +970,7 @@
         else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--risk-g)"; res.style.background = "#e6fffa"; }
     }
 
-    // 恢復：單項食物查詢功能
-    function checkFood() {
-        const val = document.getElementById('food-select').value;
-        const res = document.getElementById('food-result');
-        res.classList.add('hidden');
-        if(!val) return;
-        const data = foodDB[val];
-        res.classList.remove('hidden');
-        res.innerHTML = `<strong style="font-size:1.4rem;">${data.t}</strong><br>${data.d}`;
-        if(data.t.includes('紅')) { res.style.borderColor = 'red'; res.style.background = '#fff5f5'; }
-        else if(data.t.includes('黃')) { res.style.borderColor = 'gold'; res.style.background = '#fffbe6'; }
-        else { res.style.borderColor = 'green'; res.style.background = '#e8f5e9'; }
-    }
-
-    // --- 🛡️ 裝備與稱號 ---
+        // --- 🛡️ 裝備與稱號 ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
         // 1. 血壓藥/ARNI
         const iconRasi = document.getElementById('icon-rasi');
@@ -1063,6 +1259,7 @@
 </script>
 </body>
 </html>
+
 
 
 
