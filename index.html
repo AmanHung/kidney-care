@@ -330,7 +330,7 @@
             <h2>🚦 藥物安全紅綠燈</h2>
             <div class="select-wrapper">
                 <select id="med-select" onchange="checkMed()">
-                    <option value="">🔍 請選擇藥物名稱...</option><option value="ras">ACEi / ARB (血壓藥)</option><option value="arni">ARNI (心衰竭雙效藥)</option><option value="panadol">Acetaminophen (普拿疼)</option><option value="mycin">Aminoglycosides (抗生素)</option><option value="bb">Beta-blocker (乙型阻斷劑)</option><option value="contrast">Contrast Media (顯影劑)</option><option value="diuretic">Diuretics (利尿劑)</option><option value="enema">Enema (清腸劑)</option><option value="ns_mra">Finerenone (ns-MRA)</option><option value="glp1">GLP-1 RA (腸泌素)</option><option value="herbal">Herbal (中草藥)</option><option value="metformin">Metformin (降糖藥)</option><option value="nsaid">NSAIDs (強效止痛藥)</option><option value="sglt2">SGLT2i (排糖藥)</option><option value="statins">Statins (降血脂藥)</option>
+                    <option value="">🔍 請選擇藥物名稱...</option><option value="ras">ACEi / ARB (血壓藥)</option><option value="arni">ARNI (心衰竭雙效藥)</option><option value="panadol">Acetaminophen (普拿疼)</option><option value="mycin">Aminoglycosides (抗生素)</option><option value="bb">Beta-blocker (乙型阻斷劑)</option><option value="contrast">Contrast Media (顯影劑)</option><option value="diuretic">Diuretics (利尿劑)</option><option value="enema">Enema (清腸劑)</option><option value="ns_mra">Finerenone 可申達(ns-MRA)</option><option value="glp1">GLP-1 RA (腸泌素)</option><option value="herbal">Herbal (中草藥)</option><option value="metformin">Metformin (降糖藥)</option><option value="nsaid">NSAIDs (強效止痛藥)</option><option value="sglt2">SGLT2i (排糖藥)</option><option value="statins">Statins (降血脂藥)</option>
                 </select>
             </div>
             <div class="traffic-container">
@@ -491,7 +491,7 @@
                 </div>
 
                 <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
-                    <span class="equip-icon">💍</span><span class="equip-name">新型護腎戒</span><span class="equip-desc">Finerenone<br>精準抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">💍</span><span class="equip-name">新型護腎藥</span><span class="equip-desc">Finerenone(可申達)<br>精準抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
@@ -629,7 +629,7 @@
         'metformin': { level: 'y', title: '🟡 需減量 (Metformin)', desc: 'eGFR < 30 必須停用；30-45 需減量。' },
         'nsaid': { level: 'r', title: '🛑 絕對禁止 (NSAIDs)', desc: '強效止痛藥。最強烈的腎臟殺手！極易造成急性腎損傷。' },
         'mra_old': { level: 'g', title: '🧤 傳統 MRA (Spironolactone)', desc: '心衰竭標準治療藥物(GDMT)。需注意血鉀濃度與男性女乳症副作用。' },
-        'ns_mra': { level: 'g', title: '💍 新型 ns-MRA (Finerenone)', desc: '針對糖尿病腎病變設計。高血鉀風險較傳統藥物低，能抗發炎、抗纖維化。' },
+        'ns_mra': { level: 'g', title: '💍 新型 ns-MRA (Finerenone 可申達)', desc: '針對糖尿病腎病變設計。高血鉀風險較傳統藥物低，能抗發炎、抗纖維化。' },
         'sglt2': { level: 'g', title: '✅ 核心神器 (SGLT2i)', desc: '排糖藥。心臟衰竭與慢性腎臟病的救命支柱，KDIGO 與心臟指引雙重推薦。' },
         'statins': { level: 'g', title: '✅ 建議使用 (Statins)', desc: '降血脂藥。預防中風與心血管事件。' },
         'contrast': { level: 'r', title: '⚠️ 高風險 (顯影劑)', desc: '含碘顯影劑可能造成急性腎損傷。' },
@@ -987,7 +987,7 @@
             // --- 區分：糖尿病腎病變推薦 ns-MRA ---
             // 條件：有糖尿病 + 無心衰竭(因為有心衰會優先推傳統) + eGFR>25 + 這裡假設有蛋白尿風險
             if (!hasHF && egfr >= 25) {
-                add(g, "ns-MRA (新型護腎石)", "Finerenone 針對糖尿病腎病變，精準抗發炎且副作用較少。");
+                add(g, "ns-MRA (新型護腎藥)", "Finerenone(可申達) 針對糖尿病腎病變，精準抗發炎且副作用較少。");
             }
             
             if (egfr < 30) add(r, "Metformin", "eGFR < 30 絕對禁用！乳酸中毒風險。");
@@ -1214,7 +1214,7 @@
         if (slotNsMra.style.display !== 'none') {
             const useNsMra = document.getElementById('drug-nsmra').checked;
             if (useNsMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型 ns-MRA：</strong>很棒！您正在使用精準抗發炎藥物保護腎臟。</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>若血鉀正常，可諮詢新型藥物 (Finerenone) 以預防腎功能惡化。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>若血鉀正常，可諮詢新型藥物 (Finerenone 可申達) 以預防腎功能惡化。</div>`;
         }
 
         // 5. Statin (降血脂藥) - 所有人皆顯示 (修復漏字：補上已裝備提示)
@@ -1342,5 +1342,6 @@
 </script>
 </body>
 </html>
+
 
 
