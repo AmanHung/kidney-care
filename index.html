@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>保腎護心助理</title>
+    <title>保腎護心助理 v9.4 (結構修復版)</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
@@ -356,7 +356,7 @@
                 <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 應避免/禁用</div><div class="list-body" id="list-med-r"></div></div>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
             <div class="select-wrapper">
@@ -369,9 +369,8 @@
             </div>
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
-    </div>
 
-    <div class="card warning-card">
+        <div class="card warning-card">
             <div class="warning-head">🚨 生病停藥法則 (SADMANS)</div>
             <div class="warning-body">
                 <p style="margin-top:0; font-weight:bold; color:#c62828; line-height:1.6; font-size:1.05rem; text-align:center; background:#ffebee; padding:10px; border-radius:10px;">
@@ -422,9 +421,7 @@
                 <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#e03e2e; margin-top:20px; box-shadow: 0 6px 15px rgba(224, 62, 46, 0.4); border-radius: 30px;">🏥 症狀嚴重？立即掛號 ➜</a>
             </div>
         </div>
-      </div>
-    
-    <div id="tab-diet" class="section">
+    </div> <div id="tab-diet" class="section">
         <div class="card">
             <h2>🍽️ 專屬飲食建議</h2>
             <div id="diet-placeholder" style="padding:40px 10px; color:#999;">
@@ -851,6 +848,8 @@
         {tags:['all'], q:"「雞精」適合腎臟病人喝嗎？", a:[{t:"不適合，含鉀/普林高",c:true},{t:"適合，補體力",c:false}], exp:"濃縮雞精含高量的鉀、磷與普林，腎臟排泄功能不佳者應避免。"},
         {tags:['dm'], q:"糖尿病腎病變最早期的徵兆是？", a:[{t:"腰痛",c:false},{t:"微量蛋白尿",c:true}], exp:"微量蛋白尿 (UACR 30-300) 是最早期的警訊，此時治療還有機會逆轉。"},
         {tags:['hf'], q:"心臟衰竭患者若感到「呼吸困難」加劇，應？", a:[{t:"多喝水",c:false},{t:"盡速就醫",c:true}], exp:"呼吸困難加劇可能是急性肺水腫，需立即醫療介入。"},
+
+        // --- 🆕 新增題目 (依據最新上傳單張) ---
         {tags:['all'], q:"為什麼要避開「加工食品」(如火腿、貢丸)？", a:[{t:"熱量太高",c:false},{t:"無機磷吸收率100%",c:true}], exp:"加工食品添加的「無機磷」人體吸收率高達100%，是導致高血磷與血管鈣化的元兇。"},
         {tags:['all'], q:"「痛風」患者應避免下列哪組食物？", a:[{t:"內臟、小魚干、濃湯",c:true},{t:"雞蛋、牛奶、白飯",c:false}], exp:"內臟、小魚干與濃肉湯屬於「高普林」食物，易誘發痛風；且含磷量極高，腎友亦應避免。"},
         {tags:['all'], q:"腎友若熱量攝取不足，推薦吃什麼補充？", a:[{t:"低氮澱粉 (冬粉/粉圓)",c:true},{t:"五穀米/糙米",c:false}], exp:"冬粉、藕粉等「低氮澱粉」蛋白質極少，可補充熱量且不產生尿毒素。糙米雖健康但磷較高。"},
@@ -897,7 +896,7 @@
         document.getElementById('start-hint').classList.add('hidden');
         document.getElementById('unified-result').classList.remove('hidden');
 
-        // Heatmap
+        // Heatmap Logic
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
         let row = '5', stageText = '第5期';
         if (egfr >= 90) { row = '1'; stageText = '第1期'; }
@@ -960,417 +959,26 @@
         if(hasHF) condText.push("心衰竭");
         let condStr = condText.length > 0 ? "且合併" + condText.join("/") : "";
 
+        // 🆕 定義掛號按鈕 (在新分頁開啟掛號網址)
+        const regBtn = `<div style="margin-top:15px; text-align:center;"><a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" style="display:inline-block; padding:10px 20px; background:#d32f2f; color:white; text-decoration:none; border-radius:30px; font-weight:900; font-size:1rem; box-shadow:0 4px 10px rgba(211, 47, 47, 0.3); transition: transform 0.1s;">🏥 建議立即掛號 ➜</a></div>`;
+
         if (risk2 >= 0.4) { 
-            adviceBorder = "#d32f2f"; adviceHTML = `數值顯示腎功能衰退風險較高${condStr}。建議與醫師討論治療策略。`;
+            adviceBorder = "#d32f2f"; 
+            // 紅色高風險：加上掛號按鈕
+            adviceHTML = `數值顯示腎功能衰退風險較高${condStr}。建議與醫師討論治療策略。${regBtn}`;
         } else if (risk2 >= 0.1) { 
-            adviceBorder = "#f57c00"; adviceHTML = `建議加入「慢性腎臟病照護計畫」。${hasHF ? "心衰竭需嚴格控制水分與鹽分。" : ""}`;
+            adviceBorder = "#f57c00"; 
+            // 橘色中風險：加上掛號按鈕
+            adviceHTML = `建議加入「慢性腎臟病照護計畫」。${hasHF ? "心衰竭需嚴格控制水分與鹽分。" : ""}${regBtn}`;
         } else if (risk5 >= 0.03) { 
-            adviceBorder = "#fbc02d"; adviceHTML = `建議轉診至腎臟專科確認病因。${hasHF ? "心腎症候群需同時保護心臟與腎臟。" : ""}`;
+            adviceBorder = "#fbc02d"; 
+            // 黃色風險：建議轉診 (加入按鈕)
+            adviceHTML = `建議轉診至腎臟專科確認病因。${hasHF ? "心腎症候群需同時保護心臟與腎臟。" : ""}${regBtn}`;
         } else {
-            adviceBorder = "#388e3c"; adviceHTML = `目前短期內洗腎機率較低。請維持健康生活。`;
+            adviceBorder = "#388e3c"; 
+            // 綠色低風險：不用按鈕
+            adviceHTML = `目前短期內洗腎機率較低。請維持健康生活。`;
         }
         adviceBox.innerHTML = adviceHTML;
         adviceBox.style.borderLeftColor = adviceBorder;
     }
-
-    // --- 💊 用藥建議邏輯 ---
-    function updateMeds(egfr, hasDM, hasHF) {
-        document.getElementById('med-placeholder').classList.add('hidden');
-        document.getElementById('med-content').classList.remove('hidden');
-        
-        const sel = document.getElementById('kfre-egfr');
-        document.getElementById('med-egfr-val').innerText = sel.options[sel.selectedIndex].text.split(' ')[0];
-        
-        let conds = ['CKD']; 
-        if(hasDM) conds.push('糖尿病'); 
-        if(hasHF) conds.push('心衰竭');
-        document.getElementById('med-cond-text').innerText = conds.join(' + ');
-
-        const g = document.getElementById('list-med-g'), y = document.getElementById('list-med-y'), r = document.getElementById('list-med-r');
-        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
-        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
-
-        // 1. SGLT2i
-        if (egfr >= 20) {
-            let msg = hasHF ? "心臟衰竭與腎臟病的核心救命藥物！" : "能顯著延緩腎功能惡化，建議優先使用。";
-            add(g, "SGLT2i (排糖藥)", msg);
-        } else add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議新起始，若原已服用可續用。");
-
-        // 2. RASi / ARNI
-        if (hasHF) {
-            add(g, "ARNI (雙效神兵)", "心衰竭首選 (GDMT)！優於傳統血壓藥。");
-            add(g, "Beta-blocker (護心藥)", "心衰竭必備，讓心臟跳得更省力。");
-            
-            // --- 區分：心衰竭推薦傳統 MRA ---
-            add(g, "MRA (傳統阻斷藥)", "Spironolactone 是心衰竭第四支柱，能降低死亡率。需監測血鉀。");
-        } else {
-            add(g, "RASi (ACEi/ARB)", "護腎首選血壓藥，抗蛋白尿基礎。");
-        }
-
-        // 3. DM
-        if (hasDM) {
-            add(g, "GLP-1 RA (腸泌素)", "控糖、減重、護心護腎的多效藥物。");
-            
-            // --- 區分：糖尿病腎病變推薦 ns-MRA ---
-            // 條件：有糖尿病 + 無心衰竭(因為有心衰會優先推傳統) + eGFR>25 + 這裡假設有蛋白尿風險
-            if (!hasHF && egfr >= 25) {
-                add(g, "ns-MRA (新型護腎石)", "Finerenone 可申達 針對糖尿病腎病變，精準抗發炎且副作用較少。");
-            }
-            
-            if (egfr < 30) add(r, "Metformin", "eGFR < 30 絕對禁用！乳酸中毒風險。");
-            else if (egfr < 45) add(y, "Metformin", "需減量，每日不超過 1000mg。");
-        }
-
-        // 4. 通用
-        add(g, "Statins (降血脂藥)", "保護血管，預防中風與心肌梗塞。");
-        
-        let diureticMsg = hasHF ? "症狀控制重要藥物 (依體重調整)，脫水時暫停。" : "生病 (脫水/發燒) 時需暫停。";
-        add(y, "Diuretics (利尿劑)", diureticMsg);
-        
-        let nsaidMsg = hasHF ? "絕對禁止！會惡化心衰竭並損傷腎臟。" : "傷腎地雷！盡量避免使用。";
-        add(r, "NSAIDs (強效止痛藥)", nsaidMsg);
-    }
-
-    // --- 🥦 飲食建議 ---
-    function updateDiet(egfr, hasDM, hasHF) {
-        document.getElementById('diet-placeholder').classList.add('hidden');
-        document.getElementById('diet-content').classList.remove('hidden');
-        const g = document.getElementById('list-diet-g'), y = document.getElementById('list-diet-y'), r = document.getElementById('list-diet-r');
-        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
-        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
-
-        add(g, "優質蛋白質", "雞蛋、豆腐、魚肉、雞肉。");
-        add(g, "天然好油", "橄欖油、苦茶油、酪梨油。");
-        
-        if(hasHF) {
-            add(r, "高鈉食物", "醃漬品、罐頭、湯汁、火鍋湯。鹽分滯留水分，會讓心臟衰竭惡化。");
-            add(y, "水分攝取", "建議每日晨起量體重。若水腫明顯，需嚴格限水 (如每日 < 1500cc)。");
-        } else {
-            add(g, "適量水分", "無水腫者建議補充足夠水分，幫助代謝。");
-        }
-
-        if (hasDM) {
-            add(r, "精緻糖/甜飲", "血糖波動會加速血管老化與腎病變。");
-            add(g, "低升糖指數 (Low GI)", "全穀雜糧、蔬菜，有助血糖穩定。");
-        }
-
-        if (egfr < 45) { 
-            add(g, "低氮澱粉", "冬粉、米粉、藕粉。補充熱量不產生尿毒。");
-            add(y, "糙米/五穀米", "磷含量高，建議改吃白飯或低氮澱粉。");
-            add(y, "深綠色蔬菜", "鉀離子高，建議切段汆燙後再炒。");
-            add(r, "低鈉鹽", "成分通常是「氯化鉀」，心腎不佳者恐致致死性心律不整。");
-        }
-        
-        add(r, "楊桃", "絕對禁止！含神經毒素。");
-        add(r, "加工肉品", "香腸火腿含高量無機磷，吸收率 100% 極傷腎。");
-    }
-
-    function checkMed() {
-        const val = document.getElementById('med-select').value;
-        const lights = document.querySelectorAll('.light');
-        const res = document.getElementById('med-result');
-        lights.forEach(l => l.classList.remove('on'));
-        res.classList.add('hidden');
-        if(!val) return;
-        const data = medDB[val];
-        res.classList.remove('hidden');
-        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
-        if (data.level === 'r') { document.getElementById('light-r').classList.add('on'); res.style.borderColor = "var(--risk-r)"; res.style.background = "#fff5f5"; }
-        else if (data.level === 'y') { document.getElementById('light-y').classList.add('on'); res.style.borderColor = "var(--risk-y)"; res.style.background = "#fffbf0"; }
-        else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--risk-g)"; res.style.background = "#e6fffa"; }
-    }
-
-        // --- 🛡️ 裝備與稱號 ---
-    function updateArmorVisibility(hasDM, egfr, hasHF) {
-        // 1. 血壓藥/ARNI
-        const iconRasi = document.getElementById('icon-rasi');
-        const nameRasi = document.getElementById('name-rasi');
-        const descRasi = document.getElementById('desc-rasi');
-        
-        if(hasHF) {
-            iconRasi.innerText = "⛑️";
-            nameRasi.innerText = "雙效防護";
-            descRasi.innerHTML = "ARNI<br>心衰竭首選";
-        } else {
-            iconRasi.innerText = "🧥";
-            nameRasi.innerText = "血壓藥";
-            descRasi.innerHTML = "ACEi/ARB<br>基礎防禦";
-        }
-
-        // 2. Beta-blocker
-        const slotBb = document.getElementById('slot-bb');
-        if (hasHF) {
-            slotBb.style.display = 'flex';
-        } else {
-            document.getElementById('drug-bb').checked = false;
-            slotBb.classList.remove('equipped');
-            slotBb.style.display = 'none';
-        }
-
-        // 3. MRA 分流邏輯 (修正重點)
-        const slotMraOld = document.getElementById('slot-mra-old');
-        const slotNsMra = document.getElementById('slot-nsmra');
-        
-        // 重置顯示
-        slotMraOld.style.display = 'none';
-        slotNsMra.style.display = 'none';
-
-        if (hasHF) {
-            // 心衰竭：優先顯示傳統 MRA
-            slotMraOld.style.display = 'flex';
-            // 隱藏 ns-MRA 避免混淆 (或取消勾選)
-            document.getElementById('drug-nsmra').checked = false;
-            slotNsMra.classList.remove('equipped');
-        } else if (hasDM && egfr >= 25) {
-            // 無心衰竭 但有 糖尿病腎病變風險：顯示 ns-MRA
-            slotNsMra.style.display = 'flex';
-            // 隱藏傳統 MRA
-            document.getElementById('drug-mra-old').checked = false;
-            slotMraOld.classList.remove('equipped');
-        } else {
-            // 兩者皆無，都隱藏並取消勾選
-            document.getElementById('drug-mra-old').checked = false;
-            slotMraOld.classList.remove('equipped');
-            document.getElementById('drug-nsmra').checked = false;
-            slotNsMra.classList.remove('equipped');
-        }
-
-        // 4. GLP-1
-        const slotGlp1 = document.getElementById('slot-glp1');
-        if (hasDM) {
-            slotGlp1.style.display = 'flex';
-        } else {
-            document.getElementById('drug-glp1').checked = false;
-            slotGlp1.classList.remove('equipped');
-            slotGlp1.style.display = 'none';
-        }
-
-        updateStatusAndAdvice();
-    }
-
-    const ranks = [
-        { class: 'status-novice', title: '新手冒險者', icon: '⚠️', msg: '您的心腎目前完全沒有防護，風險極高！' },
-        { class: 'status-apprentice', title: '見習衛士', icon: '🛡️', msg: '很好！您穿上了第一件裝備。' },
-        { class: 'status-veteran', title: '資深騎士', icon: '⚔️', msg: '太棒了！您的防禦力大幅提升！' },
-        { class: 'status-elite', title: '皇家護衛', icon: '🏰', msg: '非常優秀！您的心腎受到嚴密的保護！' },
-        { class: 'status-guardian', title: '心腎大將軍', icon: '🏆', msg: '太強了！接近完美的防禦陣容！' },
-        { class: 'status-god', title: '心腎大元帥', icon: '👑', msg: '完美無缺！您是心腎健康的最高守護者！' }
-    ];
-
-    function updateStatusAndAdvice() {
-        const checkboxes = document.querySelectorAll('.gear-checkbox');
-        let checkedCount = 0;
-        
-        checkboxes.forEach(box => { 
-            if (box.parentElement.style.display !== 'none') {
-                if (box.checked) checkedCount++; 
-            }
-        });
-        
-        let rankIndex = checkedCount; 
-        if (rankIndex >= 5) rankIndex = 5; 
-        
-        const data = ranks[rankIndex];
-        const statusPanel = document.getElementById('status-panel');
-        document.getElementById('status-title').innerText = data.title;
-        document.getElementById('status-icon').innerText = data.icon;
-        document.getElementById('status-msg').innerText = data.msg;
-        statusPanel.className = 'status-panel ' + data.class;
-        statusPanel.classList.remove('animate-pop');
-        void statusPanel.offsetWidth;
-        statusPanel.classList.add('animate-pop');
-
-        generateAdvice();
-    }
-
-    function toggleEquip(element, checkboxId) {
-        var checkbox = document.getElementById(checkboxId);
-        checkbox.checked = !checkbox.checked;
-        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
-        else { element.classList.remove('equipped'); }
-        updateStatusAndAdvice();
-    }
-
-   // --- 💡 全面修復版：裝備建議邏輯 ---
-    function generateAdvice() {
-        const hfVal = document.getElementById('kfre-hf').value;
-        const dmVal = document.getElementById('kfre-dm').value;
-        const hasHF = hfVal === '1';
-        const hasDM = dmVal === '1';
-        
-        let adviceHTML = "";
-        
-        // 1. SGLT2i (排糖藥) - 所有人皆顯示
-        const useSglt2 = document.getElementById('drug-sglt2').checked;
-        if (useSglt2) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>很好！這是 KDIGO 與心臟學會一致推薦的救命藥物。</div>`;
-        } else {
-            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 極重要建議</span><br><strong style="color:#d84315;">請諮詢醫師：</strong>排糖藥(SGLT2i)能顯著降低心衰竭住院與洗腎風險，是治療的基石。</div>`;
-        }
-
-        // 2. RASi / ARNI (血壓藥/雙效防護) - 所有人皆顯示
-        const useRasi = document.getElementById('drug-rasi').checked;
-        if (hasHF) {
-            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>雙效防護 (ARNI/RASi)：</strong>您使用了正確的心臟保護藥物！</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>心衰竭患者建議優先使用 ARNI (雙效防護) 或 ACEi/ARB。</div>`;
-        } else {
-            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>血壓藥 (RASi)：</strong>這對保護腎臟、減少蛋白尿非常重要。</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>基礎建議：</strong>ACEi/ARB 類藥物是保護腎臟的基礎裝備。</div>`;
-        }
-
-        // 3. Beta-blocker (護心藥) - 僅 HF 顯示
-        const slotBb = document.getElementById('slot-bb');
-        if (slotBb.style.display !== 'none') {
-            const useBb = document.getElementById('drug-bb').checked;
-            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>護心藥 (Beta-blocker)：</strong>已裝備！能有效減輕心臟負擔，讓心跳更穩定。</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>乙型阻斷劑是心衰竭的四大救命支柱之一，請諮詢醫師。</div>`;
-        }
-
-       // 4. MRA (分流建議)
-        const slotMraOld = document.getElementById('slot-mra-old');
-        const slotNsMra = document.getElementById('slot-nsmra');
-
-        // 情境 A: 傳統 MRA (心衰竭)
-        if (slotMraOld.style.display !== 'none') {
-            const useMraOld = document.getElementById('drug-mra-old').checked;
-            if (useMraOld) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>傳統 MRA：</strong>已裝備！這是降低心衰竭死亡率的關鍵藥物。</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>醛固酮阻斷劑 (Spironolactone) 是心衰竭救命藥，請諮詢醫師。</div>`;
-        }
-        
-        // 情境 B: ns-MRA (糖尿病腎病變)
-        if (slotNsMra.style.display !== 'none') {
-            const useNsMra = document.getElementById('drug-nsmra').checked;
-            if (useNsMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型 ns-MRA：</strong>很棒！您正在使用精準抗發炎藥物保護腎臟。</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>若血鉀正常，可諮詢新型藥物 (Finerenone 可申達) 以預防腎功能惡化。</div>`;
-        }
-
-        // 5. Statin (降血脂藥) - 所有人皆顯示 (修復漏字：補上已裝備提示)
-        const useStatin = document.getElementById('drug-statin').checked;
-        if (useStatin) {
-             adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statins)：</strong>持續服用！穩定血管斑塊，遠離中風與心肌梗塞威脅。</div>`;
-        } else {
-             adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>血管保護：</strong>腎友心血管風險高，使用 Statin 可預防中風。</div>`;
-        }
-
-        // 6. GLP-1 (腸泌素) - 僅 DM 顯示 (修復漏字：補上未裝備提示)
-        const slotGlp1 = document.getElementById('slot-glp1');
-        if (slotGlp1.style.display !== 'none') {
-             const useGlp1 = document.getElementById('drug-glp1').checked;
-             if (useGlp1) {
-                 adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>控糖同時減重護心，是非常棒的選擇。</div>`;
-             } else {
-                 adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>控糖升級：</strong>若體重或血糖未達標，腸泌素是兼具護心、護腎與減重的強力選項。</div>`;
-             }
-        }
-
-        var adviceDiv = document.getElementById('dynamic-advice');
-        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
-        else { adviceDiv.classList.add('hidden'); }
-    }
-
-    // --- 🎓 測驗邏輯 ---
-    let qIdx = 0, score = 0;
-    function initQuiz() { 
-        qIdx=0; score=0; 
-        document.getElementById('quiz-score').classList.add('hidden'); 
-        document.getElementById('quiz-area').classList.remove('hidden'); 
-        
-        const dmVal = document.getElementById('kfre-dm').value;
-        const hfVal = document.getElementById('kfre-hf').value;
-        
-        currentQuizData = quizPool.filter(q => {
-            if (q.tags.includes('all')) return true; 
-            if (q.tags.includes('dm') && dmVal === '1') return true; 
-            if (q.tags.includes('hf') && hfVal === '1') return true; 
-            return false;
-        });
-
-        // 洗牌
-        for (let i = currentQuizData.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [currentQuizData[i], currentQuizData[j]] = [currentQuizData[j], currentQuizData[i]];
-        }
-        
-        // 修正：取前 10 題
-        currentQuizData = currentQuizData.slice(0, 10);
-        // Fallback: 如果篩選後題目不夠 10 題，補足通用題
-        if(currentQuizData.length < 10) {
-            // 簡單處理：如果還不夠，直接拿 quizPool 補
-             let remaining = quizPool.filter(q => !currentQuizData.includes(q));
-             for (let i = 0; i < (10 - currentQuizData.length); i++) {
-                 if (remaining[i]) currentQuizData.push(remaining[i]);
-             }
-        }
-
-        renderQ(); 
-    }
-    
-    function renderQ() {
-        const q = currentQuizData[qIdx];
-        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}/${currentQuizData.length}`;
-        document.getElementById('quiz-question').innerText = q.q;
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        const div = document.getElementById('quiz-options');
-        div.innerHTML = '';
-        q.a.forEach(opt => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.innerText = opt.t;
-            btn.onclick = () => {
-                playSound(opt.c);
-                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
-                if(opt.c) { btn.classList.add('correct'); score+=10; document.getElementById('quiz-res-text').innerText="🎉 答對了！"; document.getElementById('quiz-res-text').style.color="green"; }
-                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 答錯囉！"; document.getElementById('quiz-res-text').style.color="red"; }
-                document.getElementById('quiz-exp').innerText = q.exp;
-                document.getElementById('quiz-feedback').classList.remove('hidden');
-            };
-            div.appendChild(btn);
-        });
-        document.querySelector('.progress-fill').style.width = `${((qIdx)/currentQuizData.length)*100}%`;
-    }
-    
-    function nextQ() {
-        qIdx++;
-        if(qIdx < currentQuizData.length) renderQ();
-        else {
-            document.getElementById('quiz-area').classList.add('hidden');
-            document.getElementById('quiz-feedback').classList.add('hidden');
-            document.getElementById('quiz-score').classList.remove('hidden');
-            document.getElementById('final-score').innerText = score;
-            document.querySelector('.progress-fill').style.width = '100%';
-            let comment = "";
-            if (score === 100) comment = "🏆 太強了！您是全方位的照護達人！";
-            else if (score >= 60) comment = "👍 很不錯，觀念正確！";
-            else comment = "💪 加油，多看幾次衛教資訊喔！";
-            document.getElementById('score-comment').innerText = comment;
-        }
-    }
-    
-    // Protein Calc
-    function updateProteinIntake() {
-        var weight = parseFloat(localStorage.getItem('userWeight'));
-        var stage = localStorage.getItem('ckdStage'); 
-        var displayDiv = document.getElementById('protein-calc-display');
-        if (!weight || isNaN(weight)) { if(displayDiv) displayDiv.style.display = 'none'; return; }
-        var factorMin = 0.8, factorMax = 1.0;
-        if (stage && (stage.includes('3') || stage.includes('4') || stage.includes('5'))) { factorMin = 0.6; factorMax = 0.8; }
-        var pMin = (weight * factorMin).toFixed(1);
-        var pMax = (weight * factorMax).toFixed(1);
-        var portions = Math.round((weight * (factorMin + factorMax) / 2) / 7);
-        document.getElementById('display-weight').innerText = weight;
-        document.getElementById('display-protein-min').innerText = pMin;
-        document.getElementById('display-protein-max').innerText = pMax;
-        document.getElementById('display-protein-portions').innerText = portions;
-        if(displayDiv) displayDiv.style.display = 'block';
-    }
-
-    // Init
-    updateAllRisks();
-</script>
-</body>
-</html>
-
-
-
-
-
