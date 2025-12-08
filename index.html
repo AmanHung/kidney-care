@@ -240,15 +240,13 @@
                 <input type="hidden" id="kfre-sex" onchange="updateAllRisks()">
             </div>
             
-            <div class="input-group"><label>3. 體重 (公斤)</label><input type="number" id="kfre-weight" placeholder="請輸入體重..." onchange="updateAllRisks()"></div>
-
-            <div class="input-group"><label>4. 腎功能 (eGFR)</label><div class="select-wrapper">
+            <div class="input-group"><label>3. 腎功能 (eGFR)</label><div class="select-wrapper">
                 <select id="kfre-egfr" onchange="updateAllRisks()">
                     <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
                 </select>
             </div></div>
 
-            <div class="input-group"><label>5. 蛋白尿狀況 (UACR)</label>
+            <div class="input-group"><label>4. 蛋白尿狀況 (UACR)</label>
                 <div class="option-group" id="group-uacr">
                     <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">正常<br>&lt;30</div>
                     <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">微量<br>30-300</div>
@@ -257,7 +255,7 @@
                 <input type="hidden" id="kfre-uacr" value="10" onchange="updateAllRisks()">
             </div>
 
-            <div class="input-group"><label>6. 是否有糖尿病 (DM)</label>
+            <div class="input-group"><label>5. 是否有糖尿病 (DM)</label>
                 <div class="option-group" id="group-dm">
                     <div class="option-btn" onclick="setOption('kfre-dm', '0', this)">無</div>
                     <div class="option-btn" onclick="setOption('kfre-dm', '1', this)">有</div>
@@ -408,15 +406,13 @@
             <div id="diet-content" class="hidden">
                 <div class="list-card" style="border-color: var(--risk-g);">
                     <div class="list-head" style="background: var(--risk-g);">🟢 建議攝取</div>
-                    <div id="protein-calc-display" style="margin: 10px; padding: 12px; background-color: #f0fdf4; border: 1px dashed #16a34a; border-radius: 8px; display: none;">
-                        <p style="margin: 0; font-size: 1.1rem; color: #374151;">體重 <span id="display-weight" style="font-weight: bold;">--</span> kg，建議每日蛋白質：</p>
+                   <div id="protein-guide-box" style="margin: 15px 0; padding: 15px; background-color: #f1f8e9; border: 2px dashed #558b2f; border-radius: 12px; display: none;">
+                        <p style="margin: 0; font-size: 1.1rem; color: #33691e; font-weight: 900;">🥩 每日蛋白質建議攝取量</p>
                         <div style="display: flex; align-items: baseline; margin-top: 5px;">
-                            <span id="display-protein-min" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
-                            <span style="margin: 0 5px;">~</span>
-                            <span id="display-protein-max" style="font-size: 1.6rem; font-weight: bold; color: #16a34a;">--</span>
-                            <span style="margin-left: 5px; font-size: 1rem;">克</span>
+                            <span id="protein-guide-val" style="font-size: 2.5rem; font-weight: 900; color: #2e7d32;">--</span>
+                            <span style="margin-left: 8px; font-size: 1.1rem; font-weight:bold; color:#558b2f;">克 / 每公斤體重</span>
                         </div>
-                        <p style="margin: 5px 0 0 0; font-size: 1rem; color: #6b7280;">(約 <span id="display-protein-portions" style="font-weight: bold; color: #059669;">--</span> 份豆魚蛋肉類)</p>
+                        <p style="margin: 5px 0 0 0; font-size: 0.95rem; color: #666; font-weight:bold;">(依據您的腎功能分期建議)</p>
                     </div>
                     <div class="list-body" id="list-diet-g"></div>
                 </div>
@@ -847,7 +843,6 @@
         
         // 呼叫個別頁面的初始化功能
         if (id === 'diet') {
-            updateProteinIntake();
             initFoodSearch(); // 🆕 新增：初始化食物搜尋與分類按鈕
         }
         if (id === 'quiz') initQuiz();
@@ -858,13 +853,11 @@
         const sex = document.getElementById('kfre-sex').value;
         const egfr = parseFloat(document.getElementById('kfre-egfr').value);
         const uacr = parseFloat(document.getElementById('kfre-uacr').value);
-        const weight = parseFloat(document.getElementById('kfre-weight').value);
         const dmVal = document.getElementById('kfre-dm').value;
         const hfVal = document.getElementById('kfre-hf').value;
         const hasDM = dmVal === '1'; 
         const hasHF = hfVal === '1';
         
-        if (weight && !isNaN(weight)) localStorage.setItem('userWeight', weight);
         if (isNaN(age) || sex === "" || isNaN(egfr) || isNaN(uacr) || dmVal === "" || hfVal === "") return;
 
         document.getElementById('start-hint').classList.add('hidden');
@@ -1004,10 +997,27 @@
         add(r, "NSAIDs (強效止痛藥)", nsaidMsg);
     }
 
-    // --- 🥦 飲食建議 ---
+    // --- 🥦 飲食建議 (修改版：依 eGFR 給予 g/kg 建議) ---
     function updateDiet(egfr, hasDM, hasHF) {
         document.getElementById('diet-placeholder').classList.add('hidden');
         document.getElementById('diet-content').classList.remove('hidden');
+        
+        // 1. 處理蛋白質建議顯示
+        const pBox = document.getElementById('protein-guide-box');
+        const pVal = document.getElementById('protein-guide-val');
+        if(pBox) {
+            pBox.style.display = 'block';
+            // 判斷邏輯：eGFR < 45 (CKD 3b-5) 建議低蛋白 0.6-0.8
+            // eGFR >= 45 (CKD 1-3a) 建議正常適量 0.8-1.0
+            if (egfr < 45) {
+                pVal.innerText = "0.6 ~ 0.8";
+                pVal.style.color = "#d84315"; // 橘紅色強調限制
+            } else {
+                pVal.innerText = "0.8 ~ 1.0"; // 一般健康建議
+                pVal.style.color = "#2e7d32"; // 綠色
+            }
+        }
+
         const g = document.getElementById('list-diet-g'), y = document.getElementById('list-diet-y'), r = document.getElementById('list-diet-r');
         g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
         function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
@@ -1319,29 +1329,12 @@
         }
     }
     
-    // Protein Calc
-    function updateProteinIntake() {
-        var weight = parseFloat(localStorage.getItem('userWeight'));
-        var stage = localStorage.getItem('ckdStage'); 
-        var displayDiv = document.getElementById('protein-calc-display');
-        if (!weight || isNaN(weight)) { if(displayDiv) displayDiv.style.display = 'none'; return; }
-        var factorMin = 0.8, factorMax = 1.0;
-        if (stage && (stage.includes('3') || stage.includes('4') || stage.includes('5'))) { factorMin = 0.6; factorMax = 0.8; }
-        var pMin = (weight * factorMin).toFixed(1);
-        var pMax = (weight * factorMax).toFixed(1);
-        var portions = Math.round((weight * (factorMin + factorMax) / 2) / 7);
-        document.getElementById('display-weight').innerText = weight;
-        document.getElementById('display-protein-min').innerText = pMin;
-        document.getElementById('display-protein-max').innerText = pMax;
-        document.getElementById('display-protein-portions').innerText = portions;
-        if(displayDiv) displayDiv.style.display = 'block';
-    }
-
     // Init
     updateAllRisks();
 </script>
 </body>
 </html>
+
 
 
 
