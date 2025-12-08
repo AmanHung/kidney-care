@@ -204,6 +204,32 @@
         .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
+        
+        /* --- 🚨 SADMANS 排版優化 (專業版) --- */
+        .warning-card { border: 3px solid #b71c1c; background: #fff; overflow: hidden; border-radius: 20px; }
+        .warning-head { background: #b71c1c; color: white; padding: 15px; font-weight: 900; font-size: 1.3rem; text-align: center; letter-spacing: 1px; }
+        .warning-body { padding: 20px; background: #fff; }
+        
+        .sadmans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .sadmans-item { display: flex; align-items: center; border: 2px solid #eee; border-radius: 12px; padding: 10px; transition: 0.2s; background: #fafafa; }
+        .sadmans-item:hover { border-color: #ef5350; background: #ffebee; transform: translateY(-2px); }
+        
+        .big-letter { 
+            font-family: 'Arial Black', sans-serif; 
+            font-size: 2.8rem; 
+            color: #d32f2f; 
+            margin-right: 10px; 
+            line-height: 1; 
+            width: 45px; 
+            text-align: center;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+        }
+        
+        .drug-info { display: flex; flex-direction: column; justify-content: center; }
+        .drug-name { font-weight: 900; font-size: 1.1rem; color: #333; line-height: 1.2; }
+        .drug-desc { font-size: 0.9rem; color: #666; font-weight: bold; margin-top: 2px; }
+        
+        .alert-box { background: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin-top: 25px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -323,6 +349,78 @@
                 <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 核心治療 (建議諮詢)</div><div class="list-body" id="list-med-g"></div></div>
                 <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 需謹慎 (注意副作用)</div><div class="list-body" id="list-med-y"></div></div>
                 <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 應避免/禁用</div><div class="list-body" id="list-med-r"></div></div>
+            </div>
+        </div>
+        
+        <div class="card warning-card">
+            <div class="warning-head">
+                🚨 生病停藥法則 (SADMANS)
+            </div>
+            <div class="warning-body">
+                <p style="margin-top:0; font-weight:bold; color:#b71c1c; line-height:1.6; font-size:1.1rem; text-align:center;">
+                    當發生 <span style="background:#ffcdd2; padding:2px 6px; border-radius:4px;">無法進食、嚴重嘔吐腹瀉</span><br>導致脫水時，請暫停以下藥物：
+                </p>
+                
+                <div class="sadmans-grid">
+                    <div class="sadmans-item">
+                        <div class="big-letter">S</div>
+                        <div class="drug-info">
+                            <span class="drug-name">SGLT2i</span>
+                            <span class="drug-desc">排糖藥</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sadmans-item">
+                        <div class="big-letter">A</div>
+                        <div class="drug-info">
+                            <span class="drug-name">ACEi / ARB</span>
+                            <span class="drug-desc">血壓藥</span>
+                        </div>
+                    </div>
+
+                    <div class="sadmans-item">
+                        <div class="big-letter">D</div>
+                        <div class="drug-info">
+                            <span class="drug-name">Diuretics</span>
+                            <span class="drug-desc">利尿劑</span>
+                        </div>
+                    </div>
+
+                    <div class="sadmans-item">
+                        <div class="big-letter">M</div>
+                        <div class="drug-info">
+                            <span class="drug-name">Metformin</span>
+                            <span class="drug-desc">降糖藥</span>
+                        </div>
+                    </div>
+
+                    <div class="sadmans-item">
+                        <div class="big-letter">A</div>
+                        <div class="drug-info">
+                            <span class="drug-name">ARNI</span>
+                            <span class="drug-desc">心衰竭藥</span>
+                        </div>
+                    </div>
+
+                    <div class="sadmans-item">
+                        <div class="big-letter">N</div>
+                        <div class="drug-info">
+                            <span class="drug-name">NSAIDs</span>
+                            <span class="drug-desc">止痛藥</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box">
+                    <p style="font-weight:900; color:#e65100; margin:0 0 10px 0;">⚠️ 出現以下副作用，請立即停藥回診：</p>
+                    <ul style="margin:0; padding-left:20px; color:#444; font-weight:bold; line-height:1.6;">
+                        <li><strong style="color:#d32f2f;">低血壓：</strong>頭暈、眼前發黑、站不穩。</li>
+                        <li><strong style="color:#d32f2f;">酮酸中毒：</strong>呼吸急促、噁心腹痛 (SGLT2i 風險)。</li>
+                        <li><strong style="color:#d32f2f;">乳酸中毒：</strong>深快呼吸、極度疲倦 (Metformin 風險)。</li>
+                    </ul>
+                </div>
+
+                <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#b71c1c; margin-top:20px; box-shadow: 0 6px 15px rgba(183, 28, 28, 0.4); border-radius: 30px;">🏥 症狀嚴重？立即掛號 ➜</a>
             </div>
         </div>
 
@@ -1285,4 +1383,5 @@
 </script>
 </body>
 </html>
+
 
