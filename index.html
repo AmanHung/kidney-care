@@ -128,7 +128,9 @@
         .nav-item.active .nav-icon { transform: scale(1.15); color: var(--primary); }
         .nav-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
 
-        .hidden { display: none; }
+        /* 🔴 關鍵修復點：加入 !important */
+        .hidden { display: none !important; }
+        
         .page-counter { text-align: center; font-size: 1.2rem; color: #555; margin: 20px 0; font-weight: 900; }
 
         /* Quiz */
