@@ -259,18 +259,18 @@
 
             <div class="input-group"><label>6. 是否有糖尿病 (DM)</label>
                 <div class="option-group" id="group-dm">
-                    <div class="option-btn active" onclick="setOption('kfre-dm', '0', this)">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-dm', '0', this)">無</div>
                     <div class="option-btn" onclick="setOption('kfre-dm', '1', this)">有</div>
                 </div>
-                <input type="hidden" id="kfre-dm" value="0" onchange="updateAllRisks()">
+                <input type="hidden" id="kfre-dm" value="" onchange="updateAllRisks()">
             </div>
 
             <div class="input-group"><label>7. 是否有心衰竭 (HF)</label>
                 <div class="option-group" id="group-hf">
-                    <div class="option-btn active" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">無</div>
                     <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);">有</div>
                 </div>
-                <input type="hidden" id="kfre-hf" value="0" onchange="updateAllRisks()">
+                <input type="hidden" id="kfre-hf" value="" onchange="updateAllRisks()">
                 
                 <div id="hf-check-box" class="symptom-box hidden">
                     <p style="margin-top:0; color:#c2185b;">🔍 <strong>快速篩檢：您有以下症狀嗎？</strong></p>
@@ -1342,4 +1342,5 @@
 </script>
 </body>
 </html>
+
 
