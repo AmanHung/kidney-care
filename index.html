@@ -473,6 +473,12 @@
                 <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
                 <p style="font-size:1.1rem; color:#666; font-weight:bold; margin-bottom:20px;">(長按儲存或掃描上方 QR Code)</p><a href="https://lin.ee/zwLjX1Lb" target="_blank" class="btn btn-line">📲 加入好友 (線上諮詢)</a>
             </div>
+        <div style="background:#e3f2fd; padding:25px; border-radius:20px; border:3px solid #bbdefb; margin-bottom:30px;">
+            <h3 style="color:#1976d2; margin-top:0; font-size:1.6rem;">🏥 門診掛號</h3>
+            <p style="font-weight:bold; color:#555; font-size:1.2rem;">身體不適？立即預約看診</p>
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background: linear-gradient(135deg, #2196f3, #1976d2); box-shadow: 0 6px 15px rgba(33, 150, 243, 0.3);">前往掛號 ➜</a>
+        </div>
+        <div style="background:#fff8e1; padding:25px; border-radius:20px; border:3px solid #ffe0b2;">
             <div style="background:#fff8e1; padding:25px; border-radius:20px; border:3px solid #ffe0b2;">
                 <h3 style="color:var(--accent); margin-top:0; font-size:1.6rem;">慢箋預約</h3><p style="font-weight:bold; color:#555; font-size:1.2rem;">不用排隊，手機預約領藥</p><a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">前往預約 ➜</a>
             </div>
@@ -536,8 +542,23 @@
     function symAlert() {
         const checks = document.querySelectorAll('.sym-check:checked');
         const alert = document.getElementById('sym-alert');
-        if (checks.length > 0) alert.classList.remove('hidden');
-        else alert.classList.add('hidden');
+        
+        // 🆕 修改重點：加入掛號連結的 HTML
+        const alertContent = `
+            🚨 疑似心臟衰竭症狀，建議至心臟科檢查！
+            <div style="margin-top:8px; text-align:right;">
+                <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" style="text-decoration:underline; color:#b71c1c; font-weight:900; font-size:1rem;">
+                    ➜ 點此前往掛號
+                </a>
+            </div>
+        `;
+        
+        if (checks.length > 0) {
+            alert.innerHTML = alertContent; // 使用 innerHTML 才能顯示連結
+            alert.classList.remove('hidden');
+        } else {
+            alert.classList.add('hidden');
+        }
     }
 
     // --- DB ---
@@ -1268,5 +1289,6 @@
 </script>
 </body>
 </html>
+
 
 
