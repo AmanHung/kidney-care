@@ -1322,7 +1322,9 @@
     
 // Init
     updateAllRisks();
-</script> <div id="help-modal" class="modal" onclick="closeHelp()">
+</script>
+
+<div id="help-modal" class="modal" onclick="closeHelp()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <button class="close-modal" onclick="closeHelp()">×</button>
         <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem;">📄 如何看報告？</h3>
@@ -1355,10 +1357,25 @@
         <button class="btn" onclick="closeHelp()" style="margin-top:20px;">我知道了</button>
     </div>
 </div>
-    
+
+<script>
+    function showHelp(type) {
+        document.getElementById('help-modal').style.display = 'flex';
+        // 先隱藏所有內容
+        document.querySelectorAll('.help-content').forEach(d => d.classList.add('hidden'));
+        // 再顯示指定的內容
+        const target = document.getElementById('help-' + type);
+        if(target) target.classList.remove('hidden');
+    }
+
+    function closeHelp() { 
+        document.getElementById('help-modal').style.display = 'none'; 
+    }
 </script>
+
 </body>
 </html>
+
 
 
 
