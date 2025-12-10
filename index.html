@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>保腎護心助理</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
@@ -204,19 +204,44 @@
         .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
+        /* --- 新增：字體調整按鈕 --- */
+.font-controls { display: flex; gap: 8px; }
+.font-btn { 
+    background: #eee; border: 1px solid #ccc; width: 38px; height: 38px; 
+    border-radius: 50%; font-weight: bold; cursor: pointer; color: #333;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+}
+
+/* --- 新增：問號幫助按鈕 --- */
+.help-icon { 
+    display: inline-flex; align-items: center; justify-content: center; 
+    width: 26px; height: 26px; background: #2196f3; color: white; 
+    border-radius: 50%; font-size: 1rem; margin-left: 10px; cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); vertical-align: middle;
+}
+
+/* --- 新增：圖解報告 Modal 視窗 --- */
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+.modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
+.report-sample { background: #fff; border: 2px solid #444; padding: 15px; font-family: monospace; margin: 15px 0; border-radius: 5px; position: relative; }
+.report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 10px 0; font-size: 1.1rem; color: #555; }
+.highlight-report { border: 3px solid #d32f2f; background: #fffde7; color: #d32f2f; font-weight: 900; padding: 0 5px; transform: scale(1.05); }
+.close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
     </style>
 </head>
 <body>
 
 <header>
     <img src="logo_left.png" alt="豐原醫院" class="header-logo" onerror="this.style.opacity='0.2'">
-    <div class="header-title-box">
-        <h1 style="color:var(--primary);">保腎護心助理</h1>
-        <p>心/腎/糖 智慧照護</p>
+    <div class="header-title-box" style="text-align: left; flex: 1;">
+        <h1 style="color:var(--primary); font-size:1.5rem;">保腎護心助理</h1>
     </div>
-    <img src="logo_right_new.png" alt="五福藥師圈" class="header-logo" onerror="this.style.opacity='0.2'">
+    
+    <div class="font-controls">
+        <button class="font-btn" onclick="adjustFont(-2)">A-</button>
+        <button class="font-btn" onclick="adjustFont(2)">A+</button>
+    </div>
 </header>
-
 <div class="container">
 
     <div id="tab-home" class="section active">
@@ -240,13 +265,21 @@
                 <input type="hidden" id="kfre-sex" onchange="updateAllRisks()">
             </div>
             
-            <div class="input-group"><label>3. 腎功能 (eGFR)</label><div class="select-wrapper">
+            <div class="input-group">
+    <label>
+        3. 腎功能 (eGFR) 
+        <span class="help-icon" onclick="showHelp('egfr')">?</span>
+    </label><div class="select-wrapper">
                 <select id="kfre-egfr" onchange="updateAllRisks()">
                     <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
                 </select>
             </div></div>
 
-            <div class="input-group"><label>4. 蛋白尿狀況 (UACR)</label>
+            <div class="input-group">
+    <label>
+        4. 蛋白尿狀況 (UACR)
+        <span class="help-icon" onclick="showHelp('uacr')">?</span>
+    </label>
                 <div class="option-group" id="group-uacr">
                     <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">正常<br>&lt;30</div>
                     <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">微量<br>30-300</div>
@@ -1312,9 +1345,65 @@
     
     // Init
     updateAllRisks();
+</script> 
+    <div id="help-modal" class="modal" onclick="closeHelp()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeHelp()">×</button>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem;">📄 如何看報告？</h3>
+        <p style="font-size:1.1rem; color:#666;">請拿出您的抽血報告單，尋找類似下方的文字：</p>
+        
+        <div id="help-egfr" class="help-content hidden">
+            <div class="report-sample">
+                <div class="report-row"><span>Creatinine (肌酸酐)</span><span>1.2</span></div>
+                <div class="report-row highlight-report"><span>eGFR (腎絲球過濾率)</span><span>52.0</span></div>
+                <div class="report-row"><span>BUN (尿素氮)</span><span>18</span></div>
+            </div>
+            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
+                👉 請找 "eGFR" 這一欄的數字。<br>
+                <small style="color:#666; font-weight:normal;">(數字越小代表腎功能越差)</small>
+            </p>
+        </div>
+
+        <div id="help-uacr" class="help-content hidden">
+            <div class="report-sample">
+                <div class="report-row"><span>Urine Protein (尿蛋白)</span><span>-</span></div>
+                <div class="report-row highlight-report"><span>ACR / UACR (微白蛋白)</span><span>350</span></div>
+                <div class="report-row"><span>Creatinine (尿肌酸酐)</span><span>100</span></div>
+            </div>
+            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
+                👉 請找 "ACR" 或 "UACR"。<br>
+                <small style="color:#666; font-weight:normal;">(若無此欄位，可參考尿蛋白 Urine Protein)</small>
+            </p>
+        </div>
+
+        <button class="btn" onclick="closeHelp()" style="margin-top:20px;">我知道了</button>
+    </div>
+</div>
+
+<script>
+    // --- 🔠 1. 字體縮放功能 ---
+    let currentFontSize = 19; 
+    function adjustFont(delta) {
+        currentFontSize += delta;
+        if(currentFontSize < 16) currentFontSize = 16;
+        if(currentFontSize > 26) currentFontSize = 26;
+        document.body.style.fontSize = currentFontSize + "px";
+    }
+
+    // --- ❓ 2. 幫助視窗功能 ---
+    function showHelp(type) {
+        document.getElementById('help-modal').style.display = 'flex';
+        document.querySelectorAll('.help-content').forEach(d => d.classList.add('hidden'));
+        document.getElementById('help-' + type).classList.remove('hidden');
+    }
+
+    function closeHelp() { 
+        document.getElementById('help-modal').style.display = 'none'; 
+    }
 </script>
 </body>
 </html>
+
 
 
 
