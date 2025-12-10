@@ -1433,6 +1433,7 @@
 </div>
 
 <script>
+   // --- ❓ 幫助視窗功能 (只保留這個) ---
     function showHelp(type) {
         document.getElementById('help-modal').style.display = 'flex';
         // 先隱藏所有內容
@@ -1445,11 +1446,15 @@
     function closeHelp() { 
         document.getElementById('help-modal').style.display = 'none'; 
     }
+    
+    // 初始化風險計算 (讓網頁一載入就執行一次)
+    updateAllRisks();
    
 </script>
 
 </body>
 </html>
+
 
 
 
