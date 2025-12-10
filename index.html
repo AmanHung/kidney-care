@@ -316,7 +316,7 @@
                 <input type="hidden" id="kfre-dm" value="" onchange="updateAllRisks()">
             </div>
 
-            <div class="input-group"><label>7. 是否有心衰竭 (HF)</label>
+            <div class="input-group"><label>6. 是否有心衰竭 (HF)</label>
                 <div class="option-group" id="group-hf">
                     <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">無</div>
                     <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);">有</div>
@@ -370,12 +370,21 @@
                 <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
             </div>
             <div id="med-content" class="hidden">
-                <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">分析對象：eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span> / <span id="med-cond-text">--</span></p>
-                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 核心治療 (建議諮詢)</div><div class="list-body" id="list-med-g"></div></div>
-                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 需謹慎 (注意副作用)</div><div class="list-body" id="list-med-y"></div></div>
-                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 應避免/禁用</div><div class="list-body" id="list-med-r"></div></div>
+                <div class="list-card" style="border-color: var(--risk-g);">
+                    <div class="list-head" style="background: var(--risk-g);">🟢 核心治療 (建議諮詢)</div>
+                    <div class="list-body" id="list-med-g"></div>
+                </div>
+                
+                <div class="list-card" style="border-color: var(--risk-y);">
+                    <div class="list-head" style="background: var(--risk-y); color:#333;">🟡 需謹慎 (注意副作用)</div>
+                    <div class="list-body" id="list-med-y"></div>
+                </div>
+                
+                <div class="list-card" style="border-color: var(--risk-r);">
+                    <div class="list-head" style="background: var(--risk-r);">🔴 應避免/禁用</div>
+                    <div class="list-body" id="list-med-r"></div>
+                </div>
             </div>
-        </div>
 
         <div class="card">
             <h2>🚦 藥物安全紅綠燈</h2>
@@ -1433,7 +1442,7 @@
 </div>
 
 <script>
-   // --- ❓ 幫助視窗功能 (只保留這個) ---
+   // --- ❓ 幫助視窗功能 ---
     function showHelp(type) {
         document.getElementById('help-modal').style.display = 'flex';
         // 先隱藏所有內容
@@ -1449,11 +1458,10 @@
     
     // 初始化風險計算 (讓網頁一載入就執行一次)
     updateAllRisks();
-   
 </script>
-
 </body>
 </html>
+
 
 
 
