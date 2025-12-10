@@ -1381,13 +1381,20 @@
 </div>
 
 <script>
-    // --- 🔠 1. 字體縮放功能 ---
-    let currentFontSize = 19; 
+   // --- 🔠 1. 字體縮放功能 (修正版) ---
+    // 預設比例 100%
+    let currentZoom = 100; 
+    
     function adjustFont(delta) {
-        currentFontSize += delta;
-        if(currentFontSize < 16) currentFontSize = 16;
-        if(currentFontSize > 26) currentFontSize = 26;
-        document.body.style.fontSize = currentFontSize + "px";
+        // 每次調整 10%
+        currentZoom += (delta * 5); 
+        
+        // 限制範圍：最小 85%，最大 150%
+        if(currentZoom < 85) currentZoom = 85;
+        if(currentZoom > 150) currentZoom = 150;
+        
+        // 設定到 HTML 標籤上，這會讓 rem 單位跟著縮放
+        document.documentElement.style.fontSize = currentZoom + "%";
     }
 
     // --- ❓ 2. 幫助視窗功能 ---
@@ -1403,6 +1410,7 @@
 </script>
 </body>
 </html>
+
 
 
 
