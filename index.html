@@ -205,6 +205,23 @@
         .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
+        
+         /* --- 補回：問號按鈕樣式 --- */
+        .help-icon { 
+            display: inline-flex; align-items: center; justify-content: center; 
+            width: 24px; height: 24px; background: #2196f3; color: white; 
+            border-radius: 50%; font-size: 0.9rem; margin-left: 8px; cursor: pointer;
+            vertical-align: middle;
+        }
+
+        /* --- 補回：彈出視窗樣式 --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
+        
+        .report-sample { background: #fff; border: 2px solid #333; padding: 10px; font-family: monospace; margin: 15px 0; }
+        .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
+        .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
     </style>
 </head>
 <body>
@@ -1371,26 +1388,12 @@
     function closeHelp() { 
         document.getElementById('help-modal').style.display = 'none'; 
     }
-    /* --- 補回：問號按鈕樣式 --- */
-        .help-icon { 
-            display: inline-flex; align-items: center; justify-content: center; 
-            width: 24px; height: 24px; background: #2196f3; color: white; 
-            border-radius: 50%; font-size: 0.9rem; margin-left: 8px; cursor: pointer;
-            vertical-align: middle;
-        }
-
-        /* --- 補回：彈出視窗樣式 --- */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
-        .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
-        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
-        
-        .report-sample { background: #fff; border: 2px solid #333; padding: 10px; font-family: monospace; margin: 15px 0; }
-        .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
-        .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
+   
 </script>
 
 </body>
 </html>
+
 
 
 
