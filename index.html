@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -473,50 +471,79 @@
         </div>
     </div>
 
-    <div id="tab-quiz" class="section">
+<div id="tab-quiz" class="section">
         <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
-            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 保腎護心裝備庫</h2>
-            <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">裝備欄位已依您的疾病狀況(DM/HF)自動調整<br>點擊方塊以穿戴藥物</p>
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 我的護腎藥物清單</h2>
+            <p style="text-align:center; color:#666; font-size:1.1rem; margin-bottom:15px; line-height: 1.6;">
+                請勾選您目前<strong>正在服用</strong>的藥物，<br>
+                系統將幫您檢視目前的保護力是否足夠。
+            </p>
 
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
-                    <span class="equip-icon">🛡️</span><span class="equip-name">排糖藥</span><span class="equip-desc">SGLT2i<br>心腎糖核心防護</span><input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">核心救命藥</span>
+                    <span class="equip-desc">排糖藥 (SGLT2i)</span>
+                    <span class="equip-brand">恩排糖,福適佳,可拿糖</span>
+                    <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-icon" id="icon-rasi">🧥</span><span class="equip-name" id="name-rasi">血壓藥</span><span class="equip-desc" id="desc-rasi">ACEi/ARB<br>基礎防禦</span><input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
+                    <span id="icon-rasi" style="display:none;"></span>
+                    <span class="equip-name" id="name-rasi">基礎防護藥</span>
+                    <span class="equip-desc" id="desc-rasi">血壓藥 (ACEi/ARB)</span>
+                    <span class="equip-brand" id="brand-rasi">利他穩,卡布登,博脈舒</span>
+                    <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
-                    <span class="equip-icon">📿</span><span class="equip-name">護心藥</span><span class="equip-desc">Beta-blocker<br>減輕心臟負擔</span><input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">護心專用</span>
+                    <span class="equip-desc">乙型阻斷劑</span>
+                    <span class="equip-brand">康肯,心全錠,舒壓寧</span>
+                    <input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-mra-old" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-mra-old')" style="display:none;">
-                    <span class="equip-icon">🧤</span><span class="equip-name">傳統阻斷藥</span><span class="equip-desc">Spironolactone<br>心衰竭第四支柱</span><input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">加強阻斷藥</span>
+                    <span class="equip-desc">Spironolactone</span>
+                    <span class="equip-brand">使能通 (Aldactone)</span>
+                    <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
-                    <span class="equip-icon">💍</span><span class="equip-name">新型護腎藥</span><span class="equip-desc">Finerenone(可申達)<br>精準抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">進階護腎藥</span>
+                    <span class="equip-desc">Finerenone</span>
+                    <span class="equip-brand">可申達 (Kerendia)</span>
+                    <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
-                    <span class="equip-icon">🥾</span><span class="equip-name">降血脂藥</span><span class="equip-desc">Statins<br>血管暢通</span><input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">血管通暢藥</span>
+                    <span class="equip-desc">降血脂 (Statins)</span>
+                    <span class="equip-brand">立普妥,冠脂妥,益脂可</span>
+                    <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-glp1" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-glp1')" style="display:none;">
-                    <span class="equip-icon">🪄</span><span class="equip-name">腸泌素</span><span class="equip-desc">GLP-1 RA<br>控糖減重</span><input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-name">控糖減重針</span>
+                    <span class="equip-desc">腸泌素 (GLP-1 RA)</span>
+                    <span class="equip-brand">胰妥讚,易週糖,善纖達</span>
+                    <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
                 </div>
             </div>
-
+            
             <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
-                <div class="status-info"><div class="status-label">目前稱號</div><div class="status-title" id="status-title">新手冒險者</div><div class="status-msg" id="status-msg">您的心腎防護網尚未建立！</div></div>
+                <div class="status-info">
+                    <div class="status-label" style="font-size:0.9rem; opacity:0.8;">目前防護狀態</div>
+                    <div class="status-title" id="status-title">尚未建立防護</div>
+                    <div class="status-msg" id="status-msg">您目前沒有使用核心護腎藥物，風險較高。</div>
+                </div>
             </div>
             <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;"></div>
         </div>
 
-        <div class="card">
-            <h2>🎓 保腎護心大會考</h2>
+        <div class="card" style="margin-top: 20px;">
+            <h2>🎓 衛教小測驗</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
             <p id="quiz-counter" style="text-align:right; color:#666; font-size:1.1rem; font-weight:bold;">Q1/10</p>
             <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.4rem;">載入中...</h3><div id="quiz-options"></div></div>
@@ -1078,15 +1105,18 @@
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
         const descRasi = document.getElementById('desc-rasi');
+        const brandRasi = document.getElementById('brand-rasi'); // 🆕 抓取商品名欄位
         
         if(hasHF) {
             iconRasi.innerText = "⛑️";
             nameRasi.innerText = "雙效防護";
-            descRasi.innerHTML = "ARNI<br>心衰竭首選";
+            descRasi.innerText = "ARNI"; 
+            brandRasi.innerText = "健安心"; // 🆕 心衰竭時顯示健安心
         } else {
             iconRasi.innerText = "🧥";
-            nameRasi.innerText = "血壓藥";
-            descRasi.innerHTML = "ACEi/ARB<br>基礎防禦";
+            nameRasi.innerText = "基礎防護藥";
+            descRasi.innerText = "血壓藥 (ACEi/ARB)";
+            brandRasi.innerText = "利他穩,卡布登,博脈舒"; // 🆕 一般時顯示這些
         }
 
         // 2. Beta-blocker
@@ -1141,12 +1171,12 @@
     }
 
     const ranks = [
-        { class: 'status-novice', title: '新手冒險者', icon: '⚠️', msg: '您的心腎目前完全沒有防護，風險極高！' },
-        { class: 'status-apprentice', title: '見習衛士', icon: '🛡️', msg: '很好！您穿上了第一件裝備。' },
-        { class: 'status-veteran', title: '資深騎士', icon: '⚔️', msg: '太棒了！您的防禦力大幅提升！' },
-        { class: 'status-elite', title: '皇家護衛', icon: '🏰', msg: '非常優秀！您的心腎受到嚴密的保護！' },
-        { class: 'status-guardian', title: '心腎大將軍', icon: '🏆', msg: '太強了！接近完美的防禦陣容！' },
-        { class: 'status-god', title: '心腎大元帥', icon: '👑', msg: '完美無缺！您是心腎健康的最高守護者！' }
+        { class: 'status-novice', title: '尚未建立防護', icon: '⚠️', msg: '您的心腎目前暴露在風險中，請諮詢醫師。' }, // 0個
+        { class: 'status-apprentice', title: '防護起步中', icon: '🛡️', msg: '很好！您已開始建立基礎防護。' }, // 1個
+        { class: 'status-veteran', title: '進階防護網', icon: '✨', msg: '太棒了！您的防護網相當穩固。' }, // 2個
+        { class: 'status-elite', title: '高階防護網', icon: '🏰', msg: '非常優秀！多重機轉同時保護心腎。' }, // 3個
+        { class: 'status-guardian', title: '完整防護網', icon: '🏆', msg: '太強了！這是最完整的保護陣容！' }, // 4個
+        { class: 'status-god', title: '極致防護', icon: '👑', msg: '完美無缺！請繼續保持規律用藥。' } // 5個以上
     ];
 
     function updateStatusAndAdvice() {
@@ -1394,7 +1424,6 @@
 
 </body>
 </html>
-
 
 
 
