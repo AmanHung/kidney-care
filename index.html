@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>保腎護心助理</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
@@ -15,14 +17,14 @@
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
-            font-family: "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
             background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); 
             color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; 
         }
         
         /* Header */
         header { 
-            background: var(--white); padding: 12px 15px; 
+            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
             display: flex; justify-content: space-between; align-items: center;
         }
@@ -31,8 +33,9 @@
             background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%);
         }
         .header-logo { height: 50px; width: auto; object-fit: contain; }
+        header img.header-logo:first-of-type { height: 38px; }
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
-        .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
+        .header-title-box h1 { margin: 0; font-size: 1.8rem; color: #333; font-weight: 900; line-height: 1.1; }
         .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.85rem; font-weight: bold; }
 
         /* Container & Cards */
@@ -60,6 +63,11 @@
         }
         select:focus { border-color: var(--primary); background: #f9fff9; }
         
+        input[type="number"] {
+            width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
+            font-size: 1.2rem; outline: none; font-weight: bold; color: #222;
+        }
+
         /* Pill Buttons */
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn {
@@ -81,7 +89,7 @@
             color: var(--heart); box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
         }
 
-        /* Buttons */
+        /* Buttons (General) */
         .btn { 
             background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; 
             border: none; padding: 18px; width: 100%; border-radius: 18px; 
@@ -102,11 +110,12 @@
         .matrix-label { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.8rem; flex-direction: column; justify-content: center; display: flex; align-items: center; }
         .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
         .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
+
         .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: fadeIn 0.3s ease; }
         .risk-banner h3 { margin: 0; font-size: 1.8rem; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .risk-banner p { margin: 5px 0 0; font-size: 1.1rem; font-weight: bold; opacity: 0.95; }
 
-        /* Lists */
+        /* List Cards */
         .list-card { text-align: left; margin-bottom: 25px; border-radius: 15px; overflow: hidden; border: 2px solid #ddd; }
         .list-head { padding: 18px; font-weight: 900; color: white; font-size: 1.3rem; }
         .list-body { padding: 25px; font-size: 1.15rem; line-height: 1.6; background: #fff; }
@@ -120,14 +129,19 @@
         .nav-item.active { color: var(--primary); }
         .nav-item.active .nav-icon { transform: scale(1.15); color: var(--primary); }
         .nav-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+
+        /* 🔴 關鍵修復點：加入 !important */
         .hidden { display: none !important; }
+        
         .page-counter { text-align: center; font-size: 1.2rem; color: #555; margin: 20px 0; font-weight: 900; }
 
         /* Quiz */
         .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: 0.2s; position: relative; text-align: left; }
         .quiz-option:active { transform: scale(0.98); background: #f9f9f9; }
         .quiz-option.correct { border-color: #6bbd45; background: #f0fff4; color: #2e7d32; }
+        .quiz-option.correct::after { content: '✅'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; }
         .quiz-option.wrong { border-color: #e03e2e; background: #fff5f5; color: #c62828; }
+        .quiz-option.wrong::after { content: '❌'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; }
         .progress-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
 
@@ -138,12 +152,14 @@
         .light { width: 70px; height: 70px; border-radius: 50%; background: #ddd; opacity: 0.2; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
         .light.on { opacity: 1; transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
+        .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
+        .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         
-        /* Equip Grid (Mobile Optimized) */
-        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0; }
-        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; }
-        .equip-slot:active { transform: scale(0.96); }
-        
+        /* 裝備欄 CSS */
+        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 140px; }
+        .equip-slot:active { transform: scale(0.95); }
+
         .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; } .slot-legendary .equip-name { color: #E65100; }
         .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; } .slot-epic .equip-name { color: #4A148C; }
         .slot-rare { border-color: #2196F3; background-color: #E3F2FD; } .slot-rare .equip-name { color: #0D47A1; }
@@ -151,8 +167,15 @@
         .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; } .slot-arcane .equip-name { color: #006064; }
         .slot-heart { border-color: var(--heart); background-color: var(--heart-light); } .slot-heart .equip-name { color: #c2185b; }
 
-        .equip-slot.equipped { border-style: solid; border-width: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
-        .equip-slot.equipped::after { content: '已選用'; position: absolute; top: -10px; right: -5px; color: white; font-size: 0.85rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
+        .slot-legendary.equipped { box-shadow: 0 0 15px rgba(255, 140, 0, 0.4); }
+        .slot-epic.equipped { box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
+        .slot-rare.equipped { box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
+        .slot-uncommon.equipped { box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
+        .slot-arcane.equipped { box-shadow: 0 0 15px rgba(0, 188, 212, 0.4); }
+        .slot-heart.equipped { box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
+
+        .equip-slot.equipped::after { content: '已裝備'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
         .slot-rare.equipped::after { background: #2196F3; }
@@ -160,9 +183,10 @@
         .slot-arcane.equipped::after { background: #00BCD4; }
         .slot-heart.equipped::after { background: var(--heart); }
 
-        .equip-name { font-size: 1.25rem; font-weight: 900; margin-bottom: 3px; display: block; line-height: 1.2; }
-        .equip-desc { font-size: 1rem; color: #444; font-weight: bold; display: block; margin-bottom: 4px; }
-        .equip-brand { font-size: 0.85rem; color: #0277bd; display: block; background: rgba(255,255,255,0.6); padding: 2px 4px; border-radius: 4px; line-height: 1.3; }
+        .equip-icon { font-size: 3rem; display: block; margin-bottom: 5px; filter: grayscale(100%); opacity: 0.5; transition: 0.3s; }
+        .equip-slot.equipped .equip-icon { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+        .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
+        .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
         .hidden-checkbox { display: none; }
         
         .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
@@ -183,11 +207,19 @@
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
         
-        /* Modal & Help */
-        .help-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #2196f3; color: white; border-radius: 50%; font-size: 0.9rem; margin-left: 8px; cursor: pointer; vertical-align: middle; }
+         /* --- 補回：問號按鈕樣式 --- */
+        .help-icon { 
+            display: inline-flex; align-items: center; justify-content: center; 
+            width: 24px; height: 24px; background: #2196f3; color: white; 
+            border-radius: 50%; font-size: 0.9rem; margin-left: 8px; cursor: pointer;
+            vertical-align: middle;
+        }
+
+        /* --- 補回：彈出視窗樣式 --- */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
         .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
         .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
+        
         .report-sample { background: #fff; border: 2px solid #333; padding: 10px; font-family: monospace; margin: 15px 0; }
         .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
         .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
@@ -228,16 +260,21 @@
             </div>
             
             <div class="input-group">
-                <label>3. 腎功能 (eGFR) <span class="help-icon" onclick="showHelp('egfr')">?</span></label>
+    <label>
+        3. 腎功能 (eGFR) 
+        <span class="help-icon" onclick="showHelp('egfr')">?</span>
+    </label>
                 <div class="select-wrapper">
-                    <select id="kfre-egfr" onchange="updateAllRisks()">
-                        <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
-                    </select>
-                </div>
-            </div>
+                <select id="kfre-egfr" onchange="updateAllRisks()">
+                    <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
+                </select>
+            </div></div>
 
             <div class="input-group">
-                <label>4. 蛋白尿狀況 (UACR) <span class="help-icon" onclick="showHelp('uacr')">?</span></label>
+    <label>
+        4. 蛋白尿狀況 (UACR)
+        <span class="help-icon" onclick="showHelp('uacr')">?</span>
+    </label>
                 <div class="option-group" id="group-uacr">
                     <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">正常<br>&lt;30</div>
                     <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">微量<br>30-300</div>
@@ -254,7 +291,7 @@
                 <input type="hidden" id="kfre-dm" value="" onchange="updateAllRisks()">
             </div>
 
-            <div class="input-group"><label>6. 是否有心衰竭 (HF)</label>
+            <div class="input-group"><label>7. 是否有心衰竭 (HF)</label>
                 <div class="option-group" id="group-hf">
                     <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">無</div>
                     <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);">有</div>
@@ -308,6 +345,7 @@
                 <button class="btn btn-outline" onclick="switchTab('home')">前往首頁</button>
             </div>
             <div id="med-content" class="hidden">
+                <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">分析對象：eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span> / <span id="med-cond-text">--</span></p>
                 <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 核心治療 (建議諮詢)</div><div class="list-body" id="list-med-g"></div></div>
                 <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 需謹慎 (注意副作用)</div><div class="list-body" id="list-med-y"></div></div>
                 <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 應避免/禁用</div><div class="list-body" id="list-med-r"></div></div>
@@ -328,44 +366,41 @@
         </div>
         
         <div class="card" style="border: 3px solid #ff9800; background: #fff8e1;">
-            <h2 style="color:#e65100;">🤢 生病日停藥守則</h2>
+            <h2 style="color:#e65100; border-bottom-color:#ffcc80; margin-bottom:15px;">🤢 生病日停藥守則</h2>
             
-            <div style="background:white; border-radius:15px; padding:25px 10px; border:2px dashed #ffb74d; text-align:center;">
-                <div style="line-height: 1.2;">
-                    <span style="font-size:1.5rem; color:#333; font-weight:900;">口訣：</span>
-                    <span style="color:#bf360c; font-size:2.4rem; font-weight:900; letter-spacing: 3px; margin-left: 5px;">糖、壓、尿、止</span>
-                </div>
+            <div style="background:white; border-radius:15px; padding:20px; margin-bottom:20px; border:2px dashed #ffb74d;">
+                <p style="font-size:1.4rem; color:#333; margin:5px 0 0 0; font-weight:900;">口訣：<span style="font-size:2.0rem; color:#e65100; margin:5px 0 0 0; font-weight:900;">糖、壓、尿、止</span></p>
             </div>
             
-            <p style="font-weight:bold; color:#333; margin:20px 0; font-size:1.2rem; line-height: 1.6;">
-                當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px; color:#bf360c;">拉肚子、發燒、嚴重脫水</span>時，請暫時停用以下藥物：
+            <p style="text-align:left; font-weight:bold; color:#bf360c; line-height:1.6; margin-bottom:20px; font-size:1.2rem;">
+                當您發生<span style="background:#ffccbc; padding:2px 5px; border-radius:5px;">拉肚子、發燒、脫水</span>時，請諮詢醫師或藥師，是否暫停以下藥物：
             </p>
             
-            <ul style="list-style:none; padding-left:10px; margin:0;">
-                <li style="margin-bottom:15px; font-size:1.3rem; color:#333; display: flex; align-items: center;">
-                    <span style="font-size:1.5rem; margin-right:8px;">🍬</span> 
-                    <strong style="color:#bf360c; font-size:1.8rem; margin-right:5px;">糖</strong>
-                    <span style="font-weight:bold;">：降血糖藥 (SGLT2i/Metformin)</span>
-                </li>
-
-                <li style="margin-bottom:15px; font-size:1.3rem; color:#333; display: flex; align-items: center;">
-                    <span style="font-size:1.5rem; margin-right:8px;">🩸</span> 
-                    <strong style="color:#bf360c; font-size:1.8rem; margin-right:5px;">壓</strong>
-                    <span style="font-weight:bold;">：血壓藥 (ACEi/ARB)</span>
-                </li>
-
-                <li style="margin-bottom:15px; font-size:1.3rem; color:#333; display: flex; align-items: center;">
-                    <span style="font-size:1.5rem; margin-right:8px;">🚽</span> 
-                    <strong style="color:#bf360c; font-size:1.8rem; margin-right:5px;">尿</strong>
-                    <span style="font-weight:bold;">：利尿劑 (Diuretics)</span>
-                </li>
-
-                <li style="margin-bottom:0; font-size:1.3rem; color:#333; display: flex; align-items: center;">
-                    <span style="font-size:1.5rem; margin-right:8px;">💊</span> 
-                    <strong style="color:#bf360c; font-size:1.8rem; margin-right:5px;">止</strong>
-                    <span style="font-weight:bold;">：強效止痛藥 (NSAIDs)</span>
-                </li>
-            </ul>
+            <div style="text-align:left; display:grid; grid-template-columns: 1fr; gap:10px;">
+                <div class="quiz-option" style="margin:0; padding:15px; border-color:#ffcc80; color:#e65100;">
+                    <span style="font-size:2.0rem; margin-right:5px;">糖</span>
+                    <span style="font-size:1.2rem; color:#333; ">降血糖藥(SGLT2i/Metformin)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:15px; border-color:#ffcc80; color:#e65100;">
+                    <span style="font-size:2.0rem; margin-right:5px;">壓</span>
+                    <span style="font-size:1.2rem; color:#333; ">血壓藥(ACEi / ARB)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:15px; border-color:#ffcc80; color:#e65100;">
+                    <span style="font-size:2.0rem; margin-right:5px;">尿</span>
+                    <span style="font-size:1.2rem; color:#333; ">利尿劑(Diuretics)</span>
+                </div>
+                <div class="quiz-option" style="margin:0; padding:15px; border-color:#ffcc80; color:#e65100;">
+                    <span style="font-size:2.0rem; margin-right:5px;">止</span>
+                    <span style="font-size:1.2rem; color:#333; ">止痛藥(NSAIDs)</span>
+                </div>
+            </div> 
+            
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#d32f2f; margin-top:20px; box-shadow: 0 6px 15px rgba(211, 47, 47, 0.3);">🏥 症狀沒改善? 變嚴重？立即掛號</a>
+        </div>
+        
+        <div class="card">
+            <h2>🔍 不清楚自己用什麼藥？</h2>
+            <div style="display:flex; gap:15px;"><button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 諮詢藥師</button><a href="https://www.fyh.mohw.gov.tw/?aid=519" target="_blank" class="btn btn-outline" style="margin:0; flex:1; display:flex; align-items:center; justify-content:center;">🏥 藥品查詢</a></div>
         </div>
     </div>
 
@@ -440,76 +475,48 @@
 
     <div id="tab-quiz" class="section">
         <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
-            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 我的護腎藥物清單</h2>
-            <p style="text-align:center; color:#666; font-size:1.1rem; margin-bottom:15px; line-height: 1.6;">
-                請勾選您目前<strong>正在服用</strong>的藥物，<br>
-                系統將幫您檢視目前的保護力是否足夠。
-            </p>
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ 保腎護心裝備庫</h2>
+            <p style="text-align:center; color:#666; font-size:1rem; margin-bottom:15px;">裝備欄位已依您的疾病狀況(DM/HF)自動調整<br>點擊方塊以穿戴藥物</p>
 
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
-                    <span class="equip-name">核心救命藥</span>
-                    <span class="equip-desc">排糖藥 (SGLT2i)</span>
-                    <span class="equip-brand">恩排糖,福適佳,可拿糖</span>
-                    <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🛡️</span><span class="equip-name">排糖藥</span><span class="equip-desc">SGLT2i<br>心腎糖核心防護</span><input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-name">基礎防護藥</span>
-                    <span class="equip-desc">血壓藥 (ACEi/ARB)</span>
-                    <span class="equip-brand">利他穩,卡布登,博脈舒</span>
-                    <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon" id="icon-rasi">🧥</span><span class="equip-name" id="name-rasi">血壓藥</span><span class="equip-desc" id="desc-rasi">ACEi/ARB<br>基礎防禦</span><input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
-                    <span class="equip-name">護心專用</span>
-                    <span class="equip-desc">乙型阻斷劑</span>
-                    <span class="equip-brand">康肯,心全錠,舒壓寧</span>
-                    <input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">📿</span><span class="equip-name">護心藥</span><span class="equip-desc">Beta-blocker<br>減輕心臟負擔</span><input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-mra-old" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-mra-old')" style="display:none;">
-                    <span class="equip-name">加強阻斷藥</span>
-                    <span class="equip-desc">Spironolactone</span>
-                    <span class="equip-brand">使能通 (Aldactone)</span>
-                    <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🧤</span><span class="equip-name">傳統阻斷藥</span><span class="equip-desc">Spironolactone<br>心衰竭第四支柱</span><input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
-                    <span class="equip-name">進階護腎藥</span>
-                    <span class="equip-desc">Finerenone</span>
-                    <span class="equip-brand">可申達 (Kerendia)</span>
-                    <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">💍</span><span class="equip-name">新型護腎藥</span><span class="equip-desc">Finerenone(可申達)<br>精準抗纖維化</span><input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
-                    <span class="equip-name">血管通暢藥</span>
-                    <span class="equip-desc">降血脂 (Statins)</span>
-                    <span class="equip-brand">立普妥,冠脂妥,益脂可</span>
-                    <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🥾</span><span class="equip-name">降血脂藥</span><span class="equip-desc">Statins<br>血管暢通</span><input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-glp1" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-glp1')" style="display:none;">
-                    <span class="equip-name">控糖減重針</span>
-                    <span class="equip-desc">腸泌素 (GLP-1 RA)</span>
-                    <span class="equip-brand">胰妥讚,易週糖,善纖達</span>
-                    <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
+                    <span class="equip-icon">🪄</span><span class="equip-name">腸泌素</span><span class="equip-desc">GLP-1 RA<br>控糖減重</span><input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
                 </div>
             </div>
 
             <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
-                <div class="status-info">
-                    <div class="status-label" style="font-size:0.9rem; opacity:0.8;">目前防護狀態</div>
-                    <div class="status-title" id="status-title">尚未建立防護</div>
-                    <div class="status-msg" id="status-msg">您目前沒有使用核心護腎藥物，風險較高。</div>
-                </div>
+                <div class="status-info"><div class="status-label">目前稱號</div><div class="status-title" id="status-title">新手冒險者</div><div class="status-msg" id="status-msg">您的心腎防護網尚未建立！</div></div>
             </div>
             <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;"></div>
         </div>
 
-        <div class="card" style="margin-top: 20px;">
-            <h2>🎓 衛教小測驗</h2>
+        <div class="card">
+            <h2>🎓 保腎護心大會考</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
             <p id="quiz-counter" style="text-align:right; color:#666; font-size:1.1rem; font-weight:bold;">Q1/10</p>
             <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.4rem;">載入中...</h3><div id="quiz-options"></div></div>
@@ -549,40 +556,6 @@
     <div class="nav-item" onclick="switchTab('consult')"><span class="nav-icon">💬</span>諮詢</div>
 </nav>
 
-<div id="help-modal" class="modal" onclick="closeHelp()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-modal" onclick="closeHelp()">×</button>
-        <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem;">📄 如何看報告？</h3>
-        <p style="font-size:1.1rem; color:#666;">請拿出您的抽血報告單，尋找類似下方的文字：</p>
-        
-        <div id="help-egfr" class="help-content hidden">
-            <div class="report-sample">
-                <div class="report-row"><span>Creatinine (肌酸酐)</span><span>1.2</span></div>
-                <div class="report-row highlight-report"><span>eGFR (腎絲球過濾率)</span><span>52.0</span></div>
-                <div class="report-row"><span>BUN (尿素氮)</span><span>18</span></div>
-            </div>
-            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
-                👉 請找 "eGFR" 這一欄的數字。<br>
-                <small style="color:#666; font-weight:normal;">(數字越小代表腎功能越差)</small>
-            </p>
-        </div>
-
-        <div id="help-uacr" class="help-content hidden">
-            <div class="report-sample">
-                <div class="report-row"><span>Urine Protein (尿蛋白)</span><span>-</span></div>
-                <div class="report-row highlight-report"><span>ACR / UACR (微白蛋白)</span><span>350</span></div>
-                <div class="report-row"><span>Creatinine (尿肌酸酐)</span><span>100</span></div>
-            </div>
-            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
-                👉 請找 "ACR" 或 "UACR"。<br>
-                <small style="color:#666; font-weight:normal;">(若無此欄位，可參考尿蛋白 Urine Protein)</small>
-            </p>
-        </div>
-
-        <button class="btn" onclick="closeHelp()" style="margin-top:20px;">我知道了</button>
-    </div>
-</div>
-
 <script>
     // --- 🔊 Audio ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -618,14 +591,12 @@
     function checkHFSymptoms(hasHF) {
         const box = document.getElementById('hf-check-box');
         const alert = document.getElementById('sym-alert');
-        // 修正邏輯：如果「有」心衰竭(true)，則顯示症狀檢核；如果「無」(false)，則隱藏
-        if (hasHF) {
-            box.classList.remove('hidden'); 
-            alert.classList.add('hidden'); // 先隱藏警告，等勾選才顯示
-        } else {
-            box.classList.add('hidden'); 
+        if (!hasHF) {
+            box.classList.remove('hidden'); // 如果選無，顯示症狀確認
             document.querySelectorAll('.sym-check').forEach(c => c.checked = false);
             alert.classList.add('hidden');
+        } else {
+            box.classList.add('hidden'); // 如果選有，隱藏症狀確認
         }
     }
 
@@ -633,6 +604,7 @@
         const checks = document.querySelectorAll('.sym-check:checked');
         const alert = document.getElementById('sym-alert');
         
+        // 🆕 修改重點：加入掛號連結的 HTML
         const alertContent = `
             🚨 疑似心臟衰竭症狀，建議至心臟科檢查！
             <div style="margin-top:8px; text-align:right;">
@@ -643,7 +615,7 @@
         `;
         
         if (checks.length > 0) {
-            alert.innerHTML = alertContent; 
+            alert.innerHTML = alertContent; // 使用 innerHTML 才能顯示連結
             alert.classList.remove('hidden');
         } else {
             alert.classList.add('hidden');
@@ -670,34 +642,47 @@
         'herbal': { level: 'r', title: '🛑 絕對禁止 (中草藥)', desc: '來路不明藥物可能含重金屬或馬兜鈴酸。' }
     };
 
-    // --- Food DB ---
+// --- 🥬 擴充後的食物資料庫 (依據豐原醫院衛教單張) ---
     const foodDB = {
+        // --- 🟢 低氮澱粉 / 補充熱量區 ---
         'dongfen': { n: '冬粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。熱量來源首選，蛋白質極低，適合需限制蛋白質者補充熱量。' },
         'sago': { n: '西谷米', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。適合做成甜點補充熱量。' },
         'lotus': { n: '藕粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。可勾芡取代太白粉，或沖泡食用。' },
         'cornstarch': { n: '玉米粉/太白粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '低氮澱粉。烹調勾芡時可使用，增加熱量攝取。' },
         'rice_noodle': { n: '米粉', c: 'staple', t: '🟢 綠燈', tags: ['low_n'], d: '蛋白質含量低於麵條，是較好的主食選擇。' },
         'rice': { n: '白飯', c: 'staple', t: '🟢 綠燈', d: '磷含量比糙米低，適合晚期腎友的主食。' },
+        
+        // --- 🟡 全穀雜糧 (高磷/高鉀注意) ---
         'brown_rice': { n: '糙米/五穀米', c: 'staple', t: '🟡 黃燈', tags: ['high_p'], d: '雖然健康，但「磷」含量較高。建議與白飯搭配或依血磷狀況減量。' },
         'oat': { n: '燕麥/麥片', c: 'staple', t: '🟡 黃燈', tags: ['high_p'], d: '屬於高磷穀類，食用時需注意份量，避免血磷過高。' },
         'bread': { n: '麵包/麵食', c: 'staple', t: '🟡 黃燈', tags: ['high_na'], d: '麵粉製品通常含有鹽(鈉)，且麵筋為低生理價蛋白，產生含氮廢物多。' },
         'taro': { n: '芋頭/地瓜', c: 'staple', t: '🟡 黃燈', tags: ['high_k'], d: '屬於高鉀主食。食用時需減少白飯份量(做代換)，並注意血鉀。' },
+
+        // --- 🟢 優質蛋白質 (加工豆製品/肉類) ---
         'egg': { n: '雞蛋白', c: 'protein', t: '🟢 綠燈', d: '高生理價蛋白質首選，利用率高，產生的尿毒素少。' },
         'tofu': { n: '豆腐/豆干', c: 'protein', t: '🟢 綠燈', d: '加工後的黃豆製品(如豆腐)屬於高生理價蛋白，且磷含量較原豆低，推薦食用。' }, 
         'fish': { n: '新鮮魚肉', c: 'protein', t: '🟢 綠燈', d: '優質蛋白質。請選擇新鮮魚類，避免鹹魚或魚罐頭。' },
         'pork': { n: '豬/雞/牛肉', c: 'protein', t: '🟢 綠燈', d: '優質蛋白質。請吃原肉，避免肉湯(含高鉀/磷)。' },
+
+        // --- 🔴 高風險蛋白質 (內臟/加工/普林) ---
         'organs': { n: '內臟 (肝/心)', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'gout'], d: '絕對禁止！高磷、高膽固醇且高普林，極易誘發痛風與高血磷。' },
         'processed_meat': { n: '香腸/火腿/貢丸', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'high_na'], d: '含「無機磷」添加劑，吸收率100%，極傷腎！高鹽分亦導致高血壓。' },
         'fish_dry': { n: '小魚干/蝦米', c: 'protein', t: '🔴 紅燈', tags: ['high_p', 'gout'], d: '含磷量極高且高普林。常用於熬湯或配菜，腎友應避免。' },
         'gluten': { n: '麵筋/麵腸/烤麩', c: 'protein', t: '🔴 紅燈', d: '屬於「低生理價」植物蛋白，利用率差，會產生大量尿毒素，應少吃。' },
+
+        // --- 🟢 蔬果類 ---
         'veg_general': { n: '一般葉菜 (高麗菜/絲瓜)', c: 'veg', t: '🟢 綠燈', d: '每餐需攝取。若血鉀偏高，請「汆燙」後讓鉀離子流失再以油拌炒。' },
         'fruit_low': { n: '蘋果/鳳梨/葡萄', c: 'fruit', t: '🟢 綠燈', d: '鉀含量相對較低的水果。仍需注意每日份量。' }, 
+
+        // --- 🔴 高鉀蔬果警示 ---
         'banana': { n: '香蕉', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。血鉀偏高或尿量少者應避免。' },
         'tomato': { n: '番茄 (含聖女番茄)', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。番茄汁或番茄醬鉀含量更高，應避免。' },
         'starfruit': { n: '楊桃', c: 'fruit', t: '🔴 紅燈', tags: ['toxin'], d: '絕對禁止！含神經毒素，腎友無法代謝，食用恐致抽搐昏迷。' },
         'melon': { n: '哈密瓜/美濃瓜', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '瓜類水果通常鉀離子較高，建議少量淺嚐。' },
         'kiwi': { n: '奇異果', c: 'fruit', t: '🟡 黃燈', tags: ['high_k'], d: '高鉀水果。建議切小塊限量食用。' },
         'soup': { n: '菜湯/精力湯', c: 'veg', t: '🔴 紅燈', tags: ['high_k', 'gout'], d: '蔬菜的鉀離子都溶在湯裡，且普林高。請吃菜、不喝湯。' },
+
+        // --- 🥤 點心/調味/其他 ---
         'oil': { n: '植物油', c: 'snack', t: '🟢 綠燈', d: '橄欖油、芥花油。腎友補充熱量的好幫手，且不含磷鉀。' },
         'candy': { n: '冰糖/蜂蜜/水果糖', c: 'snack', t: '🟡 黃燈', d: '低蛋白熱量來源。糖尿病患需注意血糖，非糖尿病者可適量補充熱量。' },
         'nuts': { n: '堅果/花生/瓜子', c: 'snack', t: '🟡 黃燈', tags: ['high_p'], d: '含磷量高。雖然是好油，但腎友一天建議不超過5顆，或配合磷結合劑。' },
@@ -712,7 +697,7 @@
         'veg': '🥦 蔬菜', 'fruit': '🍎 水果', 'snack': '🍦 點心/調味'
     };
 
-    // --- Search Logic ---
+    // --- 🔍 食物搜尋功能 (UX優化) ---
     let currentCategory = 'all';
 
     function initFoodSearch() {
@@ -723,7 +708,7 @@
             const btn = document.createElement('button');
             btn.innerText = foodCategories[key];
             btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
-            btn.style.flex = '0 0 auto'; 
+            btn.style.flex = '0 0 auto'; // 不壓縮
             btn.style.padding = '8px 15px';
             btn.style.fontSize = '0.95rem';
             btn.onclick = () => {
@@ -734,7 +719,7 @@
             };
             tagContainer.appendChild(btn);
         });
-        filterFood(); 
+        filterFood(); // 預設顯示全部或清空
     }
 
     function filterFood() {
@@ -747,20 +732,25 @@
         let count = 0;
         Object.keys(foodDB).forEach(key => {
             const item = foodDB[key];
+            // 篩選邏輯：分類符合 且 (搜尋框為空 或 關鍵字匹配)
             const catMatch = currentCategory === 'all' || item.c === currentCategory;
             const keyMatch = input === '' || item.n.includes(input) || key.includes(input);
 
             if (catMatch && keyMatch) {
-                if (currentCategory === 'all' && input === '') return; 
+                // 如果沒搜尋且分類是 All，不要一次顯示全部(太長)，只顯示提示
+                if (currentCategory === 'all' && input === '') {
+                    return; 
+                }
 
                 const div = document.createElement('div');
-                div.className = 'quiz-option'; 
+                div.className = 'quiz-option'; // 借用 quiz 的樣式 (卡片感)
                 div.style.padding = '15px';
                 div.style.marginBottom = '10px';
                 div.style.display = 'flex';
                 div.style.justifyContent = 'space-between';
                 div.style.alignItems = 'center';
                 
+                // 燈號顏色
                 let dotColor = '#ddd';
                 if(item.t.includes('綠')) dotColor = 'var(--risk-g)';
                 if(item.t.includes('黃')) dotColor = 'var(--risk-y)';
@@ -794,6 +784,7 @@
         else if(item.t.includes('黃')) { bg='#fffbe6'; border='var(--risk-y)'; }
         else { bg='#e8f5e9'; border='var(--risk-g)'; }
 
+        // 標籤顯示
         let tagHtml = '';
         if(item.tags) {
             item.tags.forEach(t => {
@@ -808,11 +799,13 @@
 
         content.parentElement.style.background = bg;
         content.parentElement.style.borderLeft = `8px solid ${border}`;
+        
         content.innerHTML = `
             <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
             <div style="margin-bottom:15px;">${item.t} ${tagHtml}</div>
             <p style="font-size:1.15rem; line-height:1.6; color:#444; font-weight:bold;">${item.d}</p>
         `;
+        
         modal.classList.remove('hidden');
     }
 
@@ -820,8 +813,9 @@
         document.getElementById('food-result-modal').classList.add('hidden');
     }
 
-    // --- Quiz Logic ---
+    // --- 🎓 更新後的題庫 (整合痛風、低氮澱粉與最新飲食觀念) ---
     const quizPool = [
+        // --- 原有題目 ---
         {tags:['all'], q:"要改吃「薄鹽醬油」或「低鈉鹽」嗎？", a:[{t:"對，少鹽就好",c:false},{t:"錯，那是高鉀鹽",c:true}], exp:"低鈉鹽以「鉀」代鈉，腎臟排鉀功能差或服用心臟藥物者，吃多恐致心律不整。"},
         {tags:['all'], q:"關於喝水，何者正確？", a:[{t:"完全不能喝水",c:false},{t:"沒水腫應適量喝",c:true}], exp:"除非嚴重水腫或心衰竭惡化，否則適量喝水有助代謝。痛風患者更需多喝水幫助排尿酸。"},
         {tags:['hf'], q:"心臟衰竭患者，每天早上最重要的事是？", a:[{t:"量體重",c:true},{t:"深蹲運動",c:false}], exp:"每天量體重若突然增加(2天重2公斤)，可能是積水惡化警訊，需儘速回診。"},
@@ -842,8 +836,432 @@
         {tags:['all'], q:"青菜含有鉀離子，血鉀高時該怎麼煮？", a:[{t:"汆燙瀝乾後再調味",c:true},{t:"煮成菜湯喝掉",c:false}], exp:"鉀離子易溶於水。將青菜汆燙後把水瀝乾，可去除大量鉀離子；絕對不要喝菜湯。"},
         {tags:['all'], q:"痛風患者想減重，應該？", a:[{t:"快速斷食瘦身",c:false},{t:"維持理想體重，慢慢減",c:true}], exp:"快速減重會產生酮酸，反而抑制尿酸排泄，誘發痛風。應維持理想體重，採漸進式減重。"}
     ];
-    let qIdx = 0, score = 0;
+    let currentQuizData = [];
+
+    // --- Logic ---
+   function switchTab(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
+        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
+        const navItems = document.querySelectorAll('.nav-item');
+        if(navItems[idx]) navItems[idx].classList.add('active');
+        
+        window.scrollTo(0,0);
+        
+        // 呼叫個別頁面的初始化功能
+        if (id === 'diet') {
+            initFoodSearch(); // 🆕 新增：初始化食物搜尋與分類按鈕
+        }
+        if (id === 'quiz') initQuiz();
+    }
     
+    function updateAllRisks() {
+        const age = parseFloat(document.getElementById('kfre-age').value);
+        const sex = document.getElementById('kfre-sex').value;
+        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
+        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hfVal = document.getElementById('kfre-hf').value;
+        const hasDM = dmVal === '1'; 
+        const hasHF = hfVal === '1';
+        
+        if (isNaN(age) || sex === "" || isNaN(egfr) || isNaN(uacr) || dmVal === "" || hfVal === "") return;
+
+        document.getElementById('start-hint').classList.add('hidden');
+        document.getElementById('unified-result').classList.remove('hidden');
+
+        // Heatmap
+        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
+        let row = '5', stageText = '第5期';
+        if (egfr >= 90) { row = '1'; stageText = '第1期'; }
+        else if (egfr >= 60) { row = '2'; stageText = '第2期'; }
+        else if (egfr >= 45) { row = '3a'; stageText = '第3a期'; }
+        else if (egfr >= 30) { row = '3b'; stageText = '第3b期'; }
+        else if (egfr >= 15) { row = '4'; stageText = '第4期'; }
+        
+        let col = '1', uacrText = '正常/輕微';
+        if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } 
+        else if (uacr >= 300) { col = '2'; uacrText = '微量蛋白尿'; }
+
+        const cellId = `cell-${row}-${col}`;
+        const cell = document.getElementById(cellId);
+        if (cell) cell.classList.add('active-cell');
+
+        let color = '#e03e2e', text = '超高風險';
+        let boxBg = '#ffebee', boxColor = '#b71c1c';
+
+        if (cell.classList.contains('bg-g')) { 
+            color = '#6bbd45'; text = '低風險 (定期追蹤)'; 
+            boxBg = '#f0fdf4'; boxColor = '#1b5e20';
+        } else if (cell.classList.contains('bg-y')) { 
+            color = '#ffd700'; text = '中度風險 (需注意)'; 
+            boxBg = '#fffde7'; boxColor = '#f57f17';
+        } else if (cell.classList.contains('bg-o')) { 
+            color = '#f58220'; text = '高風險 (嚴格控制)'; 
+            boxBg = '#fff3e0'; boxColor = '#e65100';
+        }
+
+        const banner = document.getElementById('risk-banner');
+        banner.style.backgroundColor = color;
+        banner.style.color = (color === '#ffd700') ? '#222' : '#fff'; 
+        document.getElementById('risk-title').innerText = text;
+        document.getElementById('risk-desc').innerText = `eGFR${stageText} + ${uacrText}`;
+
+        const kBox = document.getElementById('kfre-result-box');
+        if(kBox) {
+            kBox.style.borderColor = color; kBox.style.backgroundColor = boxBg;
+            document.getElementById('kfre-result-title').style.color = boxColor;
+        }
+
+        updateMeds(egfr, hasDM, hasHF);
+        updateDiet(egfr, hasDM, hasHF);
+        updateArmorVisibility(hasDM, egfr, hasHF); 
+
+        // KFRE logic (Simplified)
+        const sexNum = parseFloat(sex);
+        const logACR = Math.log(uacr);
+        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
+        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
+        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
+        document.getElementById('res-2yr').innerText = (risk2 * 100).toFixed(1) + "%";
+        document.getElementById('res-5yr').innerText = (risk5 * 100).toFixed(1) + "%";
+
+        const adviceBox = document.getElementById('kfre-advice-box');
+        let adviceHTML = "", adviceBorder = "#ccc";
+        let condText = [];
+        if(hasDM) condText.push("糖尿病");
+        if(hasHF) condText.push("心衰竭");
+        let condStr = condText.length > 0 ? "且合併" + condText.join("/") : "";
+
+        if (risk2 >= 0.4) { 
+            adviceBorder = "#d32f2f"; adviceHTML = `數值顯示腎功能衰退風險較高${condStr}。建議與醫師討論治療策略。`;
+        } else if (risk2 >= 0.1) { 
+            adviceBorder = "#f57c00"; adviceHTML = `建議加入「慢性腎臟病照護計畫」。${hasHF ? "心衰竭需嚴格控制水分與鹽分。" : ""}`;
+        } else if (risk5 >= 0.03) { 
+            adviceBorder = "#fbc02d"; adviceHTML = `建議轉診至腎臟專科確認病因。${hasHF ? "心腎症候群需同時保護心臟與腎臟。" : ""}`;
+        } else {
+            adviceBorder = "#388e3c"; adviceHTML = `目前短期內洗腎機率較低。請維持健康生活。`;
+        }
+        adviceBox.innerHTML = adviceHTML;
+        adviceBox.style.borderLeftColor = adviceBorder;
+    }
+
+    // --- 💊 用藥建議邏輯 ---
+    function updateMeds(egfr, hasDM, hasHF) {
+        document.getElementById('med-placeholder').classList.add('hidden');
+        document.getElementById('med-content').classList.remove('hidden');
+        
+        const sel = document.getElementById('kfre-egfr');
+        document.getElementById('med-egfr-val').innerText = sel.options[sel.selectedIndex].text.split(' ')[0];
+        
+        let conds = ['CKD']; 
+        if(hasDM) conds.push('糖尿病'); 
+        if(hasHF) conds.push('心衰竭');
+        document.getElementById('med-cond-text').innerText = conds.join(' + ');
+
+        const g = document.getElementById('list-med-g'), y = document.getElementById('list-med-y'), r = document.getElementById('list-med-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
+
+        // 1. SGLT2i
+        if (egfr >= 20) {
+            let msg = hasHF ? "心臟衰竭與腎臟病的核心救命藥物！" : "能顯著延緩腎功能惡化，建議優先使用。";
+            add(g, "SGLT2i (排糖藥)", msg);
+        } else add(y, "SGLT2i (排糖藥)", "eGFR < 20 不建議新起始，若原已服用可續用。");
+
+        // 2. RASi / ARNI
+        if (hasHF) {
+            add(g, "ARNI (雙效神兵)", "心衰竭首選 (GDMT)！優於傳統血壓藥。");
+            add(g, "Beta-blocker (護心藥)", "心衰竭必備，讓心臟跳得更省力。");
+            
+            // --- 區分：心衰竭推薦傳統 MRA ---
+            add(g, "MRA (傳統阻斷藥)", "Spironolactone 是心衰竭第四支柱，能降低死亡率。需監測血鉀。");
+        } else {
+            add(g, "RASi (ACEi/ARB)", "護腎首選血壓藥，抗蛋白尿基礎。");
+        }
+
+        // 3. DM
+        if (hasDM) {
+            add(g, "GLP-1 RA (腸泌素)", "控糖、減重、護心護腎的多效藥物。");
+            
+            // --- 區分：糖尿病腎病變推薦 ns-MRA ---
+            // 條件：有糖尿病 + 無心衰竭(因為有心衰會優先推傳統) + eGFR>25 + 這裡假設有蛋白尿風險
+            if (!hasHF && egfr >= 25) {
+                add(g, "ns-MRA (新型護腎藥)", "Finerenone(可申達) 針對糖尿病腎病變，精準抗發炎且副作用較少。");
+            }
+            
+            if (egfr < 30) add(r, "Metformin", "eGFR < 30 絕對禁用！乳酸中毒風險。");
+            else if (egfr < 45) add(y, "Metformin", "需減量，每日不超過 1000mg。");
+        }
+
+        // 4. 通用
+        add(g, "Statins (降血脂藥)", "保護血管，預防中風與心肌梗塞。");
+        
+        let diureticMsg = hasHF ? "症狀控制重要藥物 (依體重調整)，脫水時暫停。" : "生病 (脫水/發燒) 時需暫停。";
+        add(y, "Diuretics (利尿劑)", diureticMsg);
+        
+        let nsaidMsg = hasHF ? "絕對禁止！會惡化心衰竭並損傷腎臟。" : "傷腎地雷！盡量避免使用。";
+        add(r, "NSAIDs (強效止痛藥)", nsaidMsg);
+    }
+
+    // --- 🥦 飲食建議 (修改版：依 eGFR 給予 g/kg 建議) ---
+    function updateDiet(egfr, hasDM, hasHF) {
+        document.getElementById('diet-placeholder').classList.add('hidden');
+        document.getElementById('diet-content').classList.remove('hidden');
+        
+        // 1. 處理蛋白質建議顯示
+        const pBox = document.getElementById('protein-guide-box');
+        const pVal = document.getElementById('protein-guide-val');
+        if(pBox) {
+            pBox.style.display = 'block';
+            // 判斷邏輯：eGFR < 45 (CKD 3b-5) 建議低蛋白 0.6-0.8
+            // eGFR >= 45 (CKD 1-3a) 建議正常適量 0.8-1.0
+            if (egfr < 45) {
+                pVal.innerText = "0.6 ~ 0.8";
+                pVal.style.color = "#d84315"; // 橘紅色強調限制
+            } else {
+                pVal.innerText = "0.8 ~ 1.0"; // 一般健康建議
+                pVal.style.color = "#2e7d32"; // 綠色
+            }
+        }
+
+        const g = document.getElementById('list-diet-g'), y = document.getElementById('list-diet-y'), r = document.getElementById('list-diet-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
+
+        add(g, "優質蛋白質", "雞蛋、豆腐、魚肉、雞肉。");
+        add(g, "天然好油", "橄欖油、苦茶油、酪梨油。");
+        
+        if(hasHF) {
+            add(r, "高鈉食物", "醃漬品、罐頭、湯汁、火鍋湯。鹽分滯留水分，會讓心臟衰竭惡化。");
+            add(y, "水分攝取", "建議每日晨起量體重。若水腫明顯，需嚴格限水 (如每日 < 1500cc)。");
+        } else {
+            add(g, "適量水分", "無水腫者建議補充足夠水分，幫助代謝。");
+        }
+
+        if (hasDM) {
+            add(r, "精緻糖/甜飲", "血糖波動會加速血管老化與腎病變。");
+            add(g, "低升糖指數 (Low GI)", "全穀雜糧、蔬菜，有助血糖穩定。");
+        }
+
+        if (egfr < 45) { 
+            add(g, "低氮澱粉", "冬粉、米粉、藕粉。補充熱量不產生尿毒。");
+            add(y, "糙米/五穀米", "磷含量高，建議改吃白飯或低氮澱粉。");
+            add(y, "深綠色蔬菜", "鉀離子高，建議切段汆燙後再炒。");
+            add(r, "低鈉鹽", "成分通常是「氯化鉀」，心腎不佳者恐致致死性心律不整。");
+        }
+        
+        add(r, "楊桃", "絕對禁止！含神經毒素。");
+        add(r, "加工肉品", "香腸火腿含高量無機磷，吸收率 100% 極傷腎。");
+    }
+
+    function checkMed() {
+        const val = document.getElementById('med-select').value;
+        const lights = document.querySelectorAll('.light');
+        const res = document.getElementById('med-result');
+        lights.forEach(l => l.classList.remove('on'));
+        res.classList.add('hidden');
+        if(!val) return;
+        const data = medDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
+        if (data.level === 'r') { document.getElementById('light-r').classList.add('on'); res.style.borderColor = "var(--risk-r)"; res.style.background = "#fff5f5"; }
+        else if (data.level === 'y') { document.getElementById('light-y').classList.add('on'); res.style.borderColor = "var(--risk-y)"; res.style.background = "#fffbf0"; }
+        else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--risk-g)"; res.style.background = "#e6fffa"; }
+    }
+
+        // --- 🛡️ 裝備與稱號 ---
+    function updateArmorVisibility(hasDM, egfr, hasHF) {
+        // 1. 血壓藥/ARNI
+        const iconRasi = document.getElementById('icon-rasi');
+        const nameRasi = document.getElementById('name-rasi');
+        const descRasi = document.getElementById('desc-rasi');
+        
+        if(hasHF) {
+            iconRasi.innerText = "⛑️";
+            nameRasi.innerText = "雙效防護";
+            descRasi.innerHTML = "ARNI<br>心衰竭首選";
+        } else {
+            iconRasi.innerText = "🧥";
+            nameRasi.innerText = "血壓藥";
+            descRasi.innerHTML = "ACEi/ARB<br>基礎防禦";
+        }
+
+        // 2. Beta-blocker
+        const slotBb = document.getElementById('slot-bb');
+        if (hasHF) {
+            slotBb.style.display = 'flex';
+        } else {
+            document.getElementById('drug-bb').checked = false;
+            slotBb.classList.remove('equipped');
+            slotBb.style.display = 'none';
+        }
+
+        // 3. MRA 分流邏輯 (修正重點)
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+        
+        // 重置顯示
+        slotMraOld.style.display = 'none';
+        slotNsMra.style.display = 'none';
+
+        if (hasHF) {
+            // 心衰竭：優先顯示傳統 MRA
+            slotMraOld.style.display = 'flex';
+            // 隱藏 ns-MRA 避免混淆 (或取消勾選)
+            document.getElementById('drug-nsmra').checked = false;
+            slotNsMra.classList.remove('equipped');
+        } else if (hasDM && egfr >= 25) {
+            // 無心衰竭 但有 糖尿病腎病變風險：顯示 ns-MRA
+            slotNsMra.style.display = 'flex';
+            // 隱藏傳統 MRA
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+        } else {
+            // 兩者皆無，都隱藏並取消勾選
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+            document.getElementById('drug-nsmra').checked = false;
+            slotNsMra.classList.remove('equipped');
+        }
+
+        // 4. GLP-1
+        const slotGlp1 = document.getElementById('slot-glp1');
+        if (hasDM) {
+            slotGlp1.style.display = 'flex';
+        } else {
+            document.getElementById('drug-glp1').checked = false;
+            slotGlp1.classList.remove('equipped');
+            slotGlp1.style.display = 'none';
+        }
+
+        updateStatusAndAdvice();
+    }
+
+    const ranks = [
+        { class: 'status-novice', title: '新手冒險者', icon: '⚠️', msg: '您的心腎目前完全沒有防護，風險極高！' },
+        { class: 'status-apprentice', title: '見習衛士', icon: '🛡️', msg: '很好！您穿上了第一件裝備。' },
+        { class: 'status-veteran', title: '資深騎士', icon: '⚔️', msg: '太棒了！您的防禦力大幅提升！' },
+        { class: 'status-elite', title: '皇家護衛', icon: '🏰', msg: '非常優秀！您的心腎受到嚴密的保護！' },
+        { class: 'status-guardian', title: '心腎大將軍', icon: '🏆', msg: '太強了！接近完美的防禦陣容！' },
+        { class: 'status-god', title: '心腎大元帥', icon: '👑', msg: '完美無缺！您是心腎健康的最高守護者！' }
+    ];
+
+    function updateStatusAndAdvice() {
+        const checkboxes = document.querySelectorAll('.gear-checkbox');
+        let checkedCount = 0;
+        
+        checkboxes.forEach(box => { 
+            if (box.parentElement.style.display !== 'none') {
+                if (box.checked) checkedCount++; 
+            }
+        });
+        
+        let rankIndex = checkedCount; 
+        if (rankIndex >= 5) rankIndex = 5; 
+        
+        const data = ranks[rankIndex];
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        statusPanel.className = 'status-panel ' + data.class;
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth;
+        statusPanel.classList.add('animate-pop');
+
+        generateAdvice();
+    }
+
+    function toggleEquip(element, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked;
+        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
+        else { element.classList.remove('equipped'); }
+        updateStatusAndAdvice();
+    }
+
+   // --- 💡 全面修復版：裝備建議邏輯 ---
+    function generateAdvice() {
+        const hfVal = document.getElementById('kfre-hf').value;
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasHF = hfVal === '1';
+        const hasDM = dmVal === '1';
+        
+        let adviceHTML = "";
+        
+        // 1. SGLT2i (排糖藥) - 所有人皆顯示
+        const useSglt2 = document.getElementById('drug-sglt2').checked;
+        if (useSglt2) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>排糖藥 (SGLT2i)：</strong>很好！這是 KDIGO 與心臟學會一致推薦的救命藥物。</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 極重要建議</span><br><strong style="color:#d84315;">請諮詢醫師：</strong>排糖藥(SGLT2i)能顯著降低心衰竭住院與洗腎風險，是治療的基石。</div>`;
+        }
+
+        // 2. RASi / ARNI (血壓藥/雙效防護) - 所有人皆顯示
+        const useRasi = document.getElementById('drug-rasi').checked;
+        if (hasHF) {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>雙效防護 (ARNI/RASi)：</strong>您使用了正確的心臟保護藥物！</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>心衰竭患者建議優先使用 ARNI (雙效防護) 或 ACEi/ARB。</div>`;
+        } else {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>血壓藥 (RASi)：</strong>這對保護腎臟、減少蛋白尿非常重要。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>基礎建議：</strong>ACEi/ARB 類藥物是保護腎臟的基礎裝備。</div>`;
+        }
+
+        // 3. Beta-blocker (護心藥) - 僅 HF 顯示
+        const slotBb = document.getElementById('slot-bb');
+        if (slotBb.style.display !== 'none') {
+            const useBb = document.getElementById('drug-bb').checked;
+            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>護心藥 (Beta-blocker)：</strong>已裝備！能有效減輕心臟負擔，讓心跳更穩定。</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>乙型阻斷劑是心衰竭的四大救命支柱之一，請諮詢醫師。</div>`;
+        }
+
+       // 4. MRA (分流建議)
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+
+        // 情境 A: 傳統 MRA (心衰竭)
+        if (slotMraOld.style.display !== 'none') {
+            const useMraOld = document.getElementById('drug-mra-old').checked;
+            if (useMraOld) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>傳統 MRA：</strong>已裝備！這是降低心衰竭死亡率的關鍵藥物。</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>護心建議：</strong>醛固酮阻斷劑 (Spironolactone) 是心衰竭救命藥，請諮詢醫師。</div>`;
+        }
+        
+        // 情境 B: ns-MRA (糖尿病腎病變)
+        if (slotNsMra.style.display !== 'none') {
+            const useNsMra = document.getElementById('drug-nsmra').checked;
+            if (useNsMra) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>新型 ns-MRA：</strong>很棒！您正在使用精準抗發炎藥物保護腎臟。</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>進階建議：</strong>若血鉀正常，可諮詢新型藥物 (Finerenone 可申達) 以預防腎功能惡化。</div>`;
+        }
+
+        // 5. Statin (降血脂藥) - 所有人皆顯示 (修復漏字：補上已裝備提示)
+        const useStatin = document.getElementById('drug-statin').checked;
+        if (useStatin) {
+             adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>降血脂藥 (Statins)：</strong>持續服用！穩定血管斑塊，遠離中風與心肌梗塞威脅。</div>`;
+        } else {
+             adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>血管保護：</strong>腎友心血管風險高，使用 Statin 可預防中風。</div>`;
+        }
+
+        // 6. GLP-1 (腸泌素) - 僅 DM 顯示 (修復漏字：補上未裝備提示)
+        const slotGlp1 = document.getElementById('slot-glp1');
+        if (slotGlp1.style.display !== 'none') {
+             const useGlp1 = document.getElementById('drug-glp1').checked;
+             if (useGlp1) {
+                 adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>腸泌素 (GLP-1 RA)：</strong>控糖同時減重護心，是非常棒的選擇。</div>`;
+             } else {
+                 adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>控糖升級：</strong>若體重或血糖未達標，腸泌素是兼具護心、護腎與減重的強力選項。</div>`;
+             }
+        }
+
+        var adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
+    }
+
+    // --- 🎓 測驗邏輯 ---
+    let qIdx = 0, score = 0;
     function initQuiz() { 
         qIdx=0; score=0; 
         document.getElementById('quiz-score').classList.add('hidden'); 
@@ -859,18 +1277,23 @@
             return false;
         });
 
+        // 洗牌
         for (let i = currentQuizData.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [currentQuizData[i], currentQuizData[j]] = [currentQuizData[j], currentQuizData[i]];
         }
         
+        // 修正：取前 10 題
         currentQuizData = currentQuizData.slice(0, 10);
+        // Fallback: 如果篩選後題目不夠 10 題，補足通用題
         if(currentQuizData.length < 10) {
+            // 簡單處理：如果還不夠，直接拿 quizPool 補
              let remaining = quizPool.filter(q => !currentQuizData.includes(q));
              for (let i = 0; i < (10 - currentQuizData.length); i++) {
                  if (remaining[i]) currentQuizData.push(remaining[i]);
              }
         }
+
         renderQ(); 
     }
     
@@ -915,115 +1338,50 @@
         }
     }
     
-    // --- Main Logic & Functions ---
-    function switchTab(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById('tab-' + id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+// Init
+    updateAllRisks();
+</script>
+
+<div id="help-modal" class="modal" onclick="closeHelp()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeHelp()">×</button>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem;">📄 如何看報告？</h3>
+        <p style="font-size:1.1rem; color:#666;">請拿出您的抽血報告單，尋找類似下方的文字：</p>
         
-        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
-        const navItems = document.querySelectorAll('.nav-item');
-        if(navItems[idx]) navItems[idx].classList.add('active');
-        
-        window.scrollTo(0,0);
-        
-        if (id === 'diet') initFoodSearch();
-        if (id === 'quiz') initQuiz();
-    }
-    
-    function updateAllRisks() {
-        const age = parseFloat(document.getElementById('kfre-age').value);
-        const sex = document.getElementById('kfre-sex').value;
-        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
-        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
-        const dmVal = document.getElementById('kfre-dm').value;
-        const hfVal = document.getElementById('kfre-hf').value;
-        const hasDM = dmVal === '1'; 
-        const hasHF = hfVal === '1';
-        
-        if (isNaN(age) || sex === "" || isNaN(egfr) || isNaN(uacr) || dmVal === "" || hfVal === "") return;
+        <div id="help-egfr" class="help-content hidden">
+            <div class="report-sample">
+                <div class="report-row"><span>Creatinine (肌酸酐)</span><span>1.2</span></div>
+                <div class="report-row highlight-report"><span>eGFR (腎絲球過濾率)</span><span>52.0</span></div>
+                <div class="report-row"><span>BUN (尿素氮)</span><span>18</span></div>
+            </div>
+            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
+                👉 請找 "eGFR" 這一欄的數字。<br>
+                <small style="color:#666; font-weight:normal;">(數字越小代表腎功能越差)</small>
+            </p>
+        </div>
 
-        document.getElementById('start-hint').classList.add('hidden');
-        document.getElementById('unified-result').classList.remove('hidden');
+        <div id="help-uacr" class="help-content hidden">
+            <div class="report-sample">
+                <div class="report-row"><span>Urine Protein (尿蛋白)</span><span>-</span></div>
+                <div class="report-row highlight-report"><span>ACR / UACR (微白蛋白)</span><span>350</span></div>
+                <div class="report-row"><span>Creatinine (尿肌酸酐)</span><span>100</span></div>
+            </div>
+            <p style="color:#d32f2f; font-weight:bold; font-size:1.2rem; margin-top:10px;">
+                👉 請找 "ACR" 或 "UACR"。<br>
+                <small style="color:#666; font-weight:normal;">(若無此欄位，可參考尿蛋白 Urine Protein)</small>
+            </p>
+        </div>
 
-        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
-        let row = '5', stageText = '第5期';
-        if (egfr >= 90) { row = '1'; stageText = '第1期'; }
-        else if (egfr >= 60) { row = '2'; stageText = '第2期'; }
-        else if (egfr >= 45) { row = '3a'; stageText = '第3a期'; }
-        else if (egfr >= 30) { row = '3b'; stageText = '第3b期'; }
-        else if (egfr >= 15) { row = '4'; stageText = '第4期'; }
-        
-        let col = '1', uacrText = '正常/輕微';
-        if (uacr >= 300) { col = '3'; uacrText = '嚴重蛋白尿'; } 
-        else if (uacr >= 300) { col = '2'; uacrText = '微量蛋白尿'; }
+        <button class="btn" onclick="closeHelp()" style="margin-top:20px;">我知道了</button>
+    </div>
+</div>
 
-        const cellId = `cell-${row}-${col}`;
-        const cell = document.getElementById(cellId);
-        if (cell) cell.classList.add('active-cell');
-
-        let color = '#e03e2e', text = '高風險 (需積極治療)';
-        let boxBg = '#ffebee', boxColor = '#b71c1c';
-
-        if (cell.classList.contains('bg-g')) { 
-            color = '#6bbd45'; text = '低風險 (定期追蹤)'; 
-            boxBg = '#f0fdf4'; boxColor = '#1b5e20';
-        } else if (cell.classList.contains('bg-y')) { 
-            color = '#ffd700'; text = '中度風險 (需注意)'; 
-            boxBg = '#fffde7'; boxColor = '#f57f17';
-        } else if (cell.classList.contains('bg-o')) { 
-            color = '#f58220'; text = '高風險 (嚴格控制)'; 
-            boxBg = '#fff3e0'; boxColor = '#e65100';
-        }
-
-        const banner = document.getElementById('risk-banner');
-        banner.style.backgroundColor = color;
-        banner.style.color = (color === '#ffd700') ? '#222' : '#fff'; 
-        document.getElementById('risk-title').innerText = text;
-        document.getElementById('risk-desc').innerText = `eGFR${stageText} + ${uacrText}`;
-
-        const kBox = document.getElementById('kfre-result-box');
-        if(kBox) {
-            kBox.style.borderColor = color; kBox.style.backgroundColor = boxBg;
-            document.getElementById('kfre-result-title').style.color = boxColor;
-        }
-
-        updateMeds(egfr, hasDM, hasHF);
-        updateDiet(egfr, hasDM, hasHF);
-        updateArmorVisibility(hasDM, egfr, hasHF); 
-
-        const sexNum = parseFloat(sex);
-        const logACR = Math.log(uacr);
-        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
-        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
-        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
-        document.getElementById('res-2yr').innerText = (risk2 * 100).toFixed(1) + "%";
-        document.getElementById('res-5yr').innerText = (risk5 * 100).toFixed(1) + "%";
-
-        const adviceBox = document.getElementById('kfre-advice-box');
-        let adviceHTML = "", adviceBorder = "#ccc";
-        let condText = [];
-        if(hasDM) condText.push("糖尿病");
-        if(hasHF) condText.push("心衰竭");
-        let condStr = condText.length > 0 ? "且合併" + condText.join("/") : "";
-
-        if (risk2 >= 0.4) { 
-            adviceBorder = "#d32f2f"; adviceHTML = `數值顯示腎功能衰退風險較高${condStr}。建議與醫師討論治療策略。`;
-        } else if (risk2 >= 0.1) { 
-            adviceBorder = "#f57c00"; adviceHTML = `建議加入「慢性腎臟病照護計畫」。${hasHF ? "心衰竭需嚴格控制水分與鹽分。" : ""}`;
-        } else if (risk5 >= 0.03) { 
-            adviceBorder = "#fbc02d"; adviceHTML = `建議轉診至腎臟專科確認病因。${hasHF ? "心腎症候群需同時保護心臟與腎臟。" : ""}`;
-        } else {
-            adviceBorder = "#388e3c"; adviceHTML = `目前短期內洗腎機率較低。請維持健康生活。`;
-        }
-        adviceBox.innerHTML = adviceHTML;
-        adviceBox.style.borderLeftColor = adviceBorder;
-    }
-
-    // --- ❓ Help Functions ---
+<script>
     function showHelp(type) {
         document.getElementById('help-modal').style.display = 'flex';
+        // 先隱藏所有內容
         document.querySelectorAll('.help-content').forEach(d => d.classList.add('hidden'));
+        // 再顯示指定的內容
         const target = document.getElementById('help-' + type);
         if(target) target.classList.remove('hidden');
     }
@@ -1031,9 +1389,20 @@
     function closeHelp() { 
         document.getElementById('help-modal').style.display = 'none'; 
     }
-    
-    // Init
-    updateAllRisks();
+   
 </script>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
