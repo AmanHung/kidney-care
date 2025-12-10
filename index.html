@@ -485,7 +485,7 @@
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
                     <span class="equip-icon">👑</span> <span class="equip-name">核心救命藥</span>
                     <span class="equip-desc">排糖藥 (SGLT2i)</span>
-                    <span class="equip-brand">商品名：Jardiance(恩排糖), Forxiga(福適佳)</span>
+                    <span class="equip-brand">商品名：恩排糖,福適佳,可拿糖...等</span>
                     <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
                 
@@ -493,7 +493,7 @@
                     <span class="equip-icon" id="icon-rasi">🧥</span>
                     <span class="equip-name" id="name-rasi">基礎防護藥</span>
                     <span class="equip-desc" id="desc-rasi">血壓藥 (ACEi/ARB)</span>
-                    <span class="equip-brand">商品名：Diovan(代芬), Hyzaar(海莎), Aprovel(安普諾維)</span>
+                    <span class="equip-brand">商品名：利他穩、卡布登...等</span>
                     <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
                 
@@ -501,7 +501,7 @@
                     <span class="equip-icon">❤️</span>
                     <span class="equip-name">護心專用</span>
                     <span class="equip-desc">乙型阻斷劑 (Beta-blocker)</span>
-                    <span class="equip-brand">商品名：Bisoprolol, Carvedilol</span>
+                    <span class="equip-brand">商品名：康肯,心全錠...等</span>
                     <input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
@@ -509,7 +509,7 @@
                     <span class="equip-icon">🛡️</span>
                     <span class="equip-name">加強阻斷藥</span>
                     <span class="equip-desc">Spironolactone</span>
-                    <span class="equip-brand">心衰竭第四支柱</span>
+                    <span class="equip-brand">商品名：使能通</span>
                     <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
                 </div>
 
@@ -525,7 +525,7 @@
                     <span class="equip-icon">🩸</span>
                     <span class="equip-name">血管通暢藥</span>
                     <span class="equip-desc">降血脂 (Statins)</span>
-                    <span class="equip-brand">商品名：Lipitor(立普妥), Crestor(冠脂妥)</span>
+                    <span class="equip-brand">商品名：立普妥, 冠脂妥...等</span>
                     <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
 
@@ -533,7 +533,7 @@
                     <span class="equip-icon">💉</span>
                     <span class="equip-name">控糖減重針</span>
                     <span class="equip-desc">腸泌素 (GLP-1 RA)</span>
-                    <span class="equip-brand">商品名：Ozempic(胰妥讚), Trulicity(易週糖)</span>
+                    <span class="equip-brand">商品名：胰妥讚, 胰妥善...等</span>
                     <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
                 </div>
             </div>
@@ -1177,12 +1177,12 @@
 
     // --- 修改後的狀態等級：去遊戲化，改為防護網完整度 ---
     const ranks = [
-        { class: 'status-novice', title: '⚠️ 尚未建立防護', icon: '⚠️', msg: '您的心腎目前暴露在風險中，請諮詢醫師。' }, // 0個
-        { class: 'status-apprentice', title: '🛡️ 防護起步中', icon: '🛡️', msg: '很好！您已開始建立基礎防護。' }, // 1個
-        { class: 'status-veteran', title: '🛡️ 進階防護網', icon: '✨', msg: '太棒了！您的防護網相當穩固。' }, // 2個
-        { class: 'status-elite', title: '🏰 高階防護網', icon: '🏰', msg: '非常優秀！多重機轉同時保護心腎。' }, // 3個
-        { class: 'status-guardian', title: '🏆 完整防護網', icon: '🏆', msg: '太強了！這是最完整的保護陣容！' }, // 4個
-        { class: 'status-god', title: '👑 極致防護', icon: '👑', msg: '完美無缺！請繼續保持規律用藥。' } // 5個以上
+        { class: 'status-novice', title: '尚未建立防護', icon: '⚠️', msg: '您的心腎目前暴露在風險中，請諮詢醫師。' }, // 0個
+        { class: 'status-apprentice', title: '防護起步中', icon: '🛡️', msg: '很好！您已開始建立基礎防護。' }, // 1個
+        { class: 'status-veteran', title: '進階防護網', icon: '✨', msg: '太棒了！您的防護網相當穩固。' }, // 2個
+        { class: 'status-elite', title: '高階防護網', icon: '🏰', msg: '非常優秀！多重機轉同時保護心腎。' }, // 3個
+        { class: 'status-guardian', title: '完整防護網', icon: '🏆', msg: '太強了！這是最完整的保護陣容！' }, // 4個
+        { class: 'status-god', title: '極致防護', icon: '👑', msg: '完美無缺！請繼續保持規律用藥。' } // 5個以上
     ];
 
     function updateStatusAndAdvice() {
@@ -1430,6 +1430,7 @@
 
 </body>
 </html>
+
 
 
 
