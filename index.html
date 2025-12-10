@@ -154,27 +154,49 @@
         .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
         .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         
-        /* 裝備欄 CSS */
-        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
-        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 140px; }
-        .equip-slot:active { transform: scale(0.95); }
+/* 裝備欄 CSS (無圖示優化版) */
+        .equip-grid { 
+            display: grid; 
+            /* 手機版改為單欄顯示比較清楚，若要維持雙欄可保留 repeat(2, 1fr) */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; margin: 20px 0; 
+        }
+        .equip-slot { 
+            background: #fff; border: 3px dashed #ccc; border-radius: 12px; padding: 15px 5px; 
+            text-align: center; cursor: pointer; transition: all 0.2s; position: relative; 
+            user-select: none; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            min-height: 110px; /* 移除圖示後高度可以縮小 */
+        }
+        .equip-slot:active { transform: scale(0.96); }
 
-        .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; } .slot-legendary .equip-name { color: #E65100; }
-        .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; } .slot-epic .equip-name { color: #4A148C; }
-        .slot-rare { border-color: #2196F3; background-color: #E3F2FD; } .slot-rare .equip-name { color: #0D47A1; }
-        .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; } .slot-uncommon .equip-name { color: #1B5E20; }
-        .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; } .slot-arcane .equip-name { color: #006064; }
-        .slot-heart { border-color: var(--heart); background-color: var(--heart-light); } .slot-heart .equip-name { color: #c2185b; }
+        /* 顏色定義 */
+        .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; } 
+        .slot-legendary .equip-name { color: #E65100; }
+        
+        .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; } 
+        .slot-epic .equip-name { color: #4A148C; }
+        
+        .slot-rare { border-color: #2196F3; background-color: #E3F2FD; } 
+        .slot-rare .equip-name { color: #0D47A1; }
+        
+        .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; } 
+        .slot-uncommon .equip-name { color: #1B5E20; }
+        
+        .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; } 
+        .slot-arcane .equip-name { color: #006064; }
+        
+        .slot-heart { border-color: var(--heart); background-color: var(--heart-light); } 
+        .slot-heart .equip-name { color: #c2185b; }
 
-        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
-        .slot-legendary.equipped { box-shadow: 0 0 15px rgba(255, 140, 0, 0.4); }
-        .slot-epic.equipped { box-shadow: 0 0 15px rgba(156, 39, 176, 0.4); }
-        .slot-rare.equipped { box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
-        .slot-uncommon.equipped { box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
-        .slot-arcane.equipped { box-shadow: 0 0 15px rgba(0, 188, 212, 0.4); }
-        .slot-heart.equipped { box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
-
-        .equip-slot.equipped::after { content: '已裝備'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        /* 已裝備樣式 */
+        .equip-slot.equipped { border-style: solid; border-width: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
+        .equip-slot.equipped::after { 
+            content: '已選用'; position: absolute; top: -10px; right: -5px; 
+            color: white; font-size: 0.85rem; padding: 2px 8px; border-radius: 10px; 
+            font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        }
+        /* 裝備標籤顏色 */
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
         .slot-rare.equipped::after { background: #2196F3; }
@@ -182,10 +204,14 @@
         .slot-arcane.equipped::after { background: #00BCD4; }
         .slot-heart.equipped::after { background: var(--heart); }
 
-        .equip-icon { font-size: 3rem; display: block; margin-bottom: 5px; filter: grayscale(100%); opacity: 0.5; transition: 0.3s; }
-        .equip-slot.equipped .equip-icon { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
-        .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
-        .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
+        /* 文字排版優化 */
+        .equip-name { font-size: 1.25rem; font-weight: 900; margin-bottom: 3px; display: block; line-height: 1.2; }
+        .equip-desc { font-size: 1rem; color: #444; font-weight: bold; display: block; margin-bottom: 4px; }
+        .equip-brand { 
+            font-size: 0.85rem; color: #0277bd; display: block; 
+            background: rgba(255,255,255,0.6); padding: 2px 4px; border-radius: 4px;
+            line-height: 1.3;
+        }
         .hidden-checkbox { display: none; }
         
         .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
@@ -483,61 +509,55 @@
 
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
-                    <span class="equip-icon">👑</span> <span class="equip-name">核心救命藥</span>
+                    <span class="equip-name">核心救命藥</span>
                     <span class="equip-desc">排糖藥 (SGLT2i)</span>
-                    <span class="equip-brand">恩排糖,福適佳,可拿糖...等</span>
+                    <span class="equip-brand">恩排糖,福適佳,可拿糖</span>
                     <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-icon" id="icon-rasi">🧥</span>
-                    <span class="equip-name" id="name-rasi">基礎防護藥</span>
-                    <span class="equip-desc" id="desc-rasi">血壓藥 (ACEi/ARB)</span>
-                    <span class="equip-brand">利他穩、卡布登...等</span>
+                    <span class="equip-name">基礎防護藥</span>
+                    <span class="equip-desc">血壓藥 (ACEi/ARB)</span>
+                    <span class="equip-brand">利他穩,卡布登,博脈舒</span>
                     <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
                 
                 <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
-                    <span class="equip-icon">❤️</span>
                     <span class="equip-name">護心專用</span>
-                    <span class="equip-desc">乙型阻斷劑 (Beta-blocker)</span>
-                    <span class="equip-brand">康肯,心全錠...等</span>
+                    <span class="equip-desc">乙型阻斷劑</span>
+                    <span class="equip-brand">康肯,心全錠,舒壓寧</span>
                     <input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-mra-old" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-mra-old')" style="display:none;">
-                    <span class="equip-icon">🛡️</span>
                     <span class="equip-name">加強阻斷藥</span>
                     <span class="equip-desc">Spironolactone</span>
-                    <span class="equip-brand">使能通</span>
+                    <span class="equip-brand">使能通 (Aldactone)</span>
                     <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
-                    <span class="equip-icon">✨</span>
                     <span class="equip-name">進階護腎藥</span>
-                    <span class="equip-desc">Finerenone (可申達)</span>
-                    <span class="equip-brand">針對糖尿病腎病變</span>
+                    <span class="equip-desc">Finerenone</span>
+                    <span class="equip-brand">可申達 (Kerendia)</span>
                     <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
-                    <span class="equip-icon">🩸</span>
                     <span class="equip-name">血管通暢藥</span>
                     <span class="equip-desc">降血脂 (Statins)</span>
-                    <span class="equip-brand">立普妥, 冠脂妥...等</span>
+                    <span class="equip-brand">立普妥,冠脂妥,益脂可</span>
                     <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
                 </div>
 
                 <div id="slot-glp1" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-glp1')" style="display:none;">
-                    <span class="equip-icon">💉</span>
                     <span class="equip-name">控糖減重針</span>
                     <span class="equip-desc">腸泌素 (GLP-1 RA)</span>
-                    <span class="equip-brand">胰妥讚, 胰妥善...等</span>
+                    <span class="equip-brand">胰妥讚,易週糖,善纖達</span>
                     <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
                 </div>
             </div>
-
+            
             <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
                 <div class="status-info">
@@ -1430,6 +1450,7 @@
 
 </body>
 </html>
+
 
 
 
