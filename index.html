@@ -450,30 +450,50 @@
             <hr style="margin: 30px 0; border:0; border-top:2px dashed #ddd;">
             
             <h3 style="color:var(--primary); margin-bottom:15px;">🔎 食物紅綠燈查詢</h3>
-            <div style="background:#f8f9fa; border:2px solid #e9ecef; border-radius:15px; padding:15px; margin-bottom:20px;">
-    <p style="margin:0 0 10px 0; font-weight:900; color:#555;">🚦 燈號代表意義：</p>
+<style>
+    /* 專屬樣式，確保排版漂亮 */
+    .guide-box { background: #fff; border-radius: 18px; padding: 20px 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; }
+    .guide-title { margin: 0 0 15px 0; font-weight: 900; color: #444; font-size: 1.2rem; text-align: center; letter-spacing: 1px; }
+    .guide-row { display: flex; align-items: flex-start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
+    .guide-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .guide-icon { flex: 0 0 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.8rem; margin-right: 15px; background: #f9f9f9; }
+    .guide-text { flex: 1; }
+    .guide-head { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; display: block; }
+    .guide-desc { font-size: 1rem; color: #666; line-height: 1.5; text-align: justify; }
     
-    <div style="display:flex; align-items:start; margin-bottom:8px;">
-        <span style="color:var(--risk-g); font-size:1.2rem; margin-right:8px; line-height:1.2;">●</span>
-        <div style="font-size:0.95rem; color:#444;">
-            <strong style="color:var(--risk-g);">綠燈 (安心吃)</strong><br>
-            低磷、低鉀、優質蛋白或低氮澱粉。可作為每日主要營養來源。
+    /* 燈號專屬色 */
+    .icon-g { background: #e8f5e9; color: var(--risk-g); box-shadow: 0 2px 5px rgba(107, 189, 69, 0.2); }
+    .text-g { color: var(--risk-g); }
+    .icon-y { background: #fffde7; color: #fbc02d; box-shadow: 0 2px 5px rgba(251, 192, 45, 0.2); }
+    .text-y { color: #fbc02d; }
+    .icon-r { background: #ffebee; color: var(--risk-r); box-shadow: 0 2px 5px rgba(224, 62, 46, 0.2); }
+    .text-r { color: var(--risk-r); }
+</style>
+
+<div class="guide-box">
+    <h3 class="guide-title">🚦 燈號代表意義</h3>
+    
+    <div class="guide-row">
+        <div class="guide-icon icon-g">🟢</div>
+        <div class="guide-text">
+            <span class="guide-head text-g">綠燈 (安心吃)</span>
+            <div class="guide-desc">低磷、低鉀、優質蛋白或低氮澱粉。可作為每日主要營養來源。</div>
         </div>
     </div>
 
-    <div style="display:flex; align-items:start; margin-bottom:8px;">
-        <span style="color:var(--risk-y); font-size:1.2rem; margin-right:8px; line-height:1.2;">●</span>
-        <div style="font-size:0.95rem; color:#444;">
-            <strong style="color:var(--risk-y);">黃燈 (需注意)</strong><br>
-            雖然天然但含磷鉀稍高。建議<strong>「限量」</strong>或<strong>「切小塊汆燙」</strong>後再吃。
+    <div class="guide-row">
+        <div class="guide-icon icon-y">🟡</div>
+        <div class="guide-text">
+            <span class="guide-head text-y">黃燈 (需注意)</span>
+            <div class="guide-desc">雖天然但含磷鉀稍高。建議<strong>「限量」</strong>或<strong>「切小塊汆燙」</strong>後再吃。</div>
         </div>
     </div>
 
-    <div style="display:flex; align-items:start;">
-        <span style="color:var(--risk-r); font-size:1.2rem; margin-right:8px; line-height:1.2;">●</span>
-        <div style="font-size:0.95rem; color:#444;">
-            <strong style="color:var(--risk-r);">紅燈 (應避免)</strong><br>
-            加工高鈉/無機磷、內臟、或含神經毒素(楊桃)。腎友應盡量避免。
+    <div class="guide-row">
+        <div class="guide-icon icon-r">🔴</div>
+        <div class="guide-text">
+            <span class="guide-head text-r">紅燈 (應避免)</span>
+            <div class="guide-desc">加工高鈉/無機磷、內臟、或含神經毒素(楊桃)。腎友應盡量避免。</div>
         </div>
     </div>
 </div>
@@ -1550,6 +1570,7 @@
 
 </body>
 </html>
+
 
 
 
