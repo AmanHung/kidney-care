@@ -451,8 +451,8 @@
             
             <h3 style="color:var(--primary); margin-bottom:15px;">🔎 食物紅綠燈查詢</h3>
             <div style="position: sticky; top: 75px; background: #fff; padding: 10px 0; z-index: 10;">
-                <input type="text" id="food-search-input" placeholder="輸入關鍵字 (如: 香蕉、冬粉)..." onkeyup="filterFood()" 
-                    style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; font-size: 1.1rem; outline: none; transition: 0.3s; font-weight:bold;">
+                <input type="text" id="food-search-input" placeholder="輸入關鍵字 (如: 香蕉、冬粉)..." oninput="filterFood()" 
+    style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; font-size: 1.1rem; outline: none; transition: 0.3s; font-weight:bold;">
                 <div id="food-tags" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch;">
                     </div>
             </div>
@@ -730,19 +730,25 @@
         Object.keys(foodCategories).forEach(key => {
             const btn = document.createElement('button');
             btn.innerText = foodCategories[key];
-            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
-            btn.style.flex = '0 0 auto'; // 不壓縮
+            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`; // 預設全部按鈕為 Active
+            btn.style.flex = '0 0 auto'; 
             btn.style.padding = '8px 15px';
             btn.style.fontSize = '0.95rem';
             btn.onclick = () => {
                 document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentCategory = key;
+                
+                // UX 優化：切換分類時，如果搜尋框有字，建議清空，以免使用者混淆
+                // (也可選擇不清空，看您的需求。這裡示範不清空，但讓 filterFood 邏輯去處理)
                 filterFood();
             };
             tagContainer.appendChild(btn);
         });
-        filterFood(); // 預設顯示全部或清空
+        
+        // 初始化時，直接執行一次篩選，列出「全部」食物
+        currentCategory = 'all'; 
+        filterFood(); 
     }
 
     function filterFood() {
@@ -755,18 +761,19 @@
         let count = 0;
         Object.keys(foodDB).forEach(key => {
             const item = foodDB[key];
-            // 篩選邏輯：分類符合 且 (搜尋框為空 或 關鍵字匹配)
-            const catMatch = currentCategory === 'all' || item.c === currentCategory;
+            
+            // --- 🔍 修正後的邏輯 ---
+            // 1. 搜尋優先：如果有輸入關鍵字 (input !== '')，則強制搜尋所有分類 (無視 currentCategory)
+            // 2. 分類篩選：如果沒輸入關鍵字，才依照目前的 currentCategory 進行篩選
+            const isGlobalSearch = input !== '';
+            const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
+            
+            // 3. 關鍵字比對 (比對 名稱 或 代碼)
             const keyMatch = input === '' || item.n.includes(input) || key.includes(input);
 
             if (catMatch && keyMatch) {
-                // 如果沒搜尋且分類是 All，不要一次顯示全部(太長)，只顯示提示
-                if (currentCategory === 'all' && input === '') {
-                    return; 
-                }
-
                 const div = document.createElement('div');
-                div.className = 'quiz-option'; // 借用 quiz 的樣式 (卡片感)
+                div.className = 'quiz-option'; 
                 div.style.padding = '15px';
                 div.style.marginBottom = '10px';
                 div.style.display = 'flex';
@@ -791,10 +798,15 @@
             }
         });
 
-        if (currentCategory === 'all' && input === '') {
-            listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">👇 請輸入名稱 (如：香蕉) 或點選上方分類</p>';
-        } else if (count === 0) {
-            listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">找不到相關食物 😅<br>試試其他關鍵字？</p>';
+        // 搜尋結果為空時的提示
+        if (count === 0) {
+            if (input === '') {
+                // 分類下沒有東西 (理論上不應該發生，除非該分類為空)
+                 listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">此分類暫無資料</p>';
+            } else {
+                // 搜尋不到
+                listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">找不到相關食物 😅<br>試試其他關鍵字？</p>';
+            }
         }
     }
 
@@ -1429,6 +1441,7 @@
 
 </body>
 </html>
+
 
 
 
