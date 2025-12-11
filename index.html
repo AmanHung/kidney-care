@@ -1574,13 +1574,12 @@
 </script>
 <script>
     // ==========================================
-    // 💾 基礎個人化功能：自動存檔模組 (Local Storage)
+    // 💾 基礎個人化功能：自動存檔模組 (修正版 v2)
     // ==========================================
     const STORAGE_KEY = 'my_ckd_data_v1';
     
-    // 1. 儲存資料函式
+    // 1. 儲存資料
     function saveUserData() {
-        // 取得目前所有欄位的值
         const data = {
             age: document.getElementById('kfre-age').value,
             sex: document.getElementById('kfre-sex').value,
@@ -1588,7 +1587,6 @@
             uacr: document.getElementById('kfre-uacr').value,
             dm: document.getElementById('kfre-dm').value,
             hf: document.getElementById('kfre-hf').value,
-            // 藥物勾選狀態
             meds: {
                 'drug-sglt2': document.getElementById('drug-sglt2').checked,
                 'drug-rasi': document.getElementById('drug-rasi').checked,
@@ -1599,48 +1597,49 @@
                 'drug-glp1': document.getElementById('drug-glp1').checked
             }
         };
-        // 存入手機瀏覽器 (轉成字串)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
 
-    // 2. 載入資料函式
+    // 2. 載入資料 (邏輯順序修正)
     function loadUserData() {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return; // 沒資料就跳過
+        if (!raw) return; 
 
         try {
             const data = JSON.parse(raw);
 
-            // 還原下拉選單
+            // [步驟一] 先還原基本資料 (這是開啟裝備欄的鑰匙)
             if (data.age) document.getElementById('kfre-age').value = data.age;
             if (data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
-
-            // 還原按鈕選項 (同步 Hidden Input 與 按鈕樣式)
             restoreOptionGroup('kfre-sex', data.sex);
             restoreOptionGroup('kfre-uacr', data.uacr);
             restoreOptionGroup('kfre-dm', data.dm);
             restoreOptionGroup('kfre-hf', data.hf);
 
-            // 還原藥物勾選狀態
+            // [步驟二] 🔥 關鍵修正：先執行計算，讓正確的裝備欄位「顯示出來」
+            updateAllRisks();
+            checkHFSymptoms(data.hf === '1');
+
+            // [步驟三] 欄位顯示後，再還原藥物勾選狀態
             if (data.meds) {
                 Object.keys(data.meds).forEach(id => {
                     const checkbox = document.getElementById(id);
-                    // 確保元素存在才操作 (避免隱藏欄位報錯)
+                    // 只有當該欄位現在是「顯示中」的，才把勾勾打上去
+                    // 這樣可以避免邏輯衝突 (例如沒心衰竭卻勾了 Beta-blocker)
                     if (checkbox && checkbox.closest('.equip-slot').style.display !== 'none') {
                         checkbox.checked = data.meds[id];
+                        
+                        // 同步視覺樣式 (邊框發光)
                         const slot = checkbox.closest('.equip-slot');
                         if (data.meds[id]) slot.classList.add('equipped');
                         else slot.classList.remove('equipped');
                     }
                 });
+                
+                // 藥物勾選完後，要再更新一次裝備狀態 (Status Panel) 和 建議文字
+                updateStatusAndAdvice();
             }
 
-            // 觸發計算更新畫面
-            updateAllRisks();
-            // 特殊處理：心衰竭症狀檢核
-            checkHFSymptoms(data.hf === '1');
-            
-            // 顯示歡迎提示
             showToast("👋 歡迎回來！已載入您的紀錄");
 
         } catch (e) {
@@ -1648,7 +1647,6 @@
         }
     }
 
-    // 輔助：還原按鈕群組 Active 狀態
     function restoreOptionGroup(inputId, value) {
         if (!value) return;
         const input = document.getElementById(inputId);
@@ -1657,7 +1655,6 @@
         if (group) {
             const btns = group.querySelectorAll('.option-btn');
             btns.forEach(btn => {
-                // 檢查 onclick 內容是否包含該數值
                 if (btn.getAttribute('onclick').includes(`'${value}'`)) {
                     btn.classList.add('active');
                 } else {
@@ -1667,30 +1664,27 @@
         }
     }
 
-    // 3. 攔截(Hook)現有函式，加入自動儲存
-    // 這樣不用修改上面的原始碼
-    
+    // 3. Hook 攔截器
     const originalUpdateRisks = updateAllRisks;
     updateAllRisks = function() {
-        originalUpdateRisks(); // 執行原本計算
-        saveUserData();        // 自動存檔
+        originalUpdateRisks(); 
+        saveUserData(); 
     };
 
     const originalToggleEquip = toggleEquip;
     toggleEquip = function(element, checkboxId) {
-        originalToggleEquip(element, checkboxId); // 執行原本切換
-        saveUserData();                           // 自動存檔
+        originalToggleEquip(element, checkboxId); 
+        saveUserData(); 
     };
 
-    // 4. 清除資料
+    // 4. 清除與提示
     function clearUserData() {
         if(confirm('確定要清除所有紀錄並重置嗎？')) {
             localStorage.removeItem(STORAGE_KEY);
-            location.reload(); // 重新整理頁面
+            location.reload(); 
         }
     }
 
-    // 5. 提示訊息 UI
     function showToast(msg) {
         const toast = document.createElement('div');
         toast.innerText = msg;
@@ -1707,11 +1701,11 @@
         }, 2000);
     }
 
-    // 頁面載入後自動讀取
     window.addEventListener('load', loadUserData);
 </script>
 </body>
 </html>
+
 
 
 
