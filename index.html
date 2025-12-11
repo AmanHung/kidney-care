@@ -242,6 +242,11 @@
             <p style="color:#666; font-size:0.95rem; margin-bottom:20px; text-align:left; padding:0 10px;">
                 請輸入您的基本資料，系統將依據您的狀況 (慢性腎衰竭 / 糖尿病 / 心衰竭) 提供個人化的用藥與飲食建議。
             </p>
+            <div style="text-align:right; margin-bottom:10px;">
+            <button onclick="clearUserData()" style="background:#f5f5f5; border:1px solid #ddd; color:#666; padding:6px 12px; border-radius:20px; font-size:0.85rem; cursor:pointer; font-weight:bold;">
+                🗑️ 清除紀錄 / 重設
+            </button>
+        </div>
 
             <div class="input-group"><label>1. 年齡</label><div class="select-wrapper">
                 <select id="kfre-age" onchange="updateAllRisks()">
@@ -1567,9 +1572,147 @@
     }
    
 </script>
+<script>
+    // ==========================================
+    // 💾 基礎個人化功能：自動存檔模組 (Local Storage)
+    // ==========================================
+    const STORAGE_KEY = 'my_ckd_data_v1';
+    
+    // 1. 儲存資料函式
+    function saveUserData() {
+        // 取得目前所有欄位的值
+        const data = {
+            age: document.getElementById('kfre-age').value,
+            sex: document.getElementById('kfre-sex').value,
+            egfr: document.getElementById('kfre-egfr').value,
+            uacr: document.getElementById('kfre-uacr').value,
+            dm: document.getElementById('kfre-dm').value,
+            hf: document.getElementById('kfre-hf').value,
+            // 藥物勾選狀態
+            meds: {
+                'drug-sglt2': document.getElementById('drug-sglt2').checked,
+                'drug-rasi': document.getElementById('drug-rasi').checked,
+                'drug-bb': document.getElementById('drug-bb').checked,
+                'drug-mra-old': document.getElementById('drug-mra-old').checked,
+                'drug-nsmra': document.getElementById('drug-nsmra').checked,
+                'drug-statin': document.getElementById('drug-statin').checked,
+                'drug-glp1': document.getElementById('drug-glp1').checked
+            }
+        };
+        // 存入手機瀏覽器 (轉成字串)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
 
+    // 2. 載入資料函式
+    function loadUserData() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return; // 沒資料就跳過
+
+        try {
+            const data = JSON.parse(raw);
+
+            // 還原下拉選單
+            if (data.age) document.getElementById('kfre-age').value = data.age;
+            if (data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
+
+            // 還原按鈕選項 (同步 Hidden Input 與 按鈕樣式)
+            restoreOptionGroup('kfre-sex', data.sex);
+            restoreOptionGroup('kfre-uacr', data.uacr);
+            restoreOptionGroup('kfre-dm', data.dm);
+            restoreOptionGroup('kfre-hf', data.hf);
+
+            // 還原藥物勾選狀態
+            if (data.meds) {
+                Object.keys(data.meds).forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    // 確保元素存在才操作 (避免隱藏欄位報錯)
+                    if (checkbox && checkbox.closest('.equip-slot').style.display !== 'none') {
+                        checkbox.checked = data.meds[id];
+                        const slot = checkbox.closest('.equip-slot');
+                        if (data.meds[id]) slot.classList.add('equipped');
+                        else slot.classList.remove('equipped');
+                    }
+                });
+            }
+
+            // 觸發計算更新畫面
+            updateAllRisks();
+            // 特殊處理：心衰竭症狀檢核
+            checkHFSymptoms(data.hf === '1');
+            
+            // 顯示歡迎提示
+            showToast("👋 歡迎回來！已載入您的紀錄");
+
+        } catch (e) {
+            console.error("讀取資料失敗", e);
+        }
+    }
+
+    // 輔助：還原按鈕群組 Active 狀態
+    function restoreOptionGroup(inputId, value) {
+        if (!value) return;
+        const input = document.getElementById(inputId);
+        input.value = value;
+        const group = input.parentElement; 
+        if (group) {
+            const btns = group.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                // 檢查 onclick 內容是否包含該數值
+                if (btn.getAttribute('onclick').includes(`'${value}'`)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    // 3. 攔截(Hook)現有函式，加入自動儲存
+    // 這樣不用修改上面的原始碼
+    
+    const originalUpdateRisks = updateAllRisks;
+    updateAllRisks = function() {
+        originalUpdateRisks(); // 執行原本計算
+        saveUserData();        // 自動存檔
+    };
+
+    const originalToggleEquip = toggleEquip;
+    toggleEquip = function(element, checkboxId) {
+        originalToggleEquip(element, checkboxId); // 執行原本切換
+        saveUserData();                           // 自動存檔
+    };
+
+    // 4. 清除資料
+    function clearUserData() {
+        if(confirm('確定要清除所有紀錄並重置嗎？')) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload(); // 重新整理頁面
+        }
+    }
+
+    // 5. 提示訊息 UI
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.cssText = `
+            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 10px 20px;
+            border-radius: 20px; font-size: 0.9rem; z-index: 3000;
+            animation: fadeIn 0.5s; pointer-events: none;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 2000);
+    }
+
+    // 頁面載入後自動讀取
+    window.addEventListener('load', loadUserData);
+</script>
 </body>
 </html>
+
 
 
 
