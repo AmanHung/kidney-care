@@ -1373,7 +1373,7 @@
 </script>
 
 <div id="help-modal" class="modal" onclick="closeHelp()">
-    <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="padding-bottom: 0; overflow: hidden;">
         <button class="close-modal" onclick="closeHelp()">×</button>
         <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem;">📄 如何看報告？</h3>
         <p style="font-size:1.1rem; color:#666;">請拿出您的抽血報告單，尋找類似下方的文字：</p>
@@ -1402,8 +1402,17 @@
             </p>
         </div>
 
-        <button class="btn" onclick="closeHelp()" style="margin-top:20px;">我知道了</button>
-    </div>
+        <button class="btn" onclick="closeHelp()" style="margin-top:20px; margin-bottom: 25px;">我知道了</button>
+
+        <div style="background: #f5f5f5; margin: 0 -25px; padding: 20px 25px; border-top: 2px dashed #ddd;">
+            <a href="line://home/main?id=@khr7184w" target="_blank" class="btn btn-line" style="margin:0; margin-bottom:10px; text-decoration:none; display:flex; align-items:center; justify-content:center;">
+                📲 我要查詢
+            </a>
+            <p style="font-size:0.95rem; color:#666; margin: 0; font-weight:bold; line-height: 1.5;">
+                請加入豐原醫院官方LINE，<br>綁定後可查詢檢驗報告
+            </p>
+        </div>
+        </div>
 </div>
 
 <script>
@@ -1424,6 +1433,7 @@
 
 </body>
 </html>
+
 
 
 
