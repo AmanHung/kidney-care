@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title data-i18n="app_title">保腎護心助理</title>
+    <title>保腎護心助理 | Kidney & Heart Assistant</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         :root {
@@ -20,25 +20,25 @@
             color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; 
         }
         
-        /* Header & Lang Switcher */
+        /* Header & Lang Selector */
         header { 
-            background: var(--white); padding: 12px 10px; border-radius: 0 0 25px 25px; 
+            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; flex-direction: column; align-items: center;
         }
+        .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px; }
         header::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
             background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%);
         }
-        .header-logo { height: 40px; width: auto; object-fit: contain; }
+        .header-logo { height: 45px; width: auto; object-fit: contain; }
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
-        .header-title-box h1 { margin: 0; font-size: 1.4rem; color: var(--primary); font-weight: 900; line-height: 1.1; }
-        
-        .lang-control { margin-left: 5px; }
-        #lang-select { 
-            padding: 6px 4px; border-radius: 10px; border: 1px solid var(--primary); 
-            font-size: 0.85rem; font-weight: bold; color: var(--primary); outline: none;
-        }
+        .header-title-box h1 { margin: 0; font-size: 1.6rem; color: var(--primary); font-weight: 900; line-height: 1.1; }
+        .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
+
+        .lang-selector { display: flex; gap: 5px; background: #f0f0f0; padding: 4px; border-radius: 12px; width: 100%; justify-content: space-around; }
+        .lang-btn { flex: 1; border: none; background: none; padding: 6px 2px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; color: #666; cursor: pointer; transition: 0.2s; }
+        .lang-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -49,97 +49,85 @@
         .card { background: var(--white); border-radius: 20px; padding: 25px 20px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
         .card h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; font-weight: 900; border-bottom: 3px solid #f0f4f8; padding-bottom: 15px; margin-bottom: 20px; }
 
-        /* Inputs & Buttons UI */
+        /* UI Elements */
         .input-group { margin-bottom: 25px; text-align: left; }
         .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
-        
         .select-wrapper { position: relative; width: 100%; }
-        select { 
-            width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; 
-            font-size: 1.1rem; background: #fff; outline: none; font-weight: bold; color: #222;
-            -webkit-appearance: none; appearance: none; cursor: pointer;
-        }
-        .select-wrapper::after { 
-            content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
-            color: #444; pointer-events: none; font-size: 1.2rem; 
-        }
+        select, input[type="number"] { width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.1rem; outline: none; font-weight: bold; color: #222; appearance: none; }
+        .select-wrapper::after { content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #444; pointer-events: none; }
         
-        /* Pill Buttons */
-        .option-group { display: flex; gap: 8px; width: 100%; flex-wrap: wrap; }
-        .option-btn {
-            flex: 1; min-width: 80px; padding: 12px 5px; 
-            border: 2px solid #ddd; border-radius: 15px;
-            background: #fff; color: #666;
-            font-size: 1rem; font-weight: 900;
-            text-align: center; cursor: pointer;
-            transition: all 0.2s; user-select: none;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .option-btn.active {
-            border-color: var(--primary); background-color: #e8f5e9;
-            color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2);
-        }
+        .option-group { display: flex; gap: 8px; width: 100%; }
+        .option-btn { flex: 1; padding: 12px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
+        .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
+        #group-hf .option-btn.active { border-color: var(--heart); background-color: var(--heart-light); color: var(--heart); }
 
-        /* Buttons (General) */
-        .btn { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; 
-            border: none; padding: 18px; width: 100%; border-radius: 18px; 
-            font-size: 1.2rem; font-weight: 900; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            text-decoration: none; margin-bottom: 15px; transition: transform 0.1s;
-        }
+        .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.2rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.97); }
+        .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
 
-        /* Risk Matrix & Banner */
-        .risk-matrix { display: grid; grid-template-columns: 70px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; background: #fff; font-size: 0.8rem; }
-        .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.1); height: 45px; }
+        /* Risk Matrix */
+        .risk-matrix { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; font-size: 0.8rem; }
+        .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; height: 50px; position: relative; color: rgba(0,0,0,0.3); }
         .matrix-header { background: #f4f4f4; color: #444; font-weight: 900; padding: 5px 0; }
-        .matrix-label { background: #f4f4f4; color: #444; font-weight: 900; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .matrix-label { background: #f4f4f4; color: #444; font-weight: 900; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
-        .active-cell { border: 4px solid #0044cc !important; transform: scale(1.05); z-index: 5; }
+        .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-        .risk-banner { padding: 20px; border-radius: 15px; color: white; text-align: center; margin-bottom: 20px; }
+        .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; animation: fadeIn 0.3s ease; }
+        .risk-banner h3 { margin: 0; font-size: 1.6rem; font-weight: 900; }
+
+        /* List Cards */
+        .list-card { text-align: left; margin-bottom: 25px; border-radius: 15px; overflow: hidden; border: 2px solid #ddd; }
+        .list-head { padding: 15px; font-weight: 900; color: white; font-size: 1.2rem; }
+        .list-body { padding: 20px; font-size: 1.05rem; background: #fff; }
+        .list-item { margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 12px; }
+        .list-title { font-weight: 900; display: block; color: #000; margin-bottom: 3px; }
 
         /* Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ccc; z-index: 1000; }
         .nav-item { text-align: center; color: #999; font-size: 0.85rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
+        .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 2px; }
 
         .hidden { display: none !important; }
-
-        /* Symptoms & Status */
-        .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
-        .status-panel { display: flex; align-items: center; padding: 15px; border-radius: 15px; margin-top: 20px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .status-icon { font-size: 2.5rem; margin-right: 15px; }
         
-        /* Equip Grid */
+        /* Equip Box */
         .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
-        .equip-slot { background: #fff; border: 2px dashed #ccc; border-radius: 15px; padding: 12px 8px; text-align: center; cursor: pointer; min-height: 120px; display: flex; flex-direction: column; justify-content: center; position: relative; }
-        .equip-slot.equipped { border-style: solid; border-width: 3px; border-color: var(--primary); }
-        .equip-slot.equipped::after { content: '✓'; position: absolute; top: 5px; right: 8px; color: var(--primary); font-weight: bold; }
-        .equip-name { font-weight: 900; font-size: 0.95rem; display: block; }
-        .equip-desc { font-size: 0.8rem; color: #666; }
+        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 12px 8px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; min-height: 120px; justify-content: center; }
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
+        .equip-name { font-size: 1rem; font-weight: 900; display: block; }
+        .equip-desc { font-size: 0.8rem; color: #666; display: block; margin-top: 2px; }
+        .equip-brand { font-size: 0.75rem; color: #999; font-style: italic; }
+        .equip-slot.equipped::after { content: '✓'; position: absolute; top: -10px; right: -5px; background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* Modal */
+        .status-panel { display: flex; align-items: center; padding: 15px; border-radius: 15px; color: white; transition: 0.5s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .status-icon { font-size: 2.5rem; margin-right: 15px; }
+        .status-title { font-size: 1.4rem; font-weight: 900; }
+        
+        /* Modal & Traffic */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
-        .modal-content { background: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 20px; position: relative; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 20px; position: relative; }
+        .traffic-container { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .light { width: 60px; height: 60px; border-radius: 50%; background: #ddd; opacity: 0.2; transition: 0.3s; }
+        .light.on { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px currentColor; }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="logo_left.png" alt="Hospital" class="header-logo">
-    <div class="header-title-box">
-        <h1 data-i18n="header_title">保腎護心助理</h1>
+    <div class="header-top">
+        <img src="logo_left.png" alt="Hospital" class="header-logo" onerror="this.style.opacity='0.2'">
+        <div class="header-title-box">
+            <h1 data-i18n="app-title">保腎護心助理</h1>
+            <p data-i18n="app-subtitle">心/腎/糖 智慧照護</p>
+        </div>
+        <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
     </div>
-    <div class="lang-control">
-        <select id="lang-select" onchange="changeLang(this.value)">
-            <option value="zh">繁中</option>
-            <option value="en">EN</option>
-            <option value="id">ID (印尼)</option>
-            <option value="vi">VI (越)</option>
-        </select>
+    <div class="lang-selector">
+        <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" onclick="setLang('en')">English</button>
+        <button class="lang-btn" onclick="setLang('vi')">Tiếng Việt</button>
+        <button class="lang-btn" onclick="setLang('id')">Indonesian</button>
     </div>
 </header>
 
@@ -147,13 +135,16 @@
 
     <div id="tab-home" class="section active">
         <div class="card">
-            <h2 data-i18n="home_card_title">📊 風險評估</h2>
-            
+            <h2 data-i18n="home-title">📊 風險評估</h2>
+            <div style="text-align:right; margin-bottom:15px;">
+                <button onclick="clearUserData()" style="background:#f5f5f5; border:1px solid #ddd; color:#666; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;" data-i18n="btn-reset">重設紀錄</button>
+            </div>
+
             <div class="input-group">
-                <label data-i18n="label_age">1. 年齡</label>
+                <label data-i18n="label-age">1. 年齡</label>
                 <div class="select-wrapper">
-                    <select id="kfre-age" onchange="updateAll()">
-                        <option value="" disabled selected data-i18n="opt_placeholder">請選擇...</option>
+                    <select id="kfre-age" onchange="updateAllRisks()">
+                        <option value="" disabled selected data-i18n="opt-select">請選擇...</option>
                         <option value="20">20-29</option><option value="30">30-39</option><option value="40">40-49</option>
                         <option value="50">50-59</option><option value="60">60-69</option><option value="70">70-79</option>
                         <option value="80">80-89</option><option value="90">90+</option>
@@ -162,81 +153,65 @@
             </div>
 
             <div class="input-group">
-                <label data-i18n="label_sex">2. 性別</label>
+                <label data-i18n="label-sex">2. 性別</label>
                 <div class="option-group" id="group-sex">
-                    <div class="option-btn" onclick="setOpt('kfre-sex', '1', this)" data-i18n="opt_male">男</div>
-                    <div class="option-btn" onclick="setOpt('kfre-sex', '0', this)" data-i18n="opt_female">女</div>
+                    <div class="option-btn" onclick="setOption('kfre-sex', '1', this)" data-i18n="sex-m">男</div>
+                    <div class="option-btn" onclick="setOption('kfre-sex', '0', this)" data-i18n="sex-f">女</div>
                 </div>
-                <input type="hidden" id="kfre-sex" onchange="updateAll()">
+                <input type="hidden" id="kfre-sex">
             </div>
-
+            
             <div class="input-group">
-                <label>3. eGFR (腎絲球過濾率)</label>
+                <label>3. eGFR <span onclick="showHelp('egfr')" style="color:#2196f3; font-size:0.9rem; text-decoration:underline; cursor:pointer;">(What's this?)</span></label>
                 <div class="select-wrapper">
-                    <select id="kfre-egfr" onchange="updateAll()">
-                        <option value="" disabled selected data-i18n="opt_placeholder">請選擇...</option>
-                        <option value="90">≥ 90</option><option value="75">60-89</option>
-                        <option value="52">45-59</option><option value="37">30-44</option>
-                        <option value="22">15-29</option><option value="10">< 15</option>
+                    <select id="kfre-egfr" onchange="updateAllRisks()">
+                        <option value="" disabled selected data-i18n="opt-select">請選擇...</option>
+                        <option value="90">≥ 90 (G1)</option><option value="75">60-89 (G2)</option>
+                        <option value="52">45-59 (G3a)</option><option value="37">30-44 (G3b)</option>
+                        <option value="22">15-29 (G4)</option><option value="10">&lt; 15 (G5)</option>
                     </select>
                 </div>
             </div>
 
             <div class="input-group">
-                <label>4. UACR (尿蛋白狀況)</label>
+                <label>4. UACR (Albuminuria)</label>
                 <div class="option-group" id="group-uacr">
-                    <div class="option-btn" onclick="setOpt('kfre-uacr', '10', this)"><30</div>
-                    <div class="option-btn" onclick="setOpt('kfre-uacr', '150', this)">30-300</div>
-                    <div class="option-btn" onclick="setOpt('kfre-uacr', '500', this)">>300</div>
+                    <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">&lt;30<br><span style="font-size:0.7rem;" data-i18n="uacr-n">正常</span></div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">30-300<br><span style="font-size:0.7rem;" data-i18n="uacr-m">微量</span></div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '500', this)">&gt;300<br><span style="font-size:0.7rem;" data-i18n="uacr-s">嚴重</span></div>
                 </div>
-                <input type="hidden" id="kfre-uacr" onchange="updateAll()">
+                <input type="hidden" id="kfre-uacr" value="10">
             </div>
 
             <div class="input-group">
-                <label data-i18n="label_dm">5. 糖尿病 (DM)</label>
-                <div class="option-group">
-                    <div class="option-btn" onclick="setOpt('kfre-dm', '0', this)" data-i18n="opt_no">無</div>
-                    <div class="option-btn" onclick="setOpt('kfre-dm', '1', this)" data-i18n="opt_yes">有</div>
+                <label data-i18n="label-dm">5. 糖尿病 (DM)</label>
+                <div class="option-group" id="group-dm">
+                    <div class="option-btn" onclick="setOption('kfre-dm', '0', this)" data-i18n="opt-no">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-dm', '1', this)" data-i18n="opt-yes">有</div>
                 </div>
-                <input type="hidden" id="kfre-dm" onchange="updateAll()">
+                <input type="hidden" id="kfre-dm">
             </div>
 
             <div class="input-group">
-                <label data-i18n="label_hf">6. 心衰竭 (HF)</label>
-                <div class="option-group">
-                    <div class="option-btn" onclick="setOpt('kfre-hf', '0', this); toggleHF(false)" data-i18n="opt_no">無</div>
-                    <div class="option-btn" onclick="setOpt('kfre-hf', '1', this); toggleHF(true)" data-i18n="opt_yes">有</div>
+                <label data-i18n="label-hf">6. 心衰竭 (HF)</label>
+                <div class="option-group" id="group-hf">
+                    <div class="option-btn" onclick="setOption('kfre-hf', '0', this)" data-i18n="opt-no">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-hf', '1', this)" data-i18n="opt-yes">有</div>
                 </div>
-                <input type="hidden" id="kfre-hf" onchange="updateAll()">
-                
-                <div id="hf-check" class="symptom-box hidden">
-                    <p style="color:#c2185b; font-weight:bold;" data-i18n="hf_symptom_title">🔍 症狀自我檢查：</p>
-                    <label><input type="checkbox"> <span data-i18n="hf_sym1">下肢水腫</span></label><br>
-                    <label><input type="checkbox"> <span data-i18n="hf_sym2">平躺會喘</span></label>
-                </div>
+                <input type="hidden" id="kfre-hf">
             </div>
 
-            <div id="result-area" class="hidden" style="margin-top:30px;">
+            <div id="unified-result" class="hidden">
                 <div id="risk-banner" class="risk-banner">
                     <h3 id="risk-title">--</h3>
                     <p id="risk-desc">--</p>
                 </div>
                 
-                <div class="risk-matrix">
-                    <div class="matrix-header"></div><div class="matrix-header"><30</div><div class="matrix-header">30-299</div><div class="matrix-header">>300</div>
-                    <div class="matrix-label">>90</div><div class="matrix-cell bg-g" id="c-1-1"></div><div class="matrix-cell bg-g" id="c-1-2"></div><div class="matrix-cell bg-o" id="c-1-3"></div>
-                    <div class="matrix-label">60-89</div><div class="matrix-cell bg-g" id="c-2-1"></div><div class="matrix-cell bg-g" id="c-2-2"></div><div class="matrix-cell bg-o" id="c-2-3"></div>
-                    <div class="matrix-label">45-59</div><div class="matrix-cell bg-y" id="c-3a-1"></div><div class="matrix-cell bg-o" id="c-3a-2"></div><div class="matrix-cell bg-r" id="c-3a-3"></div>
-                    <div class="matrix-label">30-44</div><div class="matrix-cell bg-o" id="c-3b-1"></div><div class="matrix-cell bg-r" id="c-3b-2"></div><div class="matrix-cell bg-r" id="c-3b-3"></div>
-                    <div class="matrix-label">15-29</div><div class="matrix-cell bg-r" id="c-4-1"></div><div class="matrix-cell bg-r" id="c-4-2"></div><div class="matrix-cell bg-r" id="c-4-3"></div>
-                    <div class="matrix-label"><15</div><div class="matrix-cell bg-r" id="c-5-1"></div><div class="matrix-cell bg-r" id="c-5-2"></div><div class="matrix-cell bg-r" id="c-5-3"></div>
-                </div>
-
-                <div style="background:#e1f5fe; padding:15px; border-radius:15px; border:2px solid #b3e5fc;">
-                    <p style="font-weight:900; color:#01579b;" data-i18n="kfre_title">📅 未來洗腎風險預測</p>
+                <div id="kfre-result-box" style="margin-top:20px; padding:20px; border-radius:15px; border:2px solid #ddd;">
+                    <h4 data-i18n="kfre-title">📅 未來洗腎風險預測</h4>
                     <div style="display:flex; justify-content:space-around;">
-                        <div><small data-i18n="kfre_2yr">2年內</small><br><span id="res-2yr" style="font-size:1.8rem; font-weight:900;">--</span></div>
-                        <div><small data-i18n="kfre_5yr">5年內</small><br><span id="res-5yr" style="font-size:1.8rem; font-weight:900;">--</span></div>
+                        <div><div style="font-size:0.8rem;" data-i18n="kfre-2yr">2年內</div><div id="res-2yr" style="font-size:1.8rem; font-weight:900;">--%</div></div>
+                        <div><div style="font-size:0.8rem;" data-i18n="kfre-5yr">5年內</div><div id="res-5yr" style="font-size:1.8rem; font-weight:900;">--%</div></div>
                     </div>
                 </div>
             </div>
@@ -245,85 +220,56 @@
 
     <div id="tab-meds" class="section">
         <div class="card">
-            <h2 data-i18n="nav_meds">💊 用藥建議</h2>
-            <div id="med-list" class="hidden" style="text-align:left;">
-                </div>
-            <div id="med-empty" data-i18n="empty_hint">請先完成首頁評估</div>
+            <h2 data-i18n="nav-meds">💊 用藥建議</h2>
+            <div id="med-content">
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);" data-i18n="med-g">🟢 核心治療</div><div class="list-body" id="list-med-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;" data-i18n="med-y">🟡 需謹慎</div><div class="list-body" id="list-med-y"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);" data-i18n="med-r">🔴 應避免</div><div class="list-body" id="list-med-r"></div></div>
+            </div>
         </div>
 
-        <div class="card" style="border:3px solid #ff9800; background:#fffde7;">
-            <h2 style="color:#e65100;" data-i18n="sickday_title">🤢 生病日停藥守則</h2>
-            <p style="font-size:0.9rem; color:#666;" data-i18n="sickday_desc">脫水、腹瀉、高燒時，請諮詢醫療人員是否暫停：</p>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                <div class="option-btn" style="border-color:#ffcc80; height:auto; flex-direction:column;">
-                    <span style="font-size:1.5rem;">🍬</span>
-                    <span style="font-size:0.8rem;">SGLT2i / Metformin</span>
-                </div>
-                <div class="option-btn" style="border-color:#ffcc80; height:auto; flex-direction:column;">
-                    <span style="font-size:1.5rem;">🩸</span>
-                    <span style="font-size:0.8rem;">ACEi / ARB</span>
-                </div>
-                <div class="option-btn" style="border-color:#ffcc80; height:auto; flex-direction:column;">
-                    <span style="font-size:1.5rem;">💧</span>
-                    <span style="font-size:0.8rem;">Diuretics</span>
-                </div>
-                <div class="option-btn" style="border-color:#ffcc80; height:auto; flex-direction:column;">
-                    <span style="font-size:1.5rem;">💊</span>
-                    <span style="font-size:0.8rem;">NSAIDs</span>
-                </div>
+        <div class="card">
+            <h2 data-i18n="sickday-title">🤢 生病日停藥守則</h2>
+            <p style="font-size:0.9rem; color:#d32f2f; font-weight:bold;" data-i18n="sickday-desc">當您發生拉肚子、發燒、脫水時，請諮詢醫師是否暫停：</p>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
+                <div style="padding:10px; border:2px solid #ffcc80; border-radius:10px; font-weight:bold;">SGLT2i / Metformin</div>
+                <div style="padding:10px; border:2px solid #ffcc80; border-radius:10px; font-weight:bold;">ACEi / ARB</div>
+                <div style="padding:10px; border:2px solid #ffcc80; border-radius:10px; font-weight:bold;">Diuretics</div>
+                <div style="padding:10px; border:2px solid #ffcc80; border-radius:10px; font-weight:bold;">NSAIDs</div>
             </div>
         </div>
     </div>
 
     <div id="tab-diet" class="section">
         <div class="card">
-            <h2 data-i18n="nav_diet">🥦 飲食指南</h2>
-            <div id="diet-content" class="hidden" style="text-align:left;">
-                <div style="background:#f1f8e9; padding:15px; border-radius:15px; border-left:6px solid #4caf50; margin-bottom:15px;">
-                    <p style="margin:0; font-weight:900; color:#2e7d32;" data-i18n="diet_protein_title">🥩 蛋白質建議</p>
-                    <span id="diet-protein-val" style="font-size:2rem; font-weight:900;">--</span> g/kg/day
+            <h2 data-i18n="nav-diet">🥦 飲食建議</h2>
+            <div id="diet-content">
+                <div id="protein-box" style="background:#e8f5e9; padding:15px; border-radius:15px; margin-bottom:15px; border:2px dashed var(--primary);">
+                    <div style="font-weight:900; color:var(--primary);" data-i18n="diet-p-title">🥩 每日蛋白質建議</div>
+                    <div id="protein-val" style="font-size:2rem; font-weight:900; color:var(--primary);">-- g/kg</div>
                 </div>
-                <ul id="diet-list" style="padding-left:20px; line-height:2;">
-                    </ul>
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);" data-i18n="diet-g">🟢 建議攝取</div><div class="list-body" id="list-diet-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);" data-i18n="diet-r">🔴 應避免</div><div class="list-body" id="list-diet-r"></div></div>
             </div>
-            <div id="diet-empty" data-i18n="empty_hint">請先完成首頁評估</div>
-            <img src="CKD_diet.png" style="width:100%; margin-top:20px; border-radius:15px;">
+        </div>
+        
+        <div class="card">
+            <h2 data-i18n="food-search-title">🚦 食物紅綠燈查詢</h2>
+            <input type="text" id="food-search" oninput="filterFood()" style="width:100%; padding:15px; border-radius:30px; border:2px solid #ddd; margin-bottom:15px;" placeholder="Search food...">
+            <div id="food-list" style="text-align:left;"></div>
         </div>
     </div>
 
-    <div id="tab-armor" class="section">
+    <div id="tab-quiz" class="section">
         <div class="card">
-            <h2 data-i18n="armor_title">🛡️ 護腎防禦檢查</h2>
-            <p style="font-size:0.9rem;" data-i18n="armor_desc">請勾選您正在服用的藥物，檢視保護力：</p>
-            
-            <div class="equip-grid">
-                <div class="equip-slot" id="slot-sglt2" onclick="toggleEquip('drug-sglt2', this)">
-                    <span class="equip-name">SGLT2i</span>
-                    <span class="equip-desc" data-i18n="gear_sglt2">排糖藥</span>
-                    <input type="checkbox" id="drug-sglt2" class="hidden">
+            <h2 data-i18n="armor-title">🛡️ 護腎裝備檢查</h2>
+            <p style="font-size:0.9rem; color:#666;" data-i18n="armor-desc">請勾選您正在使用的藥物，檢視保護力：</p>
+            <div class="equip-grid" id="armor-grid">
                 </div>
-                <div class="equip-slot" id="slot-rasi" onclick="toggleEquip('drug-rasi', this)">
-                    <span class="equip-name">ACEi / ARB</span>
-                    <span class="equip-desc" data-i18n="gear_rasi">血壓藥</span>
-                    <input type="checkbox" id="drug-rasi" class="hidden">
-                </div>
-                <div class="equip-slot" id="slot-statin" onclick="toggleEquip('drug-statin', this)">
-                    <span class="equip-name">Statins</span>
-                    <span class="equip-desc" data-i18n="gear_statin">降血脂</span>
-                    <input type="checkbox" id="drug-statin" class="hidden">
-                </div>
-                <div class="equip-slot" id="slot-hf" style="display:none;" onclick="toggleEquip('drug-arni', this)">
-                    <span class="equip-name">ARNI / BB</span>
-                    <span class="equip-desc" data-i18n="gear_hf">心衰竭專用</span>
-                    <input type="checkbox" id="drug-arni" class="hidden">
-                </div>
-            </div>
-
-            <div id="status-panel" class="status-panel" style="background: #78909c;">
-                <div class="status-icon">🛡️</div>
-                <div style="text-align:left;">
-                    <div id="status-title" style="font-weight:900; font-size:1.2rem;" data-i18n="status_0">尚未建立防護</div>
-                    <div id="status-msg" style="font-size:0.85rem;" data-i18n="status_msg_0">請諮詢藥師或醫師建立核心治療。</div>
+            <div id="status-panel" class="status-panel" style="background:#eee; color:#666;">
+                <div class="status-icon">⚠️</div>
+                <div class="status-info">
+                    <div class="status-title" id="status-title">---</div>
                 </div>
             </div>
         </div>
@@ -332,202 +278,257 @@
 </div>
 
 <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span data-i18n="nav_home">首頁</span></div>
-    <div class="nav-item" onclick="switchTab('meds')"><span class="nav-icon">💊</span><span data-i18n="nav_meds">用藥</span></div>
-    <div class="nav-item" onclick="switchTab('diet')"><span class="nav-icon">🥦</span><span data-i18n="nav_diet">飲食</span></div>
-    <div class="nav-item" onclick="switchTab('armor')"><span class="nav-icon">🛡️</span><span data-i18n="nav_armor">防禦</span></div>
+    <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span data-i18n="nav-home">首頁</span></div>
+    <div class="nav-item" onclick="switchTab('meds')"><span class="nav-icon">💊</span><span data-i18n="nav-meds">用藥</span></div>
+    <div class="nav-item" onclick="switchTab('diet')"><span class="nav-icon">🥦</span><span data-i18n="nav-diet">飲食</span></div>
+    <div class="nav-item" onclick="switchTab('quiz')"><span class="nav-icon">🛡️</span><span data-i18n="nav-armor">裝備</span></div>
 </nav>
 
 <script>
-    // --- 🌍 i18n Translations ---
-    const translations = {
+    // --- 🌍 多國語言字典 ---
+    const i18n = {
         zh: {
-            app_title: "保腎護心助理",
-            header_title: "保腎護心助理",
-            nav_home: "首頁", nav_meds: "用藥", nav_diet: "飲食", nav_armor: "防禦",
-            home_card_title: "📊 風險評估",
-            label_age: "1. 年齡", label_sex: "2. 性別", label_dm: "5. 糖尿病", label_hf: "6. 心衰竭",
-            opt_placeholder: "請選擇...", opt_male: "男", opt_female: "女", opt_yes: "有", opt_no: "無",
-            hf_symptom_title: "🔍 症狀自我檢查：", hf_sym1: "下肢水腫", hf_sym2: "平躺會喘",
-            kfre_title: "📅 未來洗腎風險預測", kfre_2yr: "2年內", kfre_5yr: "5年內",
-            risk_low: "低風險", risk_med: "中度風險", risk_high: "高風險", risk_vhigh: "超高風險",
-            empty_hint: "請先完成首頁評估",
-            sickday_title: "🤢 生病日停藥守則", sickday_desc: "脫水、腹瀉、高燒時，請諮詢醫療人員是否暫停：",
-            diet_protein_title: "🥩 蛋白質建議",
-            armor_title: "🛡️ 護腎防禦檢查", armor_desc: "請勾選您正在服用的藥物，檢視保護力：",
-            gear_sglt2: "排糖藥", gear_rasi: "基礎血壓藥", gear_statin: "降血脂", gear_hf: "心衰竭救命藥",
-            status_0: "尚未建立防護", status_1: "初步防禦", status_2: "進階保護", status_3: "完整防護網",
-            status_msg_0: "請諮詢藥師建立核心治療。", status_msg_1: "很好，已開始基礎保護。", status_msg_2: "防護力強，持續維持。", status_msg_3: "完美！心腎得到極致保護。"
+            "app-title": "保腎護心助理", "app-subtitle": "心/腎/糖 智慧照護",
+            "home-title": "📊 風險評估", "btn-reset": "重設紀錄",
+            "label-age": "1. 年齡", "label-sex": "2. 性別", "label-dm": "5. 糖尿病 (DM)", "label-hf": "6. 心衰竭 (HF)",
+            "sex-m": "男", "sex-f": "女", "opt-select": "請選擇...", "opt-yes": "有", "opt-no": "無",
+            "uacr-n": "正常", "uacr-m": "微量", "uacr-s": "嚴重",
+            "kfre-title": "📅 未來洗腎風險預測", "kfre-2yr": "2年內", "kfre-5yr": "5年內",
+            "nav-home": "首頁", "nav-meds": "用藥", "nav-diet": "飲食", "nav-armor": "裝備",
+            "med-g": "🟢 核心治療", "med-y": "🟡 需謹慎", "med-r": "🔴 應避免",
+            "sickday-title": "🤢 生病日停藥守則", "sickday-desc": "當您發生腹瀉、發燒、脫水時，請諮詢醫師暫停以下藥物：",
+            "diet-p-title": "🥩 每日蛋白質建議", "diet-g": "🟢 建議攝取", "diet-r": "🔴 應避免",
+            "food-search-title": "🚦 食物紅綠燈", "armor-title": "🛡️ 護腎裝備檢查", "armor-desc": "請勾選您目前正在服用的藥物：",
+            "rank-0": "尚未建立防護", "rank-1": "基礎防護", "rank-2": "穩固防護", "rank-3": "強力防護", "rank-4": "完美防護"
         },
         en: {
-            app_title: "Kidney & Heart Care",
-            header_title: "Kidney & Heart Assistant",
-            nav_home: "Home", nav_meds: "Meds", nav_diet: "Diet", nav_armor: "Armor",
-            home_card_title: "📊 Risk Assessment",
-            label_age: "1. Age", label_sex: "2. Sex", label_dm: "5. Diabetes", label_hf: "6. Heart Failure",
-            opt_placeholder: "Select...", opt_male: "Male", opt_female: "Female", opt_yes: "Yes", opt_no: "No",
-            hf_symptom_title: "🔍 Symptom Check:", hf_sym1: "Swollen legs", hf_sym2: "Short of breath",
-            kfre_title: "📅 Kidney Failure Risk (KFRE)", kfre_2yr: "In 2 yrs", kfre_5yr: "In 5 yrs",
-            risk_low: "Low Risk", risk_med: "Moderate Risk", risk_high: "High Risk", risk_vhigh: "Very High Risk",
-            empty_hint: "Please complete assessment first",
-            sickday_title: "🤢 Sick Day Rules", sickday_desc: "If dehydrated, fever or diarrhea, consult to stop:",
-            diet_protein_title: "🥩 Protein Goal",
-            armor_title: "🛡️ Defense Checker", armor_desc: "Check your current medications to see your defense:",
-            gear_sglt2: "SGLT2i (Sugar-out)", gear_rasi: "ACEi/ARB (BP)", gear_statin: "Statins (Lipid)", gear_hf: "HF Therapy",
-            status_0: "No Defense", status_1: "Basic Defense", status_2: "Advanced Protection", status_3: "Full Shield",
-            status_msg_0: "Consult your doctor for core therapy.", status_msg_1: "Good, basic protection started.", status_msg_2: "Strong protection, keep going.", status_msg_3: "Perfect! Heart & Kidney are safe."
-        },
-        id: {
-            app_title: "Asisten Ginjal & Jantung",
-            header_title: "Asisten Ginjal & Jantung",
-            nav_home: "Beranda", nav_meds: "Obat", nav_diet: "Diet", nav_armor: "Pertahanan",
-            home_card_title: "📊 Penilaian Risiko",
-            label_age: "1. Usia", label_sex: "2. Jenis Kelamin", label_dm: "5. Diabetes (Gula)", label_hf: "6. Gagal Jantung",
-            opt_placeholder: "Pilih...", opt_male: "Pria", opt_female: "Wanita", opt_yes: "Ada", opt_no: "Tidak",
-            hf_symptom_title: "🔍 Cek Gejala:", hf_sym1: "Kaki bengkak", hf_sym2: "Sesak napas saat berbaring",
-            kfre_title: "📅 Risiko Gagal Ginjal", kfre_2yr: " dlm 2 thn", kfre_5yr: " dlm 5 thn",
-            risk_low: "Risiko Rendah", risk_med: "Risiko Sedang", risk_high: "Risiko Tinggi", risk_vhigh: "Risiko Sangat Tinggi",
-            empty_hint: "Harap isi penilaian dulu",
-            sickday_title: "🤢 Aturan Saat Sakit", sickday_desc: "Jika demam, diare, atau kurang cairan, tanyakan dokter untuk stop:",
-            diet_protein_title: "🥩 Saran Protein",
-            armor_title: "🛡️ Cek Pertahanan", armor_desc: "Centang obat yang Anda minum:",
-            gear_sglt2: "Obat Gula (SGLT2i)", gear_rasi: "Obat Tensi (ACEi/ARB)", gear_statin: "Obat Kolesterol", gear_hf: "Obat Gagal Jantung",
-            status_0: "Belum Ada Pertahanan", status_1: "Pertahanan Awal", status_2: "Perlindungan Lanjut", status_3: "Pertahanan Sempurna",
-            status_msg_0: "Konsultasikan dengan apoteker/dokter.", status_msg_1: "Bagus, perlindungan dasar dimulai.", status_msg_2: "Perlindungan kuat, pertahankan.", status_msg_3: "Sempurna! Jantung & Ginjal terlindungi."
+            "app-title": "Kidney & Heart Assistant", "app-subtitle": "Smart Care for CKD/HF/DM",
+            "home-title": "📊 Risk Assessment", "btn-reset": "Reset",
+            "label-age": "1. Age", "label-sex": "2. Gender", "label-dm": "5. Diabetes (DM)", "label-hf": "6. Heart Failure (HF)",
+            "sex-m": "Male", "sex-f": "Female", "opt-select": "Select...", "opt-yes": "Yes", "opt-no": "No",
+            "uacr-n": "Normal", "uacr-m": "Micro", "uacr-s": "Macro",
+            "kfre-title": "📅 Kidney Failure Risk", "kfre-2yr": "In 2yr", "kfre-5yr": "In 5yr",
+            "nav-home": "Home", "nav-meds": "Meds", "nav-diet": "Diet", "nav-armor": "Armor",
+            "med-g": "🟢 Core Therapy", "med-y": "🟡 Caution", "med-r": "🔴 Avoid",
+            "sickday-title": "🤢 Sick Day Rules", "sickday-desc": "If you have diarrhea, fever, or dehydration, ask your doctor about stopping:",
+            "diet-p-title": "🥩 Daily Protein", "diet-g": "🟢 Recommended", "diet-r": "🔴 Avoid",
+            "food-search-title": "🚦 Food Traffic Light", "armor-title": "🛡️ Equipment Check", "armor-desc": "Check the meds you are currently taking:",
+            "rank-0": "No Protection", "rank-1": "Basic", "rank-2": "Solid", "rank-3": "Strong", "rank-4": "Perfect"
         },
         vi: {
-            app_title: "Trợ lý Thận & Tim",
-            header_title: "Trợ lý Thận & Tim",
-            nav_home: "Trang chủ", nav_meds: "Thuốc", nav_diet: "Ăn uống", nav_armor: "Phòng vệ",
-            home_card_title: "📊 Đánh giá rủi ro",
-            label_age: "1. Tuổi", label_sex: "2. Giới tính", label_dm: "5. Tiểu đường", label_hf: "6. Suy tim",
-            opt_placeholder: "Chọn...", opt_male: "Nam", opt_female: "Nữ", opt_yes: "Có", opt_no: "Không",
-            hf_symptom_title: "🔍 Kiểm tra triệu chứng:", hf_sym1: "Phù chân", hf_sym2: "Khó thở khi nằm",
-            kfre_title: "📅 Dự đoán rủi ro chạy thận", kfre_2yr: "Trong 2 năm", kfre_5yr: "Trong 5 năm",
-            risk_low: "Rủi ro thấp", risk_med: "Rủi ro trung bình", risk_high: "Rủi ro cao", risk_vhigh: "Rủi ro rất cao",
-            empty_hint: "Vui lòng hoàn thành đánh giá",
-            sickday_title: "🤢 Quy tắc khi bị bệnh", sickday_desc: "Nếu mất nước, sốt hoặc tiêu chảy, hãy hỏi bác sĩ để dừng:",
-            diet_protein_title: "🥩 Gợi ý Protein",
-            armor_title: "🛡️ Kiểm tra phòng vệ", armor_desc: "Đánh dấu loại thuốc bạn đang uống:",
-            gear_sglt2: "Thuốc tiểu đường (SGLT2i)", gear_rasi: "Thuốc huyết áp (ACEi/ARB)", gear_statin: "Thuốc mỡ máu", gear_hf: "Thuốc suy tim",
-            status_0: "Chưa có phòng vệ", status_1: "Phòng vệ ban đầu", status_2: "Bảo vệ nâng cao", status_3: "Phòng vệ hoàn hảo",
-            status_msg_0: "Hãy hỏi dược sĩ hoặc bác sĩ.", status_msg_1: "Tốt, đã bắt đầu bảo vệ cơ bản.", status_msg_2: "Bảo vệ mạnh mẽ, hãy duy trì.", status_msg_3: "Hoàn hảo! Tim & Thận được bảo vệ tối đa."
+            "app-title": "Trợ lý Thận & Tim", "app-subtitle": "Chăm sóc CKD/HF/DM",
+            "home-title": "📊 Đánh giá rủi ro", "btn-reset": "Đặt lại",
+            "label-age": "1. Tuổi", "label-sex": "2. Giới tính", "label-dm": "5. Tiểu đường", "label-hf": "6. Suy tim",
+            "sex-m": "Nam", "sex-f": "Nữ", "opt-select": "Chọn...", "opt-yes": "Có", "opt-no": "Không",
+            "uacr-n": "Bình thường", "uacr-m": "Nhẹ", "uacr-s": "Nặng",
+            "kfre-title": "📅 Nguy cơ suy thận", "kfre-2yr": "Trong 2 năm", "kfre-5yr": "Trong 5 năm",
+            "nav-home": "Trang chủ", "nav-meds": "Thuốc", "nav-diet": "Ăn uống", "nav-armor": "Trang bị",
+            "med-g": "🟢 Điều trị chính", "med-y": "🟡 Thận trọng", "med-r": "🔴 Tránh dùng",
+            "sickday-title": "🤢 Quy tắc ngày ốm", "sickday-desc": "Nếu bị tiêu chảy, sốt hoặc mất nước, hãy hỏi bác sĩ về việc ngừng thuốc:",
+            "diet-p-title": "🥩 Đạm hàng ngày", "diet-g": "🟢 Nên ăn", "diet-r": "🔴 Cần tránh",
+            "food-search-title": "🚦 Đèn giao thông thực phẩm", "armor-title": "🛡️ Kiểm tra trang bị", "armor-desc": "Đánh dấu các loại thuốc bạn đang uống:",
+            "rank-0": "Chưa bảo vệ", "rank-1": "Cơ bản", "rank-2": "Ổn định", "rank-3": "Mạnh mẽ", "rank-4": "Hoàn hảo"
+        },
+        id: {
+            "app-title": "Asisten Ginjal & Jantung", "app-subtitle": "Perawatan CKD/HF/DM",
+            "home-title": "📊 Evaluasi Risiko", "btn-reset": "Atur Ulang",
+            "label-age": "1. Usia", "label-sex": "2. Jenis Kelamin", "label-dm": "5. Diabetes", "label-hf": "6. Gagal Jantung",
+            "sex-m": "Laki-laki", "sex-f": "Perempuan", "opt-select": "Pilih...", "opt-yes": "Ya", "opt-no": "Tidak",
+            "uacr-n": "Normal", "uacr-m": "Ringan", "uacr-s": "Berat",
+            "kfre-title": "📅 Risiko Gagal Ginjal", "kfre-2yr": " dlm 2 thn", "kfre-5yr": "dlm 5 thn",
+            "nav-home": "Beranda", "nav-meds": "Obat", "nav-diet": "Diet", "nav-armor": "Armor",
+            "med-g": "🟢 Terapi Utama", "med-y": "🟡 Hati-hati", "med-r": "🔴 Hindari",
+            "sickday-title": "🤢 Aturan Hari Sakit", "sickday-desc": "Jika diare, demam, atau dehidrasi, tanya dokter tentang menghentikan:",
+            "diet-p-title": "🥩 Protein Harian", "diet-g": "🟢 Disarankan", "diet-r": "🔴 Hindari",
+            "food-search-title": "🚦 Lampu Lalu Lintas Makanan", "armor-title": "🛡️ Cek Peralatan", "armor-desc": "Centang obat yang Anda minum:",
+            "rank-0": "Belum Terlindungi", "rank-1": "Dasar", "rank-2": "Solid", "rank-3": "Kuat", "rank-4": "Sempurna"
         }
     };
 
     let currentLang = 'zh';
 
-    function changeLang(lang) {
+    function setLang(lang) {
         currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('onclick').includes(`'${lang}'`));
+        });
+        
+        // Translate Static Text
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (translations[lang][key]) {
-                if (el.tagName === 'INPUT' && el.type === 'placeholder') el.placeholder = translations[lang][key];
-                else el.innerText = translations[lang][key];
-            }
+            if (i18n[lang][key]) el.innerText = i18n[lang][key];
         });
-        updateAll(); // Refresh results with new language
+
+        // Refresh dynamic content
+        updateAllRisks();
+        saveUserData();
     }
 
-    // --- ⚙️ Logic Functions ---
+    // --- 💊 Medication Database (Multi-lang) ---
+    const medDB = {
+        'sglt2': { zh: '排糖藥 (SGLT2i)', en: 'SGLT2i', vi: 'Thuốc thải đường SGLT2i', id: 'Obat pembuang gula SGLT2i' },
+        'rasi': { zh: '血壓藥 (ACEi/ARB)', en: 'ACEi/ARB', vi: 'Thuốc huyết áp ACEi/ARB', id: 'Obat darah tinggi ACEi/ARB' },
+        'arni': { zh: '心衰竭藥 (ARNI)', en: 'ARNI', vi: 'Thuốc suy tim ARNI', id: 'Obat gagal jantung ARNI' },
+        'bb': { zh: '乙型阻斷劑 (Beta-blocker)', en: 'Beta-blocker', vi: 'Thuốc chẹn beta', id: 'Penyekat beta' },
+        'nsaid': { zh: '強效止痛藥 (NSAIDs)', en: 'NSAIDs (Painkillers)', vi: 'Thuốc giảm đau mạnh', id: 'Obat pereda nyeri kuat' }
+    };
+
+    // --- 🥦 Food Database (Simplified for demo) ---
+    const foodDB = {
+        'starfruit': { n: {zh:'楊桃', en:'Starfruit', vi:'Khế', id:'Belimbing'}, t: '🔴', d: {zh:'含神經毒素，絕對禁食', en:'Contains neurotoxins, strictly avoid', vi:'Có chứa độc tố thần kinh, tuyệt đối không ăn', id:'Mengandung neurotoksin, hindari sama sekali'} },
+        'banana': { n: {zh:'香蕉', en:'Banana', vi:'Chuối', id:'Pisang'}, t: '🔴', d: {zh:'高鉀水果', en:'High potassium', vi:'Nhiều kali', id:'Tinggi kalium'} },
+        'cabbage': { n: {zh:'高麗菜', en:'Cabbage', vi:'Bắp cải', id:'Kubis'}, t: '🟢', d: {zh:'低鉀蔬菜，安心食用', en:'Low potassium', vi:'Ít kali', id:'Rendah kalium'} }
+    };
+
+    // --- ⚙️ Logic Core ---
+    function setOption(id, val, btn) {
+        document.getElementById(id).value = val;
+        btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateAllRisks();
+    }
+
     function switchTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        const idx = {home:0, meds:1, diet:2, quiz:3}[id];
+        document.querySelectorAll('.nav-item')[idx].classList.add('active');
         window.scrollTo(0,0);
     }
 
-    function setOpt(id, val, btn) {
-        document.getElementById(id).value = val;
-        btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updateAll();
-    }
-
-    function toggleHF(show) {
-        document.getElementById('hf-check').className = show ? 'symptom-box' : 'hidden';
-        document.getElementById('slot-hf').style.display = show ? 'flex' : 'none';
-    }
-
-    function updateAll() {
+    function updateAllRisks() {
         const age = parseFloat(document.getElementById('kfre-age').value);
         const sex = document.getElementById('kfre-sex').value;
         const egfr = parseFloat(document.getElementById('kfre-egfr').value);
         const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+        const hasDM = document.getElementById('kfre-dm').value === '1';
+        const hasHF = document.getElementById('kfre-hf').value === '1';
+
         if (isNaN(age) || sex === "" || isNaN(egfr) || isNaN(uacr)) return;
 
-        document.getElementById('result-area').classList.remove('hidden');
-
-        // Matrix update
-        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
-        let row = egfr >= 90 ? '1' : egfr >= 60 ? '2' : egfr >= 45 ? '3a' : egfr >= 30 ? '3b' : egfr >= 15 ? '4' : '5';
-        let col = uacr >= 300 ? '3' : uacr >= 30 ? '2' : '1';
-        const activeCell = document.getElementById(`c-${row}-${col}`);
-        activeCell.classList.add('active-cell');
-
-        // Risk Banner
-        let riskText = translations[currentLang].risk_vhigh, riskColor = 'var(--risk-r)';
-        if (activeCell.classList.contains('bg-g')) { riskText = translations[currentLang].risk_low; riskColor = 'var(--risk-g)'; }
-        else if (activeCell.classList.contains('bg-y')) { riskText = translations[currentLang].risk_med; riskColor = 'var(--risk-y)'; }
-        else if (activeCell.classList.contains('bg-o')) { riskText = translations[currentLang].risk_high; riskColor = 'var(--risk-o)'; }
+        document.getElementById('unified-result').classList.remove('hidden');
         
-        const banner = document.getElementById('risk-banner');
-        banner.style.background = riskColor;
-        document.getElementById('risk-title').innerText = riskText;
-        document.getElementById('risk-desc').innerText = `eGFR: ${egfr} / UACR: ${uacr}`;
+        // KFRE Logic
+        const sexNum = parseFloat(sex);
+        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (Math.log(uacr) - 5.137);
+        const risk2 = (1 - Math.pow(0.9832, Math.exp(sum))) * 100;
+        const risk5 = (1 - Math.pow(0.9365, Math.exp(sum))) * 100;
 
-        // KFRE (Simplified formula)
-        const logACR = Math.log(uacr);
-        const score = -0.22 * (age/10) + 0.24 * (parseFloat(sex)) - 0.55 * (egfr/5) + 0.45 * logACR;
-        document.getElementById('res-2yr').innerText = (Math.min(99, Math.max(0, (score + 10) * 2))).toFixed(1) + "%";
-        document.getElementById('res-5yr').innerText = (Math.min(99, Math.max(0, (score + 12) * 5))).toFixed(1) + "%";
+        document.getElementById('res-2yr').innerText = risk2.toFixed(1) + "%";
+        document.getElementById('res-5yr').innerText = risk5.toFixed(1) + "%";
 
-        updateAdvice(egfr);
+        // Dynamic Lists
+        updateMedsList(egfr, hasDM, hasHF);
+        updateDietList(egfr, hasDM, hasHF);
+        renderArmor(hasDM, hasHF, egfr);
     }
 
-    function updateAdvice(egfr) {
-        document.getElementById('med-list').classList.remove('hidden');
-        document.getElementById('med-empty').classList.add('hidden');
-        document.getElementById('diet-content').classList.remove('hidden');
-        document.getElementById('diet-empty').classList.add('hidden');
-
-        // Protein
-        const pVal = egfr < 45 ? "0.6 ~ 0.8" : "0.8 ~ 1.0";
-        document.getElementById('diet-protein-val').innerText = pVal;
-
-        // Simplified dynamic list demo
-        const medList = document.getElementById('med-list');
-        medList.innerHTML = `<div style="border-bottom:1px solid #eee; padding:10px 0;"><b>SGLT2i:</b> ${currentLang === 'zh' ? '核心藥物，保護心腎。' : 'Core drug to protect Heart & Kidney.'}</div>`;
-        medList.innerHTML += `<div style="border-bottom:1px solid #eee; padding:10px 0;"><b>ACEi/ARB:</b> ${currentLang === 'zh' ? '降壓控蛋白尿。' : 'Control BP & Proteinuria.'}</div>`;
+    function updateMedsList(egfr, hasDM, hasHF) {
+        const g = document.getElementById('list-med-g'), y = document.getElementById('list-med-y'), r = document.getElementById('list-med-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        
+        const add = (l, txt) => l.innerHTML += `<div class="list-item"><b>${txt}</b></div>`;
+        
+        if (egfr >= 20) add(g, medDB.sglt2[currentLang]);
+        if (hasHF) add(g, medDB.arni[currentLang]); else add(g, medDB.rasi[currentLang]);
+        add(r, medDB.nsaid[currentLang]);
     }
 
-    function toggleEquip(id, el) {
+    function updateDietList(egfr, hasDM, hasHF) {
+        const pVal = document.getElementById('protein-val');
+        const g = document.getElementById('list-diet-g'), r = document.getElementById('list-diet-r');
+        g.innerHTML = ''; r.innerHTML = '';
+        
+        pVal.innerText = (egfr < 45 ? "0.6~0.8" : "0.8~1.0") + " g/kg";
+        
+        const items = {
+            zh: { g: '優質蛋白(魚、肉、蛋)', r: '楊桃、加工肉品、菜湯' },
+            en: { g: 'High quality protein', r: 'Starfruit, Processed meat' },
+            vi: { g: 'Đạm chất lượng cao', r: 'Khế, Thịt chế biến' },
+            id: { g: 'Protein berkualitas', r: 'Belimbing, Daging olahan' }
+        };
+        g.innerHTML = `<div class="list-item">${items[currentLang].g}</div>`;
+        r.innerHTML = `<div class="list-item">${items[currentLang].r}</div>`;
+    }
+
+    function filterFood() {
+        const q = document.getElementById('food-search').value.toLowerCase();
+        const list = document.getElementById('food-list');
+        list.innerHTML = '';
+        Object.keys(foodDB).forEach(key => {
+            const f = foodDB[key];
+            if (f.n[currentLang].toLowerCase().includes(q)) {
+                list.innerHTML += `<div class="list-item"><b>${f.t} ${f.n[currentLang]}</b><br><small>${f.d[currentLang]}</small></div>`;
+            }
+        });
+    }
+
+    function renderArmor(hasDM, hasHF, egfr) {
+        const grid = document.getElementById('armor-grid');
+        grid.innerHTML = '';
+        const meds = [];
+        meds.push({id:'drug-sglt2', n: medDB.sglt2[currentLang]});
+        if(hasHF) meds.push({id:'drug-arni', n: medDB.arni[currentLang]});
+        else meds.push({id:'drug-rasi', n: medDB.rasi[currentLang]});
+        if(hasHF) meds.push({id:'drug-bb', n: medDB.bb[currentLang]});
+
+        meds.forEach(m => {
+            grid.innerHTML += `
+                <div class="equip-slot" id="slot-${m.id}" onclick="toggleArmor('${m.id}')">
+                    <span class="equip-name">${m.n}</span>
+                    <input type="checkbox" id="${m.id}" class="hidden" style="display:none">
+                </div>
+            `;
+        });
+    }
+
+    function toggleArmor(id) {
         const cb = document.getElementById(id);
         cb.checked = !cb.checked;
-        if(cb.checked) el.classList.add('equipped');
-        else el.classList.remove('equipped');
-        
-        // Update Status
-        const count = document.querySelectorAll('.equip-slot.equipped').length;
-        const panel = document.getElementById('status-panel');
-        const title = document.getElementById('status-title');
-        const msg = document.getElementById('status-msg');
+        document.getElementById('slot-'+id).classList.toggle('equipped', cb.checked);
+        updateArmorStatus();
+    }
 
-        if(count === 0) { 
-            panel.style.background = "#78909c"; 
-            title.innerText = translations[currentLang].status_0;
-            msg.innerText = translations[currentLang].status_msg_0;
-        } else if(count < 3) {
-            panel.style.background = "#4caf50";
-            title.innerText = translations[currentLang].status_1;
-            msg.innerText = translations[currentLang].status_msg_1;
-        } else {
-            panel.style.background = "linear-gradient(135deg, #e91e63, #ff9800)";
-            title.innerText = translations[currentLang].status_3;
-            msg.innerText = translations[currentLang].status_msg_3;
+    function updateArmorStatus() {
+        const count = document.querySelectorAll('.equip-slot.equipped').length;
+        const status = document.getElementById('status-panel');
+        const title = document.getElementById('status-title');
+        title.innerText = i18n[currentLang][`rank-${count}`] || i18n[currentLang][`rank-0`];
+        status.style.background = count > 0 ? 'var(--primary)' : '#eee';
+        status.style.color = count > 0 ? '#fff' : '#666';
+        saveUserData();
+    }
+
+    // --- 💾 Storage ---
+    function saveUserData() {
+        const data = {
+            lang: currentLang,
+            age: document.getElementById('kfre-age').value,
+            sex: document.getElementById('kfre-sex').value,
+            egfr: document.getElementById('kfre-egfr').value,
+            dm: document.getElementById('kfre-dm').value,
+            hf: document.getElementById('kfre-hf').value
+        };
+        localStorage.setItem('ckd_app_data', JSON.stringify(data));
+    }
+
+    function loadUserData() {
+        const raw = localStorage.getItem('ckd_app_data');
+        if (raw) {
+            const data = JSON.parse(raw);
+            if(data.lang) setLang(data.lang);
+            if(data.age) document.getElementById('kfre-age').value = data.age;
+            if(data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
+            // Simplified restoration for demo
+            updateAllRisks();
         }
     }
+
+    function clearUserData() { if(confirm('Reset?')) { localStorage.clear(); location.reload(); } }
+
+    window.onload = loadUserData;
 </script>
+
 </body>
 </html>
