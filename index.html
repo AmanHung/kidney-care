@@ -260,65 +260,85 @@
             </button>
         </div>
 
-            <div class="input-group"><label>1. 年齡</label><div class="select-wrapper">
-                <select id="kfre-age" onchange="updateAllRisks()">
-                    <option value="" disabled selected>請選擇年齡...</option><option value="20">20-29 歲</option><option value="30">30-39 歲</option><option value="40">40-49 歲</option><option value="50">50-59 歲</option><option value="60">60-69 歲</option><option value="70">70-79 歲</option><option value="80">80-89 歲</option><option value="90">90 歲以上</option>
-                </select>
-            </div></div>
+            <div class="input-group">
+                <label data-t="1. 年齡">1. 年齡</label>
+                <div class="select-wrapper">
+                    <select id="kfre-age" onchange="updateAllRisks()">
+                        <option value="" disabled selected data-t="請選擇年齡...">請選擇年齡...</option>
+                        <option value="20">20-29</option><option value="30">30-39</option><option value="40">40-49</option><option value="50">50-59</option><option value="60">60-69</option><option value="70">70-79</option><option value="80">80-89</option><option value="90">90+</option>
+                    </select>
+                </div>
+            </div>
 
-            <div class="input-group"><label>2. 性別</label>
+            <div class="input-group">
+                <label data-t="2. 性別">2. 性別</label>
                 <div class="option-group" id="group-sex">
-                    <div class="option-btn" onclick="setOption('kfre-sex', '1', this)">男</div>
-                    <div class="option-btn" onclick="setOption('kfre-sex', '0', this)">女</div>
+                    <div class="option-btn" onclick="setOption('kfre-sex', '1', this)" data-t="男">男</div>
+                    <div class="option-btn" onclick="setOption('kfre-sex', '0', this)" data-t="女">女</div>
                 </div>
                 <input type="hidden" id="kfre-sex" onchange="updateAllRisks()">
             </div>
             
             <div class="input-group">
-    <label>
-        3. 腎絲球過濾率 (eGFR) 
-        <span class="help-icon" onclick="showHelp('egfr')">?</span>
-    </label>
+                <label>
+                    <span data-t="3. 腎絲球過濾率 (eGFR)">3. 腎絲球過濾率 (eGFR)</span> 
+                    <span class="help-icon" onclick="showHelp('egfr')">?</span>
+                </label>
                 <div class="select-wrapper">
-                <select id="kfre-egfr" onchange="updateAllRisks()">
-                    <option value="" disabled selected>請選擇數值區間...</option><option value="90">正常 (eGFR ≥ 90)</option><option value="75">第2期 (eGFR 60-89)</option><option value="52">第3a期 (eGFR 45-59)</option><option value="37">第3b期 (eGFR 30-44)</option><option value="22">第4期 (eGFR 15-29)</option><option value="10">第5期 (eGFR < 15)</option>
-                </select>
-            </div></div>
+                    <select id="kfre-egfr" onchange="updateAllRisks()">
+                        <option value="" disabled selected data-t="請選擇數值區間...">請選擇數值區間...</option>
+                        <option value="90" data-t="正常 (eGFR ≥ 90)">正常 (eGFR ≥ 90)</option>
+                        <option value="75" data-t="第2期 (eGFR 60-89)">第2期 (eGFR 60-89)</option>
+                        <option value="52" data-t="第3a期 (eGFR 45-59)">第3a期 (eGFR 45-59)</option>
+                        <option value="37" data-t="第3b期 (eGFR 30-44)">第3b期 (eGFR 30-44)</option>
+                        <option value="22" data-t="第4期 (eGFR 15-29)">第4期 (eGFR 15-29)</option>
+                        <option value="10" data-t="第5期 (eGFR < 15)">第5期 (eGFR < 15)</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="input-group">
-    <label>
-        4. 蛋白尿狀況 (UACR)
-        <span class="help-icon" onclick="showHelp('uacr')">?</span>
-    </label>
+                <label>
+                    <span data-t="4. 蛋白尿狀況 (UACR)">4. 蛋白尿狀況 (UACR)</span>
+                    <span class="help-icon" onclick="showHelp('uacr')">?</span>
+                </label>
                 <div class="option-group" id="group-uacr">
-                    <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">正常<br>&lt;30</div>
-                    <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">微量<br>30-300</div>
-                    <div class="option-btn" onclick="setOption('kfre-uacr', '500', this)">嚴重<br>&gt;300</div>
+                    <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">
+                        <span data-t="正常">正常</span><br>&lt;30
+                    </div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">
+                        <span data-t="微量">微量</span><br>30-300
+                    </div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '500', this)">
+                        <span data-t="嚴重">嚴重</span><br>&gt;300
+                    </div>
                 </div>
                 <input type="hidden" id="kfre-uacr" value="10" onchange="updateAllRisks()">
             </div>
 
-            <div class="input-group"><label>5. 是否有糖尿病 (DM)</label>
+            <div class="input-group">
+                <label data-t="5. 是否有糖尿病 (DM)">5. 是否有糖尿病 (DM)</label>
                 <div class="option-group" id="group-dm">
-                    <div class="option-btn" onclick="setOption('kfre-dm', '0', this)">無</div>
-                    <div class="option-btn" onclick="setOption('kfre-dm', '1', this)">有</div>
+                    <div class="option-btn" onclick="setOption('kfre-dm', '0', this)" data-t="無">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-dm', '1', this)" data-t="有">有</div>
                 </div>
                 <input type="hidden" id="kfre-dm" value="" onchange="updateAllRisks()">
             </div>
 
-            <div class="input-group"><label>7. 是否有心衰竭 (HF)</label>
+            <div class="input-group">
+                <label data-t="6. 是否有心衰竭 (HF)">6. 是否有心衰竭 (HF)</label>
                 <div class="option-group" id="group-hf">
-                    <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">無</div>
-                    <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);">有</div>
+                    <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);" data-t="無">無</div>
+                    <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);" data-t="有">有</div>
                 </div>
                 <input type="hidden" id="kfre-hf" value="" onchange="updateAllRisks()">
                 
                 <div id="hf-check-box" class="symptom-box hidden">
-                    <p style="margin-top:0; color:#c2185b;">🔍 <strong>快速篩檢：您有以下症狀嗎？</strong></p>
-                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> 平躺睡覺會喘 (端坐呼吸)</div>
-                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> 下肢水腫 (按壓彈不回來)</div>
-                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> 稍微活動就很喘</div>
-                    <div id="sym-alert" class="hidden" style="color: red; font-weight: 900; margin-top: 10px; background:white; padding:10px; border-radius:10px;">🚨 疑似心臟衰竭症狀，建議至心臟科檢查！</div>
+                    <p style="margin-top:0; color:#c2185b;"><strong data-t="🔍 快速篩檢：您有以下症狀嗎？">🔍 快速篩檢：您有以下症狀嗎？</strong></p>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> <span data-t="平躺睡覺會喘 (端坐呼吸)">平躺睡覺會喘 (端坐呼吸)</span></div>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> <span data-t="下肢水腫 (按壓彈不回來)">下肢水腫 (按壓彈不回來)</span></div>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> <span data-t="稍微活動就很喘">稍微活動就很喘</span></div>
+                    <div id="sym-alert" class="hidden" style="color: red; font-weight: 900; margin-top: 10px; background:white; padding:10px; border-radius:10px;"></div>
                 </div>
             </div>
 
@@ -930,13 +950,13 @@
         let boxBg = '#ffebee', boxColor = '#b71c1c';
 
         if (cell.classList.contains('bg-g')) { 
-            color = '#6bbd45'; text = '低風險 (定期追蹤)'; 
+            color = '#6bbd45'; text = t('低風險 (定期追蹤)'); // <--- 加上 t()
             boxBg = '#f0fdf4'; boxColor = '#1b5e20';
         } else if (cell.classList.contains('bg-y')) { 
-            color = '#ffd700'; text = '中度風險 (需注意)'; 
+            color = '#ffd700'; text = t('中度風險 (需注意)'); // <--- 加上 t()
             boxBg = '#fffde7'; boxColor = '#f57f17';
         } else if (cell.classList.contains('bg-o')) { 
-            color = '#f58220'; text = '高風險 (嚴格控制)'; 
+            color = '#f58220'; text = t('高風險 (嚴格控制)'); // <--- 加上 t()
             boxBg = '#fff3e0'; boxColor = '#e65100';
         }
 
@@ -1573,6 +1593,7 @@
 </script>
 </body>
 </html>
+
 
 
 
