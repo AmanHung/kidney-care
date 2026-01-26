@@ -30,6 +30,8 @@ const dict = {
     "第5期 (eGFR < 15)": "Stage 5 (< 15)",
     "👆 資料填寫完整後，結果將自動顯示": "👆 Fill in data to see results",
     "👇 您的專屬用藥與飲食建議已生成，<br>請點選下方選單切換查看。": "👇 Personalized advice ready. Check tabs below.",
+"低風險 (定期追蹤)": "Low Risk (Regular follow-up)",
+"中度風險 (需注意)": "Moderate Risk (Caution)",
     
     // --- 導航列 ---
     "首頁": "Home", "用藥": "Meds", "飲食": "Diet", "測驗": "Quiz", "諮詢": "Consult",
