@@ -45,15 +45,38 @@
         .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
         .hidden { display: none !important; }
         .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .quiz-option.correct { border-color: #6bbd45; background: #f0fff4; color: #2e7d32; }
+        .quiz-option.wrong { border-color: #e03e2e; background: #fff5f5; color: #c62828; }
         .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
         .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
         .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
+        .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
         .hidden-checkbox { display: none; }
         .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; }
         .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
+        .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
+        .status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
+        .status-guardian { background: linear-gradient(135deg, #F2994A, #F2C94C); }
+        .status-god { background: linear-gradient(135deg, #FF416C, #FF4B2B); }
         .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
+        .progress-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        /* Slot styles */
+        .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; }
+        .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; }
+        .slot-rare { border-color: #2196F3; background-color: #E3F2FD; }
+        .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; }
+        .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; }
+        .slot-heart { border-color: var(--heart); background-color: var(--heart-light); }
+        .slot-legendary.equipped::after, .slot-epic.equipped::after, .slot-rare.equipped::after, .slot-uncommon.equipped::after, .slot-arcane.equipped::after, .slot-heart.equipped::after {
+            content: '✓'; position: absolute; top: 5px; right: 5px; background:green; color:white; border-radius:50%; width:20px; height:20px; font-size:12px; display:flex; justify-content:center; align-items:center;
+        }
+        .animate-pop { animation: pop-effect 0.4s ease-out; }
+        @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
     <script src="data_id.js"></script>
 </head>
@@ -196,6 +219,68 @@
         </div>
     </div>
 
+    <div id="tab-quiz" class="section">
+        <div class="card">
+            <h2>🛡️ Perisai Ginjal Saya</h2>
+            <p style="text-align:center; color:#666;">Centang obat yang sedang Anda minum.</p>
+            <div class="equip-grid">
+                <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
+                    <span class="equip-name">Penyelamat</span><span class="equip-desc">SGLT2i</span>
+                    <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
+                    <span class="equip-name">Pelindung Dasar</span><span class="equip-desc">ACEi/ARB</span>
+                    <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
+                    <span class="equip-name">Perisai Jantung</span><span class="equip-desc">Beta-blocker</span>
+                    <input type="checkbox" id="drug-bb" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div id="slot-mra-old" class="equip-slot slot-rare" onclick="toggleEquip(this, 'drug-mra-old')" style="display:none;">
+                    <span class="equip-name">Blok Ekstra</span><span class="equip-desc">MRA</span>
+                    <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none;">
+                    <span class="equip-name">Pelindung Baru</span><span class="equip-desc">ns-MRA</span>
+                    <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div class="equip-slot slot-uncommon" onclick="toggleEquip(this, 'drug-statin')">
+                    <span class="equip-name">Pembuluh Darah</span><span class="equip-desc">Statin</span>
+                    <input type="checkbox" id="drug-statin" class="gear-checkbox hidden-checkbox">
+                </div>
+                <div id="slot-glp1" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-glp1')" style="display:none;">
+                    <span class="equip-name">Kontrol Gula</span><span class="equip-desc">GLP-1 RA</span>
+                    <input type="checkbox" id="drug-glp1" class="gear-checkbox hidden-checkbox">
+                </div>
+            </div>
+            
+            <div id="status-panel" class="status-panel status-novice" style="margin-top:20px;">
+                <div class="status-icon" id="status-icon">⚠️</div>
+                <div class="status-info">
+                    <div class="status-title" id="status-title">Belum Ada Perlindungan</div>
+                    <div class="status-msg" id="status-msg">Anda berisiko. Konsultasikan ke dokter.</div>
+                </div>
+            </div>
+            <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;"></div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+            <h2>🎓 Kuis Kesehatan</h2>
+            <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
+            <p id="quiz-counter" style="text-align:right;">Q1/10</p>
+            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px;">Memuat...</h3><div id="quiz-options"></div></div>
+            <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
+                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900;"></div>
+                <div id="quiz-exp" style="background:#fff; padding:15px; border-radius:10px; margin:10px 0;"></div>
+                <button class="btn btn-next" onclick="nextQ()">Lanjut ➜</button>
+            </div>
+            <div id="quiz-score" class="hidden">
+                <h3 style="font-size:3rem; color:var(--primary);">Skor: <span id="final-score">0</span></h3>
+                <button class="btn" onclick="initQuiz()">🔄 Ulangi</button>
+            </div>
+        </div>
+    </div>
+
     <div id="tab-consult" class="section">
         <div class="card">
             <h2>💬 Konsultasi</h2>
@@ -213,19 +298,44 @@
     <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span>Beranda</div>
     <div class="nav-item" onclick="switchTab('meds')"><span class="nav-icon">💊</span>Obat</div>
     <div class="nav-item" onclick="switchTab('diet')"><span class="nav-icon">🥦</span>Diet</div>
+    <div class="nav-item" onclick="switchTab('quiz')"><span class="nav-icon">🎓</span>Kuis</div>
     <div class="nav-item" onclick="switchTab('consult')"><span class="nav-icon">💬</span>Konsul</div>
 </nav>
 
 <script>
+    // --- Audio ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(isCorrect) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if (isCorrect) {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        } else {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
+
     // --- Basic Logic ---
     function switchTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:3;
-        document.querySelectorAll('.nav-item')[idx].classList.add('active');
+        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
+        const navItem = document.querySelectorAll('.nav-item')[idx];
+        if(navItem) navItem.classList.add('active');
         window.scrollTo(0,0);
-        if (id === 'diet') { initFoodSearch(); }
+        if (id === 'diet') initFoodSearch();
+        if (id === 'quiz') initQuiz();
     }
 
     function setOption(inputId, value, btn) {
@@ -256,7 +366,6 @@
 
         document.getElementById('unified-result').classList.remove('hidden');
         
-        // Simple Logic for Risk Text
         let text = "Risiko Rendah";
         let color = "#6bbd45";
         if(egfr < 45 || uacr > 300) { text = "Risiko Tinggi"; color = "#e03e2e"; }
@@ -270,6 +379,7 @@
 
         updateMeds(egfr, dm, hf);
         updateDiet(egfr, dm, hf);
+        updateArmorVisibility(dm, egfr, hf);
     }
 
     function updateMeds(egfr, dm, hf) {
@@ -305,6 +415,89 @@
         if(hf) add(r, "Garam & Asin", "Memperburuk bengkak.");
     }
 
+    // --- Armor & Quiz Logic ---
+    function updateArmorVisibility(hasDM, egfr, hasHF) {
+        const slotBb = document.getElementById('slot-bb');
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+        const slotGlp1 = document.getElementById('slot-glp1');
+
+        if(hasHF) { slotBb.style.display='flex'; slotMraOld.style.display='flex'; slotNsMra.style.display='none'; }
+        else { slotBb.style.display='none'; slotMraOld.style.display='none'; }
+
+        if(hasDM && egfr >= 25 && !hasHF) { slotNsMra.style.display='flex'; } 
+        else { slotNsMra.style.display='none'; }
+
+        if(hasDM) slotGlp1.style.display='flex'; else slotGlp1.style.display='none';
+        
+        updateStatusAndAdvice();
+    }
+
+    function toggleEquip(el, id) {
+        const chk = document.getElementById(id);
+        chk.checked = !chk.checked;
+        el.classList.toggle('equipped', chk.checked);
+        if(chk.checked) playSound(true);
+        updateStatusAndAdvice();
+    }
+
+    function updateStatusAndAdvice() {
+        const cnt = document.querySelectorAll('.gear-checkbox:checked').length;
+        const panel = document.getElementById('status-panel');
+        let title="Belum Ada", msg="Risiko tinggi.";
+        if(cnt>0) { title="Perlindungan Awal"; msg="Bagus, lanjutkan!"; }
+        if(cnt>2) { title="Perlindungan Kuat"; msg="Sangat baik!"; }
+        document.getElementById('status-title').innerText=title;
+        document.getElementById('status-msg').innerText=msg;
+    }
+
+    // --- Quiz Data ---
+    const quizPool = [
+        {q:"Bolehkah makan Belimbing?", a:[{t:"Tidak Boleh",c:true},{t:"Boleh sedikit",c:false}], exp:"Belimbing mengandung racun saraf."},
+        {q:"Pasien Jantung harus timbang berat badan?", a:[{t:"Setiap hari",c:true},{t:"Sebulan sekali",c:false}], exp:"Naik 2kg dalam 2 hari tanda bahaya."},
+        {q:"Jika sesak napas saat tidur?", a:[{t:"Mungkin Gagal Jantung",c:true},{t:"Salah bantal",c:false}], exp:"Itu tanda cairan di paru-paru."},
+        {q:"Bolehkah beli obat nyeri sendiri?", a:[{t:"Jangan (NSAID bahaya)",c:true},{t:"Boleh",c:false}], exp:"Obat nyeri kuat merusak ginjal."}
+    ];
+    let qIdx=0, score=0;
+    
+    function initQuiz() {
+        qIdx=0; score=0;
+        document.getElementById('quiz-score').classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
+        renderQ();
+    }
+    function renderQ() {
+        if(qIdx >= quizPool.length) { showScore(); return; }
+        const q = quizPool[qIdx];
+        document.getElementById('quiz-question').innerText = q.q;
+        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}`;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        const div = document.getElementById('quiz-options');
+        div.innerHTML = '';
+        q.a.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className='quiz-option';
+            btn.innerText=opt.t;
+            btn.onclick=()=>{
+                playSound(opt.c);
+                if(opt.c) { btn.classList.add('correct'); score+=25; }
+                else { btn.classList.add('wrong'); }
+                document.getElementById('quiz-res-text').innerText = opt.c?"Benar!":"Salah!";
+                document.getElementById('quiz-exp').innerText = q.exp;
+                document.getElementById('quiz-feedback').classList.remove('hidden');
+            };
+            div.appendChild(btn);
+        });
+        document.querySelector('.progress-fill').style.width = `${(qIdx/quizPool.length)*100}%`;
+    }
+    function nextQ() { qIdx++; renderQ(); }
+    function showScore() {
+        document.getElementById('quiz-area').classList.add('hidden');
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        document.getElementById('quiz-score').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+
     // --- Food Search ---
     function initFoodSearch() { filterFood(); }
     function filterFood() {
@@ -327,7 +520,37 @@
         box.innerHTML = `<strong>${d.title}</strong><br>${d.desc}`;
     }
     
-    function clearUserData() { location.reload(); }
+    // --- Data Persistence ---
+    const STORAGE_KEY = 'kidney_care_data';
+    function saveUserData() {
+        const data = {
+            age: document.getElementById('kfre-age').value,
+            sex: document.getElementById('kfre-sex').value,
+            egfr: document.getElementById('kfre-egfr').value,
+            uacr: document.getElementById('kfre-uacr').value,
+            dm: document.getElementById('kfre-dm').value,
+            hf: document.getElementById('kfre-hf').value
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function loadUserData() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) {
+            const data = JSON.parse(raw);
+            if(data.age) document.getElementById('kfre-age').value = data.age;
+            if(data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
+            setOption('kfre-sex', data.sex, document.querySelector(`#group-sex .option-btn:nth-child(${data.sex==='1'?1:2})`));
+            // Add other loaders as needed
+            updateAllRisks();
+        }
+    }
+    function clearUserData() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+    
+    // Hook updates
+    const origUpdate = updateAllRisks;
+    updateAllRisks = function() { origUpdate(); saveUserData(); }
+    window.addEventListener('load', loadUserData);
+
 </script>
 </body>
 </html>
