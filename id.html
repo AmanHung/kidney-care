@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Asisten Perawatan Ginjal</title>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <style>
+        :root { --primary: #009045; --primary-dark: #007035; --accent: #F58220; --heart: #e91e63; --heart-light: #fce4ec; --bg: #fdfdfd; --white: #ffffff; --text: #222; --risk-g: #6bbd45; --risk-y: #ffd700; --risk-o: #f58220; --risk-r: #e03e2e; --nav-height: 85px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; }
+        header { background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%); }
+        .header-logo { height: 50px; width: auto; object-fit: contain; }
+        .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
+        .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
+        .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--white); border-radius: 20px; padding: 25px 20px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
+        .card h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; font-weight: 900; border-bottom: 3px solid #f0f4f8; padding-bottom: 15px; margin-bottom: 20px; }
+        .input-group { margin-bottom: 25px; text-align: left; }
+        .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
+        .select-wrapper { position: relative; width: 100%; }
+        select { width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222; -webkit-appearance: none; appearance: none; }
+        .select-wrapper::after { content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #444; pointer-events: none; font-size: 1.2rem; }
+        .option-group { display: flex; gap: 10px; width: 100%; }
+        .option-btn { flex: 1; padding: 15px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1.1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
+        .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; }
+        .btn:active { transform: scale(0.97); }
+        .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
+        .risk-matrix { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; background: #fff; font-size: 0.9rem; }
+        .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.3); height: 55px; position: relative; }
+        .matrix-header { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.85rem; padding: 5px 0; }
+        .matrix-label { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.8rem; flex-direction: column; justify-content: center; display: flex; align-items: center; }
+        .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
+        .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
+        .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ccc; z-index: 1000; }
+        .nav-item { text-align: center; color: #999; font-size: 0.85rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
+        .hidden { display: none !important; }
+        .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .hidden-checkbox { display: none; }
+        .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; }
+        .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
+        .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
+        .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
+        .sym-check { transform: scale(1.5); }
+    </style>
+    <script src="data_id.js"></script>
+</head>
+<body>
+
+<header>
+    <img src="logo_left.png" alt="Hospital Logo" class="header-logo" onerror="this.style.opacity='0.2'">
+    <div class="header-title-box">
+        <h1 style="color:var(--primary);">Asisten Ginjal</h1>
+        <p>Jantung / Ginjal / Diabetes</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+        <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
+        <select onchange="if(this.value) location.href=this.value;" 
+                style="padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; font-size: 0.8rem; background: #fff; font-weight: bold; cursor: pointer; color: #555;">
+            <option value="" disabled>🌏 Bahasa</option>
+            <option value="index.html">🇹🇼 Chinese</option>
+            <option value="en.html">🇺🇸 English</option>
+            <option value="#" selected>🇮🇩 Indo</option>
+            <option value="vn.html">🇻🇳 Tiếng Việt</option>
+        </select>
+    </div>
+</header>
+
+<div class="container">
+    <div id="tab-home" class="section active">
+        <div class="card" style="border-top: 5px solid #29b6f6;">
+            <h2 style="color:#0277bd;">📊 Penilaian Risiko</h2>
+            <p style="color:#666; font-size:0.95rem; margin-bottom:20px;">Silakan masukkan data Anda untuk mendapatkan saran obat dan diet yang dipersonalisasi.</p>
+            <div style="text-align:right; margin-bottom:10px;">
+                <button onclick="clearUserData()" style="background:#f5f5f5; border:1px solid #ddd; color:#666; padding:6px 12px; border-radius:20px; font-weight:bold;">🗑️ Hapus Data</button>
+            </div>
+
+            <div class="input-group"><label>1. Usia</label><div class="select-wrapper">
+                <select id="kfre-age" onchange="updateAllRisks()"><option value="" disabled selected>Pilih Usia...</option><option value="20">20-29</option><option value="30">30-39</option><option value="40">40-49</option><option value="50">50-59</option><option value="60">60-69</option><option value="70">70-79</option><option value="80">80-89</option><option value="90">90+</option></select>
+            </div></div>
+
+            <div class="input-group"><label>2. Jenis Kelamin</label>
+                <div class="option-group" id="group-sex">
+                    <div class="option-btn" onclick="setOption('kfre-sex', '1', this)">Pria</div>
+                    <div class="option-btn" onclick="setOption('kfre-sex', '0', this)">Wanita</div>
+                </div>
+                <input type="hidden" id="kfre-sex" onchange="updateAllRisks()">
+            </div>
+            
+            <div class="input-group"><label>3. eGFR (Fungsi Ginjal)</label><div class="select-wrapper">
+                <select id="kfre-egfr" onchange="updateAllRisks()">
+                    <option value="" disabled selected>Pilih Nilai...</option>
+                    <option value="90">Normal (≥ 90)</option><option value="75">Tahap 2 (60-89)</option><option value="52">Tahap 3a (45-59)</option><option value="37">Tahap 3b (30-44)</option><option value="22">Tahap 4 (15-29)</option><option value="10">Tahap 5 (< 15)</option>
+                </select>
+            </div></div>
+
+            <div class="input-group"><label>4. Protein Urine (UACR)</label>
+                <div class="option-group" id="group-uacr">
+                    <div class="option-btn active" onclick="setOption('kfre-uacr', '10', this)">Normal<br>&lt;30</div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '150', this)">Mikro<br>30-300</div>
+                    <div class="option-btn" onclick="setOption('kfre-uacr', '500', this)">Makro<br>&gt;300</div>
+                </div>
+                <input type="hidden" id="kfre-uacr" value="10" onchange="updateAllRisks()">
+            </div>
+
+            <div class="input-group"><label>5. Diabetes (DM)</label>
+                <div class="option-group" id="group-dm">
+                    <div class="option-btn" onclick="setOption('kfre-dm', '0', this)">Tidak</div>
+                    <div class="option-btn" onclick="setOption('kfre-dm', '1', this)">Ya</div>
+                </div>
+                <input type="hidden" id="kfre-dm" value="" onchange="updateAllRisks()">
+            </div>
+
+            <div class="input-group"><label>6. Gagal Jantung (HF)</label>
+                <div class="option-group" id="group-hf">
+                    <div class="option-btn" onclick="setOption('kfre-hf', '0', this); checkHFSymptoms(false);">Tidak</div>
+                    <div class="option-btn" onclick="setOption('kfre-hf', '1', this); checkHFSymptoms(true);">Ya</div>
+                </div>
+                <input type="hidden" id="kfre-hf" value="" onchange="updateAllRisks()">
+                
+                <div id="hf-check-box" class="symptom-box hidden">
+                    <p style="margin-top:0; color:#c2185b;">🔍 <strong>Cek Gejala:</strong></p>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Sesak saat berbaring</div>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Kaki Bengkak (Edema)</div>
+                    <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Sesak saat aktivitas</div>
+                    <div id="sym-alert" class="hidden" style="color: red; font-weight: 900; margin-top: 10px; background:white; padding:10px; border-radius:10px;">🚨 Kemungkinan Gagal Jantung. Periksa ke dokter!</div>
+                </div>
+            </div>
+
+            <div id="unified-result" class="hidden">
+                <div id="risk-banner" class="risk-banner" style="background:#ccc; margin-bottom:20px;">
+                    <h3 id="risk-title">--</h3><p id="risk-desc">--</p>
+                </div>
+                <p style="color:#d32f2f; font-weight:900; text-align:center;">👇 Hasil saran telah siap.<br>Cek tab di bawah.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-meds" class="section">
+        <div class="card">
+            <h2>💊 Saran Obat</h2>
+            <div id="med-placeholder" style="padding:40px 10px; color:#999;">Isi data di "Beranda" dulu.</div>
+            <div id="med-content" class="hidden">
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 Terapi Utama</div><div class="list-body" id="list-med-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 Hati-hati</div><div class="list-body" id="list-med-y"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 Hindari</div><div class="list-body" id="list-med-r"></div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>🚦 Cek Keamanan Obat</h2>
+            <div class="select-wrapper">
+                <select id="med-select" onchange="checkMed()">
+                    <option value="">🔍 Pilih Nama Obat...</option>
+                    <option value="ras">ACEi / ARB (Tensi)</option><option value="arni">ARNI (Jantung)</option><option value="panadol">Panadol</option><option value="nsaid">NSAID (Anti Nyeri Kuat)</option><option value="sglt2">SGLT2i (Gula/Ginjal)</option>
+                </select>
+            </div>
+            <div id="med-result" class="med-result-box hidden"></div>
+        </div>
+        <div class="card" style="border: 3px solid #ff9800; background: #fff8e1;">
+            <h2 style="color:#e65100;">🤢 Aturan Saat Sakit</h2>
+            <p style="font-weight:bold; color:#bf360c;">Jika Diare, Demam, atau Dehidrasi, konsultasikan untuk hentikan sementara:</p>
+            <div class="quiz-option" style="color:#e65100; text-align:center;">SGLT2i, ACEi/ARB, Diuretik, Metformin, NSAID</div>
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#d32f2f;">🏥 Daftar RS Sekarang</a>
+        </div>
+        <div class="card">
+            <a href="https://amanhung.github.io/Formulary/" target="_blank" class="btn btn-outline">🏥 Cari Obat (Formulary)</a>
+        </div>
+    </div>
+
+    <div id="tab-diet" class="section">
+        <div class="card">
+            <h2>🍽️ Saran Diet</h2>
+            <div id="diet-placeholder" style="padding:40px 10px; color:#999;">Isi data di "Beranda" dulu.</div>
+            <div id="diet-content" class="hidden">
+                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 Disarankan</div><div class="list-body" id="list-diet-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 Batasi</div><div class="list-body" id="list-diet-y"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 Hindari</div><div class="list-body" id="list-diet-r"></div></div>
+            </div>
+            
+            <hr style="margin: 20px 0;">
+            <h3 style="color:var(--primary);">🔎 Lampu Lalu Lintas Makanan</h3>
+            <input type="text" id="food-search-input" placeholder="Cari makanan (cth: Pisang)..." oninput="filterFood()" style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; margin-bottom:10px;">
+            <div id="food-list-area"></div>
+        </div>
+    </div>
+
+    <div id="tab-consult" class="section">
+        <div class="card">
+            <h2>💬 Konsultasi</h2>
+            <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:3px solid #eee; margin-bottom:30px;">
+                <h3 style="color:#06c755; margin-top:0;">LINE Official</h3>
+                <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
+                <a href="https://lin.ee/sydupT8" target="_blank" class="btn" style="background:#06c755;">📲 Tambah Teman</a>
+            </div>
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#2196f3;">🏥 Pendaftaran Online</a>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home')"><span class="nav-icon">🏠</span>Beranda</div>
+    <div class="nav-item" onclick="switchTab('meds')"><span class="nav-icon">💊</span>Obat</div>
+    <div class="nav-item" onclick="switchTab('diet')"><span class="nav-icon">🥦</span>Diet</div>
+    <div class="nav-item" onclick="switchTab('consult')"><span class="nav-icon">💬</span>Konsul</div>
+</nav>
+
+<script>
+    // --- Basic Logic ---
+    function switchTab(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:3;
+        document.querySelectorAll('.nav-item')[idx].classList.add('active');
+        window.scrollTo(0,0);
+        if (id === 'diet') { initFoodSearch(); }
+    }
+
+    function setOption(inputId, value, btn) {
+        document.getElementById(inputId).value = value;
+        updateAllRisks();
+        btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function checkHFSymptoms(show) {
+        document.getElementById('hf-check-box').classList.toggle('hidden', !show);
+    }
+    
+    function symAlert() {
+        const cnt = document.querySelectorAll('.sym-check:checked').length;
+        document.getElementById('sym-alert').classList.toggle('hidden', cnt === 0);
+    }
+
+    // --- Risk Logic ---
+    function updateAllRisks() {
+        const age = parseFloat(document.getElementById('kfre-age').value);
+        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
+        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+        const dm = document.getElementById('kfre-dm').value === '1';
+        const hf = document.getElementById('kfre-hf').value === '1';
+        
+        if (isNaN(age) || isNaN(egfr)) return;
+
+        document.getElementById('unified-result').classList.remove('hidden');
+        
+        // Simple Logic for Risk Text
+        let text = "Risiko Rendah";
+        let color = "#6bbd45";
+        if(egfr < 45 || uacr > 300) { text = "Risiko Tinggi"; color = "#e03e2e"; }
+        else if(egfr < 60 || uacr > 30) { text = "Risiko Sedang"; color = "#ffd700"; }
+        
+        const banner = document.getElementById('risk-banner');
+        banner.style.backgroundColor = color;
+        banner.style.color = (color==="#ffd700")?"#333":"#fff";
+        document.getElementById('risk-title').innerText = text;
+        document.getElementById('risk-desc').innerText = `eGFR ${egfr} + UACR ${uacr}`;
+
+        updateMeds(egfr, dm, hf);
+        updateDiet(egfr, dm, hf);
+    }
+
+    function updateMeds(egfr, dm, hf) {
+        document.getElementById('med-placeholder').classList.add('hidden');
+        document.getElementById('med-content').classList.remove('hidden');
+        const g=document.getElementById('list-med-g'), y=document.getElementById('list-med-y'), r=document.getElementById('list-med-r');
+        g.innerHTML=''; y.innerHTML=''; r.innerHTML='';
+        const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
+
+        if(egfr >= 20) add(g, "SGLT2i", "Obat pelindung utama.");
+        else add(y, "SGLT2i", "Hati-hati jika eGFR rendah.");
+        
+        if(hf) add(g, "ARNI / Beta-blocker", "Wajib untuk Gagal Jantung.");
+        else add(g, "ACEi / ARB", "Pelindung ginjal dasar.");
+        
+        add(r, "NSAID (Pereda Nyeri)", "Bahaya! Merusak ginjal.");
+    }
+
+    function updateDiet(egfr, dm, hf) {
+        document.getElementById('diet-placeholder').classList.add('hidden');
+        document.getElementById('diet-content').classList.remove('hidden');
+        const g=document.getElementById('list-diet-g'), y=document.getElementById('list-diet-y'), r=document.getElementById('list-diet-r');
+        g.innerHTML=''; y.innerHTML=''; r.innerHTML='';
+        const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
+
+        add(g, "Protein Berkualitas", "Putih telur, Ikan, Ayam.");
+        if(egfr < 45) {
+            add(g, "Pati Rendah Nitrogen", "Sohun, Sagu (Energi bersih).");
+            add(y, "Nasi Merah", "Tinggi Fosfor.");
+            add(y, "Sayuran Hijau", "Rebus buang airnya (Kurangi Kalium).");
+        }
+        add(r, "Belimbing", "Beracun untuk ginjal.");
+        if(hf) add(r, "Garam & Asin", "Memperburuk bengkak.");
+    }
+
+    // --- Food Search ---
+    function initFoodSearch() { filterFood(); }
+    function filterFood() {
+        const input = document.getElementById('food-search-input').value.toLowerCase();
+        const div = document.getElementById('food-list-area');
+        div.innerHTML = '';
+        Object.values(foodDB).forEach(item => {
+            if(item.n.toLowerCase().includes(input)) {
+                div.innerHTML += `<div class="quiz-option" style="padding:10px;"><strong>${item.t} ${item.n}</strong><br><small>${item.d}</small></div>`;
+            }
+        });
+    }
+    
+    function checkMed() {
+        const val = document.getElementById('med-select').value;
+        const box = document.getElementById('med-result');
+        if(!val) { box.classList.add('hidden'); return; }
+        const d = medDB[val];
+        box.classList.remove('hidden');
+        box.innerHTML = `<strong>${d.title}</strong><br>${d.desc}`;
+    }
+    
+    function clearUserData() { location.reload(); }
+</script>
+</body>
+</html>
