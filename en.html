@@ -777,4 +777,499 @@
         if(item.tags) {
             item.tags.forEach(t => {
                 if(t==='high_p') tagHtml += `<span style="background:#607d8b; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ High Phos</span>`;
-                if(t==='high_k') tagHtml += `<span style="background:#795548; color:white; padding:2px 6px; border-radius:4
+                if(t==='high_k') tagHtml += `<span style="background:#795548; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ High K</span>`;
+                if(t==='gout') tagHtml += `<span style="background:#e91e63; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ Gout</span>`;
+                if(t==='low_n') tagHtml += `<span style="background:#00bcd4; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚡ Low-N Starch</span>`;
+                if(t==='high_na') tagHtml += `<span style="background:#ef6c00; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">🧂 High Na</span>`;
+                if(t==='toxin') tagHtml += `<span style="background:black; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">☠️ Toxin</span>`;
+            });
+        }
+
+        content.parentElement.style.background = bg;
+        content.parentElement.style.borderLeft = `8px solid ${border}`;
+        
+        content.innerHTML = `
+            <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
+            <div style="margin-bottom:15px;">${item.t} ${tagHtml}</div>
+            <p style="font-size:1.15rem; line-height:1.6; color:#444; font-weight:bold;">${item.d}</p>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeFoodModal() {
+        document.getElementById('food-result-modal').classList.add('hidden');
+    }
+
+    // --- 🎓 Quiz Data (Translated) ---
+    const quizPool = [
+        {tags:['all'], q:"Should I switch to 'Low Sodium Salt'?", a:[{t:"Yes, less salt is good",c:false},{t:"No, it contains High Potassium",c:true}], exp:"Low Sodium Salt replaces Sodium with Potassium. Dangerous for kidney patients and those on heart meds."},
+        {tags:['all'], q:"About water intake?", a:[{t:"Stop drinking water",c:false},{t:"Drink moderately if no edema",c:true}], exp:"Unless you have severe edema or heart failure, moderate water intake helps metabolism."},
+        {tags:['hf'], q:"Most important routine for Heart Failure?", a:[{t:"Weigh yourself daily",c:true},{t:"Heavy exercise",c:false}], exp:"Sudden weight gain (2kg in 2 days) indicates fluid retention. Seek help."},
+        {tags:['all'], q:"Can I buy strong painkillers (NSAIDs)?", a:[{t:"Absolutely NOT",c:true},{t:"Yes, in moderation",c:false}], exp:"NSAIDs constrict blood vessels, damaging kidneys and worsening heart failure."},
+        {tags:['hf'], q:"Need to sleep on high pillows to breathe?", a:[{t:"Bad neck",c:false},{t:"Heart Failure worsening",c:true}], exp:"Orthopnea (shortness of breath lying flat) indicates fluid in lungs."},
+        {tags:['all'], q:"Can I eat Starfruit?", a:[{t:"Absolutely NOT",c:true},{t:"Just a little",c:false}], exp:"Starfruit contains neurotoxins that kidney patients cannot filter out."},
+        {tags:['all'], q:"Stop blood pressure meds if BP is normal?", a:[{t:"Yes, drugs hurt kidneys",c:false},{t:"No, stopping is dangerous",c:true}], exp:"Stable BP protects kidneys. Stopping meds risks stroke and kidney damage."},
+        {tags:['dm'], q:"HbA1c Target for Diabetics?", a:[{t:"Lower is always better",c:false},{t:"Usually < 7%",c:true}], exp:"Generally < 7%, but discuss individual targets with your doctor."},
+        {tags:['dm'], q:"Hypoglycemia (sweating, shaking) - what to do?", a:[{t:"Inject Insulin",c:false},{t:"Take 15g Sugar",c:true}], exp:"Take sugar immediately. Injecting insulin will worsen it!"},
+        {tags:['all'], q:"Is life over after Dialysis?", a:[{t:"Yes, it's over",c:false},{t:"No, quality life is possible",c:true}], exp:"Many patients maintain a good quality of life, travel, and work with dialysis."},
+        {tags:['all'], q:"Is Chicken Essence good for CKD?", a:[{t:"No, high K/P",c:true},{t:"Yes, for energy",c:false}], exp:"Concentrated essence is high in Potassium, Phosphorus, and Purines."},
+        {tags:['dm'], q:"Early sign of Diabetic Kidney Disease?", a:[{t:"Back pain",c:false},{t:"Microalbuminuria",c:true}], exp:"Microalbuminuria (UACR 30-300) is the earliest warning sign."},
+        {tags:['hf'], q:"Heart Failure: sudden breathlessness?", a:[{t:"Drink water",c:false},{t:"Seek medical help",c:true}], exp:"Could be acute pulmonary edema. Emergency."},
+        {tags:['all'], q:"Why avoid Processed Food (Ham, Sausage)?", a:[{t:"High calories",c:false},{t:"Inorganic Phosphorus",c:true}], exp:"Inorganic phosphates in additives are 100% absorbed, causing high blood phosphorus."},
+        {tags:['all'], q:"Gout diet to avoid?", a:[{t:"Organs, dried fish, broth",c:true},{t:"Eggs, Milk, Rice",c:false}], exp:"Organs and concentrated broth are high in Purines and Phosphorus."},
+        {tags:['all'], q:"Supplement calories without protein?", a:[{t:"Low-Nitrogen Starch",c:true},{t:"Brown Rice",c:false}], exp:"Glass noodles/Starch (Low-N) provide energy without producing uremic toxins."},
+        {tags:['all'], q:"Cut all oil for weight loss?", a:[{t:"Yes",c:false},{t:"No, good oil is needed",c:true}], exp:"Lack of calories causes muscle breakdown. Use good plant oils."},
+        {tags:['all'], q:"How to cook veggies to lower Potassium?", a:[{t:"Blanch and drain water",c:true},{t:"Make vegetable soup",c:false}], exp:"Potassium dissolves in water. Blanch veggies and discard the water."},
+        {tags:['all'], q:"Weight loss for Gout?", a:[{t:"Fast dieting",c:false},{t:"Slow, steady loss",c:true}], exp:"Fast weight loss produces ketones, inhibiting uric acid excretion."}
+    ];
+    let currentQuizData = [];
+
+    // --- Logic ---
+   function switchTab(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
+        const idx = (id==='home')?0:(id==='meds')?1:(id==='diet')?2:(id==='quiz')?3:4;
+        const navItems = document.querySelectorAll('.nav-item');
+        if(navItems[idx]) navItems[idx].classList.add('active');
+        
+        window.scrollTo(0,0);
+        
+        if (id === 'diet') {
+            initFoodSearch(); 
+        }
+        if (id === 'quiz') initQuiz();
+    }
+    
+    function updateAllRisks() {
+        const age = parseFloat(document.getElementById('kfre-age').value);
+        const sex = document.getElementById('kfre-sex').value;
+        const egfr = parseFloat(document.getElementById('kfre-egfr').value);
+        const uacr = parseFloat(document.getElementById('kfre-uacr').value);
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hfVal = document.getElementById('kfre-hf').value;
+        const hasDM = dmVal === '1'; 
+        const hasHF = hfVal === '1';
+        
+        if (isNaN(age) || sex === "" || isNaN(egfr) || isNaN(uacr) || dmVal === "" || hfVal === "") return;
+
+        document.getElementById('start-hint').classList.add('hidden');
+        document.getElementById('unified-result').classList.remove('hidden');
+
+        // Heatmap
+        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
+        let row = '5', stageText = 'G5';
+        if (egfr >= 90) { row = '1'; stageText = 'G1'; }
+        else if (egfr >= 60) { row = '2'; stageText = 'G2'; }
+        else if (egfr >= 45) { row = '3a'; stageText = 'G3a'; }
+        else if (egfr >= 30) { row = '3b'; stageText = 'G3b'; }
+        else if (egfr >= 15) { row = '4'; stageText = 'G4'; }
+        
+        let col = '1', uacrText = 'Normal';
+        if (uacr >= 300) { col = '3'; uacrText = 'Macro'; } 
+        else if (uacr >= 300) { col = '2'; uacrText = 'Micro'; }
+
+        const cellId = `cell-${row}-${col}`;
+        const cell = document.getElementById(cellId);
+        if (cell) cell.classList.add('active-cell');
+
+        let color = '#e03e2e', text = 'Very High Risk';
+        let boxBg = '#ffebee', boxColor = '#b71c1c';
+
+        if (cell.classList.contains('bg-g')) { 
+            color = '#6bbd45'; text = 'Low Risk (Follow-up)'; 
+            boxBg = '#f0fdf4'; boxColor = '#1b5e20';
+        } else if (cell.classList.contains('bg-y')) { 
+            color = '#ffd700'; text = 'Moderate Risk (Caution)'; 
+            boxBg = '#fffde7'; boxColor = '#f57f17';
+        } else if (cell.classList.contains('bg-o')) { 
+            color = '#f58220'; text = 'High Risk (Strict Control)'; 
+            boxBg = '#fff3e0'; boxColor = '#e65100';
+        }
+
+        const banner = document.getElementById('risk-banner');
+        banner.style.backgroundColor = color;
+        banner.style.color = (color === '#ffd700') ? '#222' : '#fff'; 
+        document.getElementById('risk-title').innerText = text;
+        document.getElementById('risk-desc').innerText = `eGFR ${stageText} + ${uacrText}`;
+
+        const kBox = document.getElementById('kfre-result-box');
+        if(kBox) {
+            kBox.style.borderColor = color; kBox.style.backgroundColor = boxBg;
+            document.getElementById('kfre-result-title').style.color = boxColor;
+        }
+
+        updateMeds(egfr, hasDM, hasHF);
+        updateDiet(egfr, hasDM, hasHF);
+        updateArmorVisibility(hasDM, egfr, hasHF); 
+
+        // KFRE logic (Same formula)
+        const sexNum = parseFloat(sex);
+        const logACR = Math.log(uacr);
+        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
+        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
+        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
+        document.getElementById('res-2yr').innerText = (risk2 * 100).toFixed(1) + "%";
+        document.getElementById('res-5yr').innerText = (risk5 * 100).toFixed(1) + "%";
+
+        const adviceBox = document.getElementById('kfre-advice-box');
+        let adviceHTML = "", adviceBorder = "#ccc";
+        let condText = [];
+        if(hasDM) condText.push("Diabetes");
+        if(hasHF) condText.push("Heart Failure");
+        let condStr = condText.length > 0 ? " with " + condText.join("/") : "";
+
+        if (risk2 >= 0.4) { 
+            adviceBorder = "#d32f2f"; adviceHTML = `High risk of kidney failure${condStr}. Consult a nephrologist.`;
+        } else if (risk2 >= 0.1) { 
+            adviceBorder = "#f57c00"; adviceHTML = `Consider joining a CKD care program. ${hasHF ? "Strict fluid control for Heart Failure." : ""}`;
+        } else if (risk5 >= 0.03) { 
+            adviceBorder = "#fbc02d"; adviceHTML = `Referral to nephrology recommended. ${hasHF ? "Cardio-Renal protection needed." : ""}`;
+        } else {
+            adviceBorder = "#388e3c"; adviceHTML = `Short-term risk is low. Maintain healthy lifestyle.`;
+        }
+        adviceBox.innerHTML = adviceHTML;
+        adviceBox.style.borderLeftColor = adviceBorder;
+    }
+
+    // --- 💊 Med Logic (Translated) ---
+    function updateMeds(egfr, hasDM, hasHF) {
+        document.getElementById('med-placeholder').classList.add('hidden');
+        document.getElementById('med-content').classList.remove('hidden');
+        
+        const sel = document.getElementById('kfre-egfr');
+        document.getElementById('med-egfr-val').innerText = sel.options[sel.selectedIndex].text.split(' ')[0];
+        
+        let conds = ['CKD']; 
+        if(hasDM) conds.push('DM'); 
+        if(hasHF) conds.push('HF');
+        document.getElementById('med-cond-text').innerText = conds.join(' + ');
+
+        const g = document.getElementById('list-med-g'), y = document.getElementById('list-med-y'), r = document.getElementById('list-med-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
+
+        // 1. SGLT2i
+        if (egfr >= 20) {
+            let msg = hasHF ? "Core life-saving drug for Heart & Kidney!" : "Significantly delays kidney progression.";
+            add(g, "SGLT2i", msg);
+        } else add(y, "SGLT2i", "Not recommended to initiate if eGFR < 20. Continue if already on it.");
+
+        // 2. RASi / ARNI
+        if (hasHF) {
+            add(g, "ARNI", "Top choice for Heart Failure (GDMT)!");
+            add(g, "Beta-blocker", "Essential for heart protection.");
+            add(g, "MRA (Spironolactone)", "4th pillar for Heart Failure. Watch Potassium.");
+        } else {
+            add(g, "RASi (ACEi/ARB)", "Basic kidney protection and anti-proteinuria.");
+        }
+
+        // 3. DM
+        if (hasDM) {
+            add(g, "GLP-1 RA", "Blood sugar, weight loss, and cardio-renal protection.");
+            
+            if (!hasHF && egfr >= 25) {
+                add(g, "ns-MRA (Finerenone)", "Specific for Diabetic Kidney Disease. Anti-inflammatory.");
+            }
+            
+            if (egfr < 30) add(r, "Metformin", "Contraindicated if eGFR < 30! Lactic Acidosis risk.");
+            else if (egfr < 45) add(y, "Metformin", "Reduce dose (max 1000mg).");
+        }
+
+        // 4. General
+        add(g, "Statins", "Vessel protection. Prevents stroke.");
+        
+        let diureticMsg = hasHF ? "Control symptoms (weight). Pause if dehydrated." : "Pause during Sick Days (Dehydration).";
+        add(y, "Diuretics", diureticMsg);
+        
+        let nsaidMsg = hasHF ? "Absolute Ban! Worsens HF and kidneys." : "Kidney Killer! Avoid.";
+        add(r, "NSAIDs", nsaidMsg);
+    }
+
+    // --- 🥦 Diet Logic (Translated) ---
+    function updateDiet(egfr, hasDM, hasHF) {
+        document.getElementById('diet-placeholder').classList.add('hidden');
+        document.getElementById('diet-content').classList.remove('hidden');
+        
+        const pBox = document.getElementById('protein-guide-box');
+        const pVal = document.getElementById('protein-guide-val');
+        if(pBox) {
+            pBox.style.display = 'block';
+            if (egfr < 45) {
+                pVal.innerText = "0.6 ~ 0.8";
+                pVal.style.color = "#d84315";
+            } else {
+                pVal.innerText = "0.8 ~ 1.0";
+                pVal.style.color = "#2e7d32"; 
+            }
+        }
+
+        const g = document.getElementById('list-diet-g'), y = document.getElementById('list-diet-y'), r = document.getElementById('list-diet-r');
+        g.innerHTML = ''; y.innerHTML = ''; r.innerHTML = '';
+        function add(list, title, desc) { list.innerHTML += `<div class="list-item"><span class="list-title">${title}</span><span style="color:#555;">${desc}</span></div>`; }
+
+        add(g, "Quality Protein", "Egg, Tofu, Fish, Chicken.");
+        add(g, "Plant Oils", "Olive oil, Canola oil.");
+        
+        if(hasHF) {
+            add(r, "High Sodium", "Pickles, Canned food, Hotpot soup. Worsens Heart Failure.");
+            add(y, "Fluid Intake", "Weigh daily. Restrict fluid if edema occurs.");
+        } else {
+            add(g, "Adequate Water", "Drink enough if no edema.");
+        }
+
+        if (hasDM) {
+            add(r, "Refined Sugar", "Blood sugar spikes age blood vessels.");
+            add(g, "Low GI", "Whole grains, Vegetables.");
+        }
+
+        if (egfr < 45) { 
+            add(g, "Low-N Starch", "Glass noodles, Tapioca. Energy without uremic toxins.");
+            add(y, "Brown Rice", "High Phosphorus. Switch to white rice or Low-N starch.");
+            add(y, "Green Veggies", "High Potassium. Blanch before cooking.");
+            add(r, "Low-Sodium Salt", "Contains Potassium Chloride. Fatal risk for heart/kidney.");
+        }
+        
+        add(r, "Starfruit", "Contains Neurotoxin.");
+        add(r, "Processed Meat", "Ham/Sausage contain Inorganic Phosphates.");
+    }
+
+    function checkMed() {
+        const val = document.getElementById('med-select').value;
+        const lights = document.querySelectorAll('.light');
+        const res = document.getElementById('med-result');
+        lights.forEach(l => l.classList.remove('on'));
+        res.classList.add('hidden');
+        if(!val) return;
+        const data = medDB[val];
+        res.classList.remove('hidden');
+        res.innerHTML = `<strong>${data.title}</strong><br>${data.desc}`;
+        if (data.level === 'r') { document.getElementById('light-r').classList.add('on'); res.style.borderColor = "var(--risk-r)"; res.style.background = "#fff5f5"; }
+        else if (data.level === 'y') { document.getElementById('light-y').classList.add('on'); res.style.borderColor = "var(--risk-y)"; res.style.background = "#fffbf0"; }
+        else { document.getElementById('light-g').classList.add('on'); res.style.borderColor = "var(--risk-g)"; res.style.background = "#e6fffa"; }
+    }
+
+    // --- 🛡️ Armor Logic (Translated) ---
+    function updateArmorVisibility(hasDM, egfr, hasHF) {
+        const iconRasi = document.getElementById('icon-rasi');
+        const nameRasi = document.getElementById('name-rasi');
+        const descRasi = document.getElementById('desc-rasi');
+        const brandRasi = document.getElementById('brand-rasi'); 
+        
+        if(hasHF) {
+            iconRasi.innerText = "⛑️";
+            nameRasi.innerText = "Dual Protect";
+            descRasi.innerText = "ARNI"; 
+            brandRasi.innerText = "Entresto";
+        } else {
+            iconRasi.innerText = "🧥";
+            nameRasi.innerText = "Basic Guard";
+            descRasi.innerText = "ACEi/ARB";
+            brandRasi.innerText = "Losartan/Valsartan";
+        }
+
+        const slotBb = document.getElementById('slot-bb');
+        if (hasHF) {
+            slotBb.style.display = 'flex';
+        } else {
+            document.getElementById('drug-bb').checked = false;
+            slotBb.classList.remove('equipped');
+            slotBb.style.display = 'none';
+        }
+
+        const slotMraOld = document.getElementById('slot-mra-old');
+        const slotNsMra = document.getElementById('slot-nsmra');
+        
+        slotMraOld.style.display = 'none';
+        slotNsMra.style.display = 'none';
+
+        if (hasHF) {
+            slotMraOld.style.display = 'flex';
+            document.getElementById('drug-nsmra').checked = false;
+            slotNsMra.classList.remove('equipped');
+        } else if (hasDM && egfr >= 25) {
+            slotNsMra.style.display = 'flex';
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+        } else {
+            document.getElementById('drug-mra-old').checked = false;
+            slotMraOld.classList.remove('equipped');
+            document.getElementById('drug-nsmra').checked = false;
+            slotNsMra.classList.remove('equipped');
+        }
+
+        const slotGlp1 = document.getElementById('slot-glp1');
+        if (hasDM) {
+            slotGlp1.style.display = 'flex';
+        } else {
+            document.getElementById('drug-glp1').checked = false;
+            slotGlp1.classList.remove('equipped');
+            slotGlp1.style.display = 'none';
+        }
+
+        updateStatusAndAdvice();
+    }
+
+    const ranks = [
+        { class: 'status-novice', title: 'No Protection', icon: '⚠️', msg: 'You are exposed to risk. Consult doctor.' }, 
+        { class: 'status-apprentice', title: 'Basic Guard', icon: '🛡️', msg: 'Good start on basic protection.' }, 
+        { class: 'status-veteran', title: 'Advanced Guard', icon: '✨', msg: 'Great! Your defense is solid.' }, 
+        { class: 'status-elite', title: 'Elite Guard', icon: '🏰', msg: 'Excellent! Multi-target protection.' }, 
+        { class: 'status-guardian', title: 'Guardian', icon: '🏆', msg: 'Strongest protection for heart & kidneys!' }, 
+        { class: 'status-god', title: 'Godlike', icon: '👑', msg: 'Perfect! Keep it up.' } 
+    ];
+
+    function updateStatusAndAdvice() {
+        const checkboxes = document.querySelectorAll('.gear-checkbox');
+        let checkedCount = 0;
+        checkboxes.forEach(box => { 
+            if (box.parentElement.style.display !== 'none') {
+                if (box.checked) checkedCount++; 
+            }
+        });
+        
+        let rankIndex = checkedCount; 
+        if (rankIndex >= 5) rankIndex = 5; 
+        
+        const data = ranks[rankIndex];
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        statusPanel.className = 'status-panel ' + data.class;
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth;
+        statusPanel.classList.add('animate-pop');
+
+        generateAdvice();
+    }
+
+    function toggleEquip(element, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked;
+        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
+        else { element.classList.remove('equipped'); }
+        updateStatusAndAdvice();
+    }
+
+    function generateAdvice() {
+        const hfVal = document.getElementById('kfre-hf').value;
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasHF = hfVal === '1';
+        
+        let adviceHTML = "";
+        
+        // SGLT2i
+        const useSglt2 = document.getElementById('drug-sglt2').checked;
+        if (useSglt2) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>SGLT2i:</strong> Great! Key life-saving drug.</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 Urgent</span><br><strong style="color:#d84315;">Consult Doctor:</strong> SGLT2i reduces hospitalization and dialysis risks.</div>`;
+        }
+
+        // RASi
+        const useRasi = document.getElementById('drug-rasi').checked;
+        if (hasHF) {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>ARNI/RASi:</strong> Correct heart protection!</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>Heart:</strong> ARNI or ACEi/ARB is recommended for Heart Failure.</div>`;
+        } else {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi:</strong> Important for kidney protection.</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>Basic:</strong> ACEi/ARB is the foundation.</div>`;
+        }
+
+        // Beta-blocker
+        const slotBb = document.getElementById('slot-bb');
+        if (slotBb.style.display !== 'none') {
+            const useBb = document.getElementById('drug-bb').checked;
+            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>Beta-blocker:</strong> Equipped! Reduces heart load.</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>Heart:</strong> One of the 4 pillars for Heart Failure.</div>`;
+        }
+
+        var adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
+    }
+
+    // --- Shared Helper Functions (Same as index.html) ---
+    function showHelp(type) {
+        document.getElementById('help-modal').style.display = 'flex';
+        document.querySelectorAll('.help-content').forEach(d => d.classList.add('hidden'));
+        const target = document.getElementById('help-' + type);
+        if(target) target.classList.remove('hidden');
+    }
+    function closeHelp() { document.getElementById('help-modal').style.display = 'none'; }
+    function clearUserData() { 
+        if(confirm('Clear all data and reset?')) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+    }
+    const STORAGE_KEY = 'my_ckd_data_v1';
+    function saveUserData() {
+        const data = {
+            age: document.getElementById('kfre-age').value,
+            sex: document.getElementById('kfre-sex').value,
+            egfr: document.getElementById('kfre-egfr').value,
+            uacr: document.getElementById('kfre-uacr').value,
+            dm: document.getElementById('kfre-dm').value,
+            hf: document.getElementById('kfre-hf').value,
+            meds: {
+                'drug-sglt2': document.getElementById('drug-sglt2').checked,
+                'drug-rasi': document.getElementById('drug-rasi').checked,
+                'drug-bb': document.getElementById('drug-bb').checked,
+                'drug-mra-old': document.getElementById('drug-mra-old').checked,
+                'drug-nsmra': document.getElementById('drug-nsmra').checked,
+                'drug-statin': document.getElementById('drug-statin').checked,
+                'drug-glp1': document.getElementById('drug-glp1').checked
+            }
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function loadUserData() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return; 
+        try {
+            const data = JSON.parse(raw);
+            if (data.age) document.getElementById('kfre-age').value = data.age;
+            if (data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
+            restoreOptionGroup('kfre-sex', data.sex);
+            restoreOptionGroup('kfre-uacr', data.uacr);
+            restoreOptionGroup('kfre-dm', data.dm);
+            restoreOptionGroup('kfre-hf', data.hf);
+            updateAllRisks();
+            checkHFSymptoms(data.hf === '1');
+            if (data.meds) {
+                Object.keys(data.meds).forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox && checkbox.closest('.equip-slot').style.display !== 'none') {
+                        checkbox.checked = data.meds[id];
+                        const slot = checkbox.closest('.equip-slot');
+                        if (data.meds[id]) slot.classList.add('equipped');
+                        else slot.classList.remove('equipped');
+                    }
+                });
+                updateStatusAndAdvice();
+            }
+        } catch (e) { console.error("Data load failed", e); }
+    }
+    function restoreOptionGroup(inputId, value) {
+        if (!value) return;
+        const input = document.getElementById(inputId);
+        input.value = value;
+        const group = input.parentElement; 
+        if (group) {
+            const btns = group.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${value}'`)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+    }
+    const originalUpdateRisks = updateAllRisks;
+    updateAllRisks = function() { originalUpdateRisks(); saveUserData(); };
+    const originalToggleEquip = toggleEquip;
+    toggleEquip = function(element, checkboxId) { originalToggleEquip(element, checkboxId); saveUserData(); };
+    window.addEventListener('load', loadUserData);
+</script>
