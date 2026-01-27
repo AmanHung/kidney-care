@@ -27,18 +27,14 @@
         select { width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222; -webkit-appearance: none; appearance: none; }
         .select-wrapper::after { content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #444; pointer-events: none; font-size: 1.2rem; }
         select:focus { border-color: var(--primary); background: #f9fff9; }
-        
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn { flex: 1; padding: 15px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1.1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
-        
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.97); }
         .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
         .btn-line { background: #06c755; box-shadow: 0 6px 15px rgba(6,199,85,0.3); }
         .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 6px 15px rgba(245,130,32,0.3); }
-        
-        /* Risk Matrix */
         .risk-matrix { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; background: #fff; font-size: 0.9rem; }
         .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.3); height: 55px; position: relative; }
         .matrix-header { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.85rem; padding: 5px 0; }
@@ -46,8 +42,6 @@
         .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
         .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
         .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        /* Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ccc; z-index: 1000; }
         .nav-item { text-align: center; color: #999; font-size: 0.9rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
         .nav-item.active { color: var(--primary); }
@@ -66,7 +60,6 @@
         .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
         .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; position: relative; transition: all 0.2s; }
         .equip-slot:active { transform: scale(0.95); }
-        
         .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; }
         .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; }
         .slot-rare { border-color: #2196F3; background-color: #E3F2FD; }
@@ -75,7 +68,7 @@
         .slot-heart { border-color: var(--heart); background-color: var(--heart-light); }
         
         .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
-        .equip-slot.equipped::after { content: 'Equipped'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
+        .equip-slot.equipped::after { content: 'Aktif'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
         .slot-rare.equipped::after { background: #2196F3; }
@@ -88,6 +81,9 @@
         .hidden-checkbox { display: none; }
         
         .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .status-icon { font-size: 3.5rem; margin-right: 20px; }
+        .status-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 5px; }
+        .status-msg { font-size: 1.1rem; opacity: 0.9; }
         .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
         .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
         .status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
@@ -109,12 +105,15 @@
         .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
         
-        /* Food Search */
         #food-list-area { min-height: 200px; }
         #food-tags { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; }
         
         .animate-pop { animation: pop-effect 0.4s ease-out; }
         @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
     </style>
     <script src="data_id.js"></script>
 </head>
@@ -209,15 +208,6 @@
                 <div id="risk-banner" class="risk-banner" style="background:#ccc; margin-bottom:20px;">
                     <h3 id="risk-title">--</h3><p id="risk-desc">--</p>
                 </div>
-                <div class="risk-matrix">
-                    <div class="matrix-header"></div><div class="matrix-header">Nrml</div><div class="matrix-header">Micr</div><div class="matrix-header">Macr</div>
-                    <div class="matrix-label">G1</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
-                    <div class="matrix-label">G2</div><div class="matrix-cell bg-g" id="cell-2-1"></div><div class="matrix-cell bg-g" id="cell-2-2"></div><div class="matrix-cell bg-o" id="cell-2-3"></div>
-                    <div class="matrix-label">G3a</div><div class="matrix-cell bg-y" id="cell-3a-1"></div><div class="matrix-cell bg-o" id="cell-3a-2"></div><div class="matrix-cell bg-r" id="cell-3a-3"></div>
-                    <div class="matrix-label">G3b</div><div class="matrix-cell bg-o" id="cell-3b-1"></div><div class="matrix-cell bg-r" id="cell-3b-2"></div><div class="matrix-cell bg-r" id="cell-3b-3"></div>
-                    <div class="matrix-label">G4</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
-                    <div class="matrix-label">G5</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
-                </div>
                 <p style="color:#d32f2f; font-weight:900; text-align:center;">👇 Hasil saran telah siap.<br>Cek tab di bawah.</p>
             </div>
         </div>
@@ -287,9 +277,10 @@
     </div>
 
     <div id="tab-quiz" class="section">
-        <div class="card">
-            <h2>🛡️ Perisai Ginjal Saya</h2>
-            <p style="text-align:center; color:#666;">Centang obat yang sedang Anda minum.</p>
+        <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ Perisai Ginjal Saya</h2>
+            <p style="text-align:center; color:#666; font-size:1.1rem; margin-bottom:15px;">Centang obat yang sedang Anda minum.</p>
+
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
                     <span class="equip-name">Penyelamat</span><span class="equip-desc">SGLT2i</span>
@@ -308,7 +299,7 @@
                     <span class="equip-name">Blok Ekstra</span><span class="equip-desc">MRA</span>
                     <input type="checkbox" id="drug-mra-old" class="gear-checkbox hidden-checkbox">
                 </div>
-                <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none;">
+                <div id="slot-nsmra" class="equip-slot slot-arcane" onclick="toggleEquip(this, 'drug-nsmra')" style="display:none; border-color:#9C27B0; background:#F3E5F5;">
                     <span class="equip-name">Pelindung Baru</span><span class="equip-desc">ns-MRA</span>
                     <input type="checkbox" id="drug-nsmra" class="gear-checkbox hidden-checkbox">
                 </div>
@@ -322,11 +313,11 @@
                 </div>
             </div>
             
-            <div id="status-panel" class="status-panel status-novice" style="margin-top:20px;">
+            <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
                 <div class="status-info">
-                    <div class="status-title" id="status-title">Belum Ada Perlindungan</div>
-                    <div class="status-msg" id="status-msg">Anda berisiko. Konsultasikan ke dokter.</div>
+                    <div class="status-title" id="status-title">Belum Ada</div>
+                    <div class="status-msg" id="status-msg">Anda berisiko.</div>
                 </div>
             </div>
             <div id="dynamic-advice" class="hidden" style="margin-top:15px; text-align:left; animation: fadeIn 0.5s;"></div>
@@ -335,17 +326,12 @@
         <div class="card" style="margin-top: 20px;">
             <h2>🎓 Kuis Kesehatan</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
-            <p id="quiz-counter" style="text-align:right;">Q1/10</p>
-            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px;">Memuat...</h3><div id="quiz-options"></div></div>
+            <p id="quiz-counter" style="text-align:right; color:#666; font-weight:bold;">Q1/10</p>
+            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.3rem;">Memuat...</h3><div id="quiz-options"></div></div>
             <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
-                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900;"></div>
-                <div id="quiz-exp" style="background:#fff; padding:15px; border-radius:10px; margin:10px 0;"></div>
-                <button class="btn btn-next" onclick="nextQ()">Lanjut ➜</button>
+                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900; margin-bottom:15px;"></div><div id="quiz-exp" style="background:#fff; padding:20px; border-radius:15px; border:2px solid #ccc; color:#444; font-size:1.1rem;"></div><button class="btn btn-next" onclick="nextQ()">Lanjut ➜</button>
             </div>
-            <div id="quiz-score" class="hidden">
-                <h3 style="font-size:3rem; color:var(--primary);">Skor: <span id="final-score">0</span></h3>
-                <button class="btn" onclick="initQuiz()">🔄 Ulangi</button>
-            </div>
+            <div id="quiz-score" class="hidden"><h3 style="font-size:3rem; color:var(--primary);">Skor: <span id="final-score">0</span></h3><button class="btn" onclick="initQuiz()">🔄 Ulangi</button></div>
         </div>
     </div>
 
@@ -508,7 +494,7 @@
         if(hf) add(r, "Garam & Asin", "Memperburuk bengkak.");
     }
 
-    // --- Armor & Quiz Logic ---
+    // --- Armor Logic (Fixed) ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
@@ -544,31 +530,77 @@
         updateStatusAndAdvice();
     }
 
-    function toggleEquip(el, id) {
-        const chk = document.getElementById(id);
-        chk.checked = !chk.checked;
-        el.classList.toggle('equipped', chk.checked);
-        if(chk.checked) playSound(true);
+    // Ranks Data (Missing in previous version)
+    const ranks = [
+        { class: 'status-novice', title: 'Belum Ada', icon: '⚠️', msg: 'Risiko tinggi. Konsultasikan ke dokter.' },
+        { class: 'status-apprentice', title: 'Pelindung Awal', icon: '🛡️', msg: 'Awal yang baik.' },
+        { class: 'status-veteran', title: 'Pelindung Menengah', icon: '✨', msg: 'Pertahanan Anda cukup kuat.' },
+        { class: 'status-elite', title: 'Pelindung Ahli', icon: '🏰', msg: 'Luar biasa! Perlindungan multi-target.' },
+        { class: 'status-guardian', title: 'Penjaga Ginjal', icon: '🏆', msg: 'Perlindungan terkuat untuk jantung & ginjal!' },
+        { class: 'status-god', title: 'Sempurna', icon: '👑', msg: 'Sempurna! Pertahankan.' }
+    ];
+
+    function updateStatusAndAdvice() {
+        const checkboxes = document.querySelectorAll('.gear-checkbox');
+        let checkedCount = 0;
+        checkboxes.forEach(box => { 
+            if (box.parentElement.style.display !== 'none') {
+                if (box.checked) checkedCount++; 
+            }
+        });
+        
+        let rankIndex = checkedCount; 
+        if (rankIndex >= 5) rankIndex = 5; 
+        
+        const data = ranks[rankIndex];
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        statusPanel.className = 'status-panel ' + data.class;
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth;
+        statusPanel.classList.add('animate-pop');
+
+        generateAdvice();
+    }
+
+    function toggleEquip(element, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked;
+        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
+        else { element.classList.remove('equipped'); }
         updateStatusAndAdvice();
     }
 
-    function updateStatusAndAdvice() {
-        const cnt = document.querySelectorAll('.gear-checkbox:checked').length;
-        const panel = document.getElementById('status-panel');
-        let title="Belum Ada", msg="Risiko tinggi.";
-        if(cnt>0) { title="Perlindungan Awal"; msg="Bagus, lanjutkan!"; }
-        if(cnt>2) { title="Perlindungan Kuat"; msg="Sangat baik!"; }
-        document.getElementById('status-title').innerText=title;
-        document.getElementById('status-msg').innerText=msg;
+    function generateAdvice() {
+        const hfVal = document.getElementById('kfre-hf').value;
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasHF = hfVal === '1';
         
-        // Advice
         let adviceHTML = "";
-        if(document.getElementById('drug-sglt2').checked) adviceHTML += `<div style="color:green; font-weight:bold;">✅ SGLT2i: Terlindungi!</div>`;
-        else adviceHTML += `<div style="color:red; font-weight:bold;">⚠️ SGLT2i: Disarankan.</div>`;
         
-        const adviceDiv = document.getElementById('dynamic-advice');
-        adviceDiv.innerHTML = adviceHTML;
-        adviceDiv.classList.remove('hidden');
+        // SGLT2i
+        const useSglt2 = document.getElementById('drug-sglt2').checked;
+        if (useSglt2) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>SGLT2i:</strong> Bagus! Obat penyelamat utama.</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 Penting</span><br><strong style="color:#d84315;">Konsul Dokter:</strong> SGLT2i mengurangi risiko rawat inap & cuci darah.</div>`;
+        }
+
+        // RASi
+        const useRasi = document.getElementById('drug-rasi').checked;
+        if (hasHF) {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>ARNI/RASi:</strong> Perlindungan jantung yang tepat!</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>Jantung:</strong> ARNI atau ACEi/ARB disarankan untuk Gagal Jantung.</div>`;
+        } else {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi:</strong> Penting untuk perlindungan ginjal.</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>Dasar:</strong> ACEi/ARB adalah fondasi pengobatan.</div>`;
+        }
+
+        var adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
     }
 
     // --- Quiz Data ---
@@ -626,7 +658,6 @@
         if(!tagContainer) return;
         tagContainer.innerHTML = '';
         
-        // Generate Category Buttons
         Object.keys(foodCategories).forEach(key => {
             const btn = document.createElement('button');
             btn.innerText = foodCategories[key];
@@ -655,8 +686,6 @@
         let count = 0;
         Object.keys(foodDB).forEach(key => {
             const item = foodDB[key];
-            
-            // Search Logic (Match Category & Keyword)
             const isGlobalSearch = input !== '';
             const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
             const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
@@ -758,9 +787,8 @@
                 setOption('kfre-dm', data.dm, document.querySelector(`#group-dm .option-btn:nth-child(${data.dm==='1'?2:1})`));
                 setOption('kfre-hf', data.hf, document.querySelector(`#group-hf .option-btn:nth-child(${data.hf==='1'?2:1})`));
                 
-                updateAllRisks(); // Trigger logic to show/hide slots
+                updateAllRisks(); 
                 
-                // Restore Meds Checkbox
                 if(data.meds) {
                     Object.keys(data.meds).forEach(key => {
                         const chk = document.getElementById(key);
