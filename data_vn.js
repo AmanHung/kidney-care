@@ -1,4 +1,4 @@
-// data_vn.js - Vietnamese Database
+// data_vn.js - Vietnamese Database (Fixed)
 
 const medDB = {
     'ras': { level: 'g', title: '✅ Bảo vệ cơ bản (ACEi/ARB)', desc: 'Thuốc cơ bản bảo vệ thận và tim. eGFR giảm nhẹ lúc đầu là bình thường.' },
