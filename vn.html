@@ -737,7 +737,7 @@
         else { adviceDiv.classList.add('hidden'); }
     }
 
-    // --- Food Search (FIXED) ---
+   // --- Food Search (FIXED) ---
     let currentCategory = 'all';
     
     function initFoodSearch() { 
@@ -745,6 +745,7 @@
         if(!tagContainer) return;
         tagContainer.innerHTML = '';
         
+        // 確保 data_vn.js 已載入
         if (typeof foodCategories !== 'undefined') {
             Object.keys(foodCategories).forEach(key => {
                 const btn = document.createElement('button');
@@ -777,6 +778,7 @@
             Object.keys(foodDB).forEach(key => {
                 const item = foodDB[key];
                 
+                // 搜尋邏輯
                 const isGlobalSearch = input !== '';
                 const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
                 const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
@@ -790,11 +792,12 @@
                     div.style.justifyContent = 'space-between';
                     div.style.alignItems = 'center';
                     
-                    // 修正：針對越南語的燈號判斷 (Xanh/Vàng/Đỏ)
+                    // 修正：針對 data_vn.js 的標籤 (🟢 Xanh, 🟡 Vàng, 🔴 Đỏ)
                     let dotColor = '#ddd';
-                    if(item.t.includes('Xanh')) dotColor = 'var(--risk-g)';
-                    else if(item.t.includes('Vàng')) dotColor = 'var(--risk-y)';
-                    else if(item.t.includes('Đỏ')) dotColor = 'var(--risk-r)';
+                    // 使用更寬鬆的包含檢查，避免因為空格導致判斷失敗
+                    if(item.t.includes('Xanh') || item.t.includes('Green')) dotColor = 'var(--risk-g)';
+                    else if(item.t.includes('Vàng') || item.t.includes('Yellow')) dotColor = 'var(--risk-y)';
+                    else if(item.t.includes('Đỏ') || item.t.includes('Red')) dotColor = 'var(--risk-r)';
 
                     div.innerHTML = `
                         <div style="font-weight:bold; font-size:1.0rem;">
@@ -809,25 +812,39 @@
             });
         }
         
-        if (count === 0) listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Không tìm thấy.</p>';
+        if (count === 0) listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Không tìm thấy (Không có dữ liệu).</p>';
     }
     
-    // 修正：針對越南語的燈號顏色判斷
     function showFoodDetail(item) {
         const modal = document.getElementById('food-result-modal');
         const content = document.getElementById('food-result-content');
         
+        // 修正：彈出視窗的顏色判斷邏輯同步更新
         let bg = '#fff', border = '#ccc';
-        if(item.t.includes('Đỏ')) { bg='#fff5f5'; border='var(--risk-r)'; }
-        else if(item.t.includes('Vàng')) { bg='#fffbe6'; border='var(--risk-y)'; }
-        else { bg='#e8f5e9'; border='var(--risk-g)'; }
+        if(item.t.includes('Đỏ') || item.t.includes('Red')) { bg='#fff5f5'; border='var(--risk-r)'; }
+        else if(item.t.includes('Vàng') || item.t.includes('Yellow')) { bg='#fffbe6'; border='var(--risk-y)'; }
+        else { bg='#e8f5e9'; border='var(--risk-g)'; } // 預設綠色
 
         content.parentElement.style.background = bg;
         content.parentElement.style.borderLeft = `8px solid ${border}`;
         
+        // 標籤顯示 (Tags)
+        let tagHtml = '';
+        if(item.tags) {
+            item.tags.forEach(t => {
+                if(t==='high_p') tagHtml += `<span style="background:#607d8b; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ Nhiều Phốt pho</span>`;
+                if(t==='high_k') tagHtml += `<span style="background:#795548; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ Nhiều Kali</span>`;
+                if(t==='gout') tagHtml += `<span style="background:#e91e63; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚠️ Gút (Purin)</span>`;
+                if(t==='low_n') tagHtml += `<span style="background:#00bcd4; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">⚡ Ít đạm</span>`;
+                if(t==='high_na') tagHtml += `<span style="background:#ef6c00; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">🧂 Nhiều Muối</span>`;
+                if(t==='toxin') tagHtml += `<span style="background:black; color:white; padding:2px 6px; border-radius:4px; font-size:0.8rem; margin-right:5px;">☠️ Độc tố</span>`;
+            });
+        }
+
         content.innerHTML = `
             <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
-            <div style="margin-bottom:15px;">${item.t}</div>
+            <div style="margin-bottom:15px; font-weight:bold;">${item.t}</div>
+            <div style="margin-bottom:10px;">${tagHtml}</div>
             <p style="font-size:1.1rem; line-height:1.6; color:#444;">${item.d}</p>
         `;
         
@@ -836,19 +853,6 @@
 
     function closeFoodModal() {
         document.getElementById('food-result-modal').classList.add('hidden');
-    }
-    
-    function checkMed() {
-        const val = document.getElementById('med-select').value;
-        const box = document.getElementById('med-result');
-        if(!val) { box.classList.add('hidden'); return; }
-        const d = medDB[val];
-        box.classList.remove('hidden');
-        box.innerHTML = `<strong>${d.title}</strong><br>${d.desc}`;
-        // Color logic
-        if(d.level==='r') { box.style.background="#fff5f5"; box.style.borderColor="var(--risk-r)"; document.getElementById('light-r').classList.add('on'); }
-        else if(d.level==='y') { box.style.background="#fffbe6"; box.style.borderColor="var(--risk-y)"; document.getElementById('light-y').classList.add('on'); }
-        else { box.style.background="#e8f5e9"; box.style.borderColor="var(--risk-g)"; document.getElementById('light-g').classList.add('on'); }
     }
     
     // --- Data Persistence ---
@@ -1002,4 +1006,5 @@
 </script>
 </body>
 </html>
+
 
