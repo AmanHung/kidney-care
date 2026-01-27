@@ -234,8 +234,10 @@
         <h1 style="color:var(--primary);">Kidney Care Assistant</h1>
         <p>Heart / Kidney / Diabetes</p>
     </div>
-    <div class="lang-switch-box">
-        <select class="lang-select" onchange="if(this.value) location.href=this.value;">
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+        <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
+        <select class="lang-select" onchange="if(this.value) location.href=this.value;" 
+                style="padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; font-size: 0.8rem; background: #fff; font-weight: bold; cursor: pointer; color: #555;">
             <option value="" disabled>🌏 Language</option>
             <option value="index.html">🇹🇼 Chinese</option>
             <option value="#" selected>🇺🇸 English</option>
@@ -1192,7 +1194,86 @@
         else { adviceDiv.classList.add('hidden'); }
     }
 
-    // --- Shared Helper Functions (Same as index.html) ---
+    // --- 🎓 Quiz Logic ---
+    let qIdx = 0, score = 0;
+    function initQuiz() { 
+        qIdx=0; score=0; 
+        document.getElementById('quiz-score').classList.add('hidden'); 
+        document.getElementById('quiz-area').classList.remove('hidden'); 
+        
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hfVal = document.getElementById('kfre-hf').value;
+        
+        // Filter questions based on profile
+        currentQuizData = quizPool.filter(q => {
+            if (q.tags.includes('all')) return true; 
+            if (q.tags.includes('dm') && dmVal === '1') return true; 
+            if (q.tags.includes('hf') && hfVal === '1') return true; 
+            return false;
+        });
+
+        // Shuffle
+        for (let i = currentQuizData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [currentQuizData[i], currentQuizData[j]] = [currentQuizData[j], currentQuizData[i]];
+        }
+        
+        // Limit to 10
+        currentQuizData = currentQuizData.slice(0, 10);
+        
+        // Fallback: If not enough questions, add more general ones
+        if(currentQuizData.length < 10) {
+             let remaining = quizPool.filter(q => !currentQuizData.includes(q));
+             for (let i = 0; i < (10 - currentQuizData.length); i++) {
+                 if (remaining[i]) currentQuizData.push(remaining[i]);
+             }
+        }
+
+        renderQ(); 
+    }
+    
+    function renderQ() {
+        const q = currentQuizData[qIdx];
+        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}/${currentQuizData.length}`;
+        document.getElementById('quiz-question').innerText = q.q;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        const div = document.getElementById('quiz-options');
+        div.innerHTML = '';
+        q.a.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'quiz-option';
+            btn.innerText = opt.t;
+            btn.onclick = () => {
+                playSound(opt.c);
+                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
+                if(opt.c) { btn.classList.add('correct'); score+=10; document.getElementById('quiz-res-text').innerText="🎉 Correct!"; document.getElementById('quiz-res-text').style.color="green"; }
+                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 Oops!"; document.getElementById('quiz-res-text').style.color="red"; }
+                document.getElementById('quiz-exp').innerText = q.exp;
+                document.getElementById('quiz-feedback').classList.remove('hidden');
+            };
+            div.appendChild(btn);
+        });
+        document.querySelector('.progress-fill').style.width = `${((qIdx)/currentQuizData.length)*100}%`;
+    }
+    
+    function nextQ() {
+        qIdx++;
+        if(qIdx < currentQuizData.length) renderQ();
+        else {
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-score').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+            document.querySelector('.progress-fill').style.width = '100%';
+            let comment = "";
+            if (score === 100) comment = "🏆 Amazing! You are a kidney expert!";
+            else if (score >= 60) comment = "👍 Good job!";
+            else comment = "💪 Keep learning!";
+            document.getElementById('score-comment').innerText = comment;
+        }
+    }
+
+    // --- Shared Helper Functions ---
     function showHelp(type) {
         document.getElementById('help-modal').style.display = 'flex';
         document.querySelectorAll('.help-content').forEach(d => d.classList.add('hidden'));
@@ -1273,3 +1354,5 @@
     toggleEquip = function(element, checkboxId) { originalToggleEquip(element, checkboxId); saveUserData(); };
     window.addEventListener('load', loadUserData);
 </script>
+</body>
+</html>
