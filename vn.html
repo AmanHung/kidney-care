@@ -6,6 +6,7 @@
     <title>Trợ lý Chăm sóc Thận</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
+        /* CSS 與 index.html 保持一致 */
         :root { --primary: #009045; --primary-dark: #007035; --accent: #F58220; --heart: #e91e63; --heart-light: #fce4ec; --bg: #fdfdfd; --white: #ffffff; --text: #222; --risk-g: #6bbd45; --risk-y: #ffd700; --risk-o: #f58220; --risk-r: #e03e2e; --nav-height: 85px; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; }
@@ -26,12 +27,19 @@
         .select-wrapper { position: relative; width: 100%; }
         select { width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222; -webkit-appearance: none; appearance: none; }
         .select-wrapper::after { content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #444; pointer-events: none; font-size: 1.2rem; }
+        select:focus { border-color: var(--primary); background: #f9fff9; }
+        
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn { flex: 1; padding: 15px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1.1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
-        .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; }
+        
+        .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.97); }
         .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
+        .btn-line { background: #06c755; box-shadow: 0 6px 15px rgba(6,199,85,0.3); }
+        .btn-refill { background: linear-gradient(135deg, var(--accent), #e07010); box-shadow: 0 6px 15px rgba(245,130,32,0.3); }
+        
+        /* Risk Matrix */
         .risk-matrix { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 3px; margin: 25px auto; background: #fff; font-size: 0.9rem; }
         .matrix-cell { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; border-radius: 6px; font-weight: bold; color: rgba(0,0,0,0.3); height: 55px; position: relative; }
         .matrix-header { background: #f4f4f4; color: #444; font-weight: 900; font-size: 0.85rem; padding: 5px 0; }
@@ -39,42 +47,73 @@
         .bg-g { background-color: var(--risk-g); } .bg-y { background-color: var(--risk-y); } .bg-o { background-color: var(--risk-o); } .bg-r { background-color: var(--risk-r); }
         .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
         .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        /* Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ccc; z-index: 1000; }
-        .nav-item { text-align: center; color: #999; font-size: 0.85rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
+        .nav-item { text-align: center; color: #999; font-size: 0.9rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
+        .nav-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
         .hidden { display: none !important; }
-        .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        
+        /* Quiz */
+        .quiz-option { background: #fff; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 15px; font-size: 1.2rem; font-weight: 900; color: #444; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: 0.2s; position: relative; text-align: left; }
+        .quiz-option:active { transform: scale(0.98); background: #f9f9f9; }
         .quiz-option.correct { border-color: #6bbd45; background: #f0fff4; color: #2e7d32; }
         .quiz-option.wrong { border-color: #e03e2e; background: #fff5f5; color: #c62828; }
-        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
-        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
-        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
-        .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
-        .hidden-checkbox { display: none; }
-        .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; }
-        .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
-        .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
-        .status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
-        .status-guardian { background: linear-gradient(135deg, #F2994A, #F2C94C); }
-        .status-god { background: linear-gradient(135deg, #FF416C, #FF4B2B); }
-        .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
-        .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
-        .sym-check { transform: scale(1.5); }
         .progress-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
-        /* Slot styles */
+        
+        /* Equip Slots */
+        .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; position: relative; transition: all 0.2s; }
+        .equip-slot:active { transform: scale(0.95); }
+        
         .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; }
         .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; }
         .slot-rare { border-color: #2196F3; background-color: #E3F2FD; }
         .slot-uncommon { border-color: #4CAF50; background-color: #E8F5E9; }
         .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; }
         .slot-heart { border-color: var(--heart); background-color: var(--heart-light); }
-        .slot-legendary.equipped::after, .slot-epic.equipped::after, .slot-rare.equipped::after, .slot-uncommon.equipped::after, .slot-arcane.equipped::after, .slot-heart.equipped::after {
-            content: '✓'; position: absolute; top: 5px; right: 5px; background:green; color:white; border-radius:50%; width:20px; height:20px; font-size:12px; display:flex; justify-content:center; align-items:center;
-        }
+        
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
+        .equip-slot.equipped::after { content: 'Equipped'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
+        .slot-legendary.equipped::after { background: #FF8C00; }
+        .slot-epic.equipped::after { background: #9C27B0; }
+        .slot-rare.equipped::after { background: #2196F3; }
+        .slot-uncommon.equipped::after { background: #4CAF50; }
+        .slot-arcane.equipped::after { background: #00BCD4; }
+        .slot-heart.equipped::after { background: var(--heart); }
+        
+        .equip-name { font-size: 1.1rem; font-weight: 900; margin-top: 5px; display: block; }
+        .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
+        .hidden-checkbox { display: none; }
+        
+        .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
+        .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .status-veteran { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
+        .status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
+        .status-guardian { background: linear-gradient(135deg, #F2994A, #F2C94C); box-shadow: 0 0 20px #F2C94C; }
+        .status-god { background: linear-gradient(135deg, #FF416C, #FF4B2B); box-shadow: 0 0 20px #FF4B2B; }
+        
+        .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
+        .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
+        .sym-check { transform: scale(1.5); }
+        
+        /* Others */
+        .qr-box { width: 220px; height: 220px; margin: 20px auto; border: 2px solid #eee; border-radius: 20px; }
+        .qr-img { width: 100%; height: 100%; object-fit: contain; }
+        .list-card { text-align: left; margin-bottom: 25px; border-radius: 15px; overflow: hidden; border: 2px solid #ddd; }
+        .list-head { padding: 18px; font-weight: 900; color: white; font-size: 1.3rem; }
+        .list-body { padding: 25px; font-size: 1.15rem; line-height: 1.6; background: #fff; }
+        .list-item { margin-bottom: 15px; border-bottom: 2px dashed #ccc; padding-bottom: 15px; }
+        .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
+        
+        /* Food Search */
+        #food-list-area { min-height: 200px; }
+        #food-tags { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; }
+        
         .animate-pop { animation: pop-effect 0.4s ease-out; }
         @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
@@ -158,13 +197,27 @@
                     <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Khó thở khi nằm</div>
                     <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Phù chân</div>
                     <div class="sym-item"><input type="checkbox" class="sym-check" onchange="symAlert()"> Khó thở khi hoạt động</div>
-                    <div id="sym-alert" class="hidden" style="color: red; font-weight: 900; margin-top: 10px; background:white; padding:10px; border-radius:10px;">🚨 Có thể là Suy tim. Vui lòng khám bác sĩ!</div>
+                    <div id="sym-alert" class="hidden" style="color: red; font-weight: 900; margin-top: 10px; background:white; padding:10px; border-radius:10px;">
+                        🚨 Có thể là Suy tim. Vui lòng khám bác sĩ!
+                        <div style="margin-top:8px; text-align:right;">
+                            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" style="text-decoration:underline; color:#b71c1c; font-weight:900; font-size:1rem;">➜ Đăng ký Khám ngay</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="unified-result" class="hidden">
                 <div id="risk-banner" class="risk-banner" style="background:#ccc; margin-bottom:20px;">
                     <h3 id="risk-title">--</h3><p id="risk-desc">--</p>
+                </div>
+                <div class="risk-matrix">
+                    <div class="matrix-header"></div><div class="matrix-header">Nrml</div><div class="matrix-header">Micr</div><div class="matrix-header">Macr</div>
+                    <div class="matrix-label">G1</div><div class="matrix-cell bg-g" id="cell-1-1"></div><div class="matrix-cell bg-g" id="cell-1-2"></div><div class="matrix-cell bg-o" id="cell-1-3"></div>
+                    <div class="matrix-label">G2</div><div class="matrix-cell bg-g" id="cell-2-1"></div><div class="matrix-cell bg-g" id="cell-2-2"></div><div class="matrix-cell bg-o" id="cell-2-3"></div>
+                    <div class="matrix-label">G3a</div><div class="matrix-cell bg-y" id="cell-3a-1"></div><div class="matrix-cell bg-o" id="cell-3a-2"></div><div class="matrix-cell bg-r" id="cell-3a-3"></div>
+                    <div class="matrix-label">G3b</div><div class="matrix-cell bg-o" id="cell-3b-1"></div><div class="matrix-cell bg-r" id="cell-3b-2"></div><div class="matrix-cell bg-r" id="cell-3b-3"></div>
+                    <div class="matrix-label">G4</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
+                    <div class="matrix-label">G5</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
                 <p style="color:#d32f2f; font-weight:900; text-align:center;">👇 Kết quả đã sẵn sàng.<br>Kiểm tra các tab bên dưới.</p>
             </div>
@@ -198,7 +251,11 @@
             <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#d32f2f;">🏥 Đăng ký Khám ngay</a>
         </div>
         <div class="card">
-            <a href="https://amanhung.github.io/Formulary/" target="_blank" class="btn btn-outline">🏥 Tra cứu thuốc (Formulary)</a>
+            <h2>🔍 Ragu về thuốc?</h2>
+            <div style="display:flex; gap:15px;">
+                <button class="btn" style="margin:0; flex:1;" onclick="switchTab('consult')">💬 Tư vấn</button>
+                <a href="https://amanhung.github.io/Formulary/" target="_blank" class="btn btn-outline" style="margin:0; flex:1; display:flex; align-items:center; justify-content:center;">🏥 Tra cứu</a>
+            </div>
         </div>
     </div>
 
@@ -214,8 +271,19 @@
             
             <hr style="margin: 20px 0;">
             <h3 style="color:var(--primary);">🔎 Đèn Giao Thông Thực Phẩm</h3>
+            
+            <div id="food-tags" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; margin-bottom: 10px;"></div>
+            
             <input type="text" id="food-search-input" placeholder="Tìm thức ăn (vd: Chuối)..." oninput="filterFood()" style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; margin-bottom:10px;">
             <div id="food-list-area"></div>
+            
+            <div id="food-result-modal" class="hidden" onclick="closeFoodModal()" 
+                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s;">
+                <div class="med-result-box" style="width: 90%; max-width: 400px; margin: 0; position: relative; animation: pop-effect 0.3s;" onclick="event.stopPropagation()">
+                    <button onclick="closeFoodModal()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #666;">✕</button>
+                    <div id="food-result-content"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -229,7 +297,8 @@
                     <input type="checkbox" id="drug-sglt2" class="gear-checkbox hidden-checkbox">
                 </div>
                 <div class="equip-slot slot-epic" onclick="toggleEquip(this, 'drug-rasi')">
-                    <span class="equip-name">Bảo vệ cơ bản</span><span class="equip-desc">ACEi/ARB</span>
+                    <span id="icon-rasi" style="display:none;"></span>
+                    <span class="equip-name" id="name-rasi">Bảo vệ cơ bản</span><span class="equip-desc" id="desc-rasi">ACEi/ARB</span>
                     <input type="checkbox" id="drug-rasi" class="gear-checkbox hidden-checkbox">
                 </div>
                 <div id="slot-bb" class="equip-slot slot-heart" onclick="toggleEquip(this, 'drug-bb')" style="display:none;">
@@ -289,7 +358,16 @@
                 <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
                 <a href="https://lin.ee/sydupT8" target="_blank" class="btn" style="background:#06c755;">📲 Kết bạn</a>
             </div>
-            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#2196f3;">🏥 Đăng ký trực tuyến</a>
+            <div style="background:#e3f2fd; padding:25px; border-radius:20px; border:3px solid #bbdefb; margin-bottom:30px;">
+                <h3 style="color:#1976d2; margin-top:0; font-size:1.6rem;">🏥 Đăng ký</h3>
+                <p style="font-weight:bold; color:#555; font-size:1.2rem;">Cảm thấy không khỏe? Đăng ký ngay.</p>
+                <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background: linear-gradient(135deg, #2196f3, #1976d2); box-shadow: 0 6px 15px rgba(33, 150, 243, 0.3);">Đăng ký Online ➜</a>
+            </div>
+            <div style="background:#fff8e1; padding:25px; border-radius:20px; border:3px solid #ffe0b2;">
+                <h3 style="color:var(--accent); margin-top:0; font-size:1.6rem;">💊 Lấy thuốc</h3>
+                <p style="font-weight:bold; color:#555; font-size:1.2rem;">Không cần xếp hàng, đặt thuốc online.</p>
+                <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">Đặt ngay ➜</a>
+            </div>
         </div>
     </div>
 </div>
@@ -366,10 +444,21 @@
 
         document.getElementById('unified-result').classList.remove('hidden');
         
+        // Heatmap Logic
+        document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
+        let row = '5';
+        if (egfr >= 90) row = '1'; else if (egfr >= 60) row = '2'; else if (egfr >= 45) row = '3a'; else if (egfr >= 30) row = '3b'; else if (egfr >= 15) row = '4';
+        let col = '1';
+        if (uacr >= 300) col = '3'; else if (uacr >= 30) col = '2';
+        
+        const cellId = `cell-${row}-${col}`;
+        const cell = document.getElementById(cellId);
+        if(cell) cell.classList.add('active-cell');
+
         let text = "Nguy cơ Thấp";
         let color = "#6bbd45";
-        if(egfr < 45 || uacr > 300) { text = "Nguy cơ Cao"; color = "#e03e2e"; }
-        else if(egfr < 60 || uacr > 30) { text = "Nguy cơ Trung bình"; color = "#ffd700"; }
+        if(cell.classList.contains('bg-r') || cell.classList.contains('bg-o')) { text = "Nguy cơ Cao"; color = "#e03e2e"; }
+        else if(cell.classList.contains('bg-y')) { text = "Nguy cơ Trung bình"; color = "#ffd700"; }
         
         const banner = document.getElementById('risk-banner');
         banner.style.backgroundColor = color;
@@ -395,6 +484,11 @@
         if(hf) add(g, "ARNI / Beta-blocker", "Bắt buộc cho Suy tim.");
         else add(g, "ACEi / ARB", "Bảo vệ thận cơ bản.");
         
+        if(dm) {
+             add(g, "GLP-1 RA", "Kiểm soát đường & Tim");
+             if(egfr < 30) add(r, "Metformin", "Nguy cơ Nhiễm toan Lactic");
+        }
+
         add(r, "NSAID (Giảm đau)", "Nguy hiểm! Gây hại thận.");
     }
 
@@ -417,18 +511,36 @@
 
     // --- Armor & Quiz Logic ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
+        const iconRasi = document.getElementById('icon-rasi');
+        const nameRasi = document.getElementById('name-rasi');
+        
+        if(hasHF) { nameRasi.innerText = "Bảo vệ kép (ARNI)"; iconRasi.style.display='inline'; iconRasi.innerText="⛑️"; }
+        else { nameRasi.innerText = "Bảo vệ cơ bản"; iconRasi.style.display='inline'; iconRasi.innerText="🧥"; }
+
         const slotBb = document.getElementById('slot-bb');
         const slotMraOld = document.getElementById('slot-mra-old');
         const slotNsMra = document.getElementById('slot-nsmra');
         const slotGlp1 = document.getElementById('slot-glp1');
 
         if(hasHF) { slotBb.style.display='flex'; slotMraOld.style.display='flex'; slotNsMra.style.display='none'; }
-        else { slotBb.style.display='none'; slotMraOld.style.display='none'; }
+        else { 
+            slotBb.style.display='none'; 
+            document.getElementById('drug-bb').checked = false; slotBb.classList.remove('equipped');
+            slotMraOld.style.display='none'; 
+            document.getElementById('drug-mra-old').checked = false; slotMraOld.classList.remove('equipped');
+        }
 
         if(hasDM && egfr >= 25 && !hasHF) { slotNsMra.style.display='flex'; } 
-        else { slotNsMra.style.display='none'; }
+        else { 
+            slotNsMra.style.display='none'; 
+            document.getElementById('drug-nsmra').checked = false; slotNsMra.classList.remove('equipped');
+        }
 
-        if(hasDM) slotGlp1.style.display='flex'; else slotGlp1.style.display='none';
+        if(hasDM) slotGlp1.style.display='flex'; 
+        else {
+            slotGlp1.style.display='none';
+            document.getElementById('drug-glp1').checked = false; slotGlp1.classList.remove('equipped');
+        }
         
         updateStatusAndAdvice();
     }
@@ -449,6 +561,15 @@
         if(cnt>2) { title="Bảo vệ mạnh"; msg="Rất tốt!"; }
         document.getElementById('status-title').innerText=title;
         document.getElementById('status-msg').innerText=msg;
+        
+        // Advice
+        let adviceHTML = "";
+        if(document.getElementById('drug-sglt2').checked) adviceHTML += `<div style="color:green; font-weight:bold;">✅ SGLT2i: Đã bảo vệ!</div>`;
+        else adviceHTML += `<div style="color:red; font-weight:bold;">⚠️ SGLT2i: Khuyến nghị.</div>`;
+        
+        const adviceDiv = document.getElementById('dynamic-advice');
+        adviceDiv.innerHTML = adviceHTML;
+        adviceDiv.classList.remove('hidden');
     }
 
     // --- Quiz Data ---
@@ -498,17 +619,101 @@
         document.getElementById('final-score').innerText = score;
     }
 
-    // --- Food Search ---
-    function initFoodSearch() { filterFood(); }
+    // --- Food Search (FIXED) ---
+    let currentCategory = 'all';
+    
+    function initFoodSearch() { 
+        const tagContainer = document.getElementById('food-tags');
+        if(!tagContainer) return;
+        tagContainer.innerHTML = '';
+        
+        // Generate Category Buttons
+        Object.keys(foodCategories).forEach(key => {
+            const btn = document.createElement('button');
+            btn.innerText = foodCategories[key];
+            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
+            btn.style.flex = '0 0 auto';
+            btn.style.padding = '8px 15px';
+            btn.onclick = () => {
+                document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = key;
+                filterFood();
+            };
+            tagContainer.appendChild(btn);
+        });
+        
+        filterFood(); 
+    }
+    
     function filterFood() {
-        const input = document.getElementById('food-search-input').value.toLowerCase();
-        const div = document.getElementById('food-list-area');
-        div.innerHTML = '';
-        Object.values(foodDB).forEach(item => {
-            if(item.n.toLowerCase().includes(input)) {
-                div.innerHTML += `<div class="quiz-option" style="padding:10px;"><strong>${item.t} ${item.n}</strong><br><small>${item.d}</small></div>`;
+        const inputEl = document.getElementById('food-search-input');
+        if(!inputEl) return;
+        const input = inputEl.value.toLowerCase().trim();
+        const listArea = document.getElementById('food-list-area');
+        listArea.innerHTML = '';
+        
+        let count = 0;
+        Object.keys(foodDB).forEach(key => {
+            const item = foodDB[key];
+            
+            // Search Logic (Match Category & Keyword)
+            const isGlobalSearch = input !== '';
+            const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
+            const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
+
+            if (catMatch && keyMatch) {
+                const div = document.createElement('div');
+                div.className = 'quiz-option'; 
+                div.style.padding = '10px';
+                div.style.marginBottom = '8px';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                
+                let dotColor = '#ddd';
+                if(item.t.includes('Xanh')) dotColor = 'var(--risk-g)';
+                if(item.t.includes('Vàng')) dotColor = 'var(--risk-y)';
+                if(item.t.includes('Đỏ')) dotColor = 'var(--risk-r)';
+
+                div.innerHTML = `
+                    <div style="font-weight:bold; font-size:1.0rem;">
+                        <span style="color:${dotColor}; margin-right:8px;">●</span>${item.n}
+                    </div>
+                    <span style="font-size:0.8rem; color:#888;">></span>
+                `;
+                div.onclick = () => showFoodDetail(item);
+                listArea.appendChild(div);
+                count++;
             }
         });
+        
+        if (count === 0) listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Không tìm thấy.</p>';
+    }
+    
+    function showFoodDetail(item) {
+        const modal = document.getElementById('food-result-modal');
+        const content = document.getElementById('food-result-content');
+        
+        let bg = '#fff', border = '#ccc';
+        if(item.t.includes('Đỏ')) { bg='#fff5f5'; border='var(--risk-r)'; }
+        else if(item.t.includes('Vàng')) { bg='#fffbe6'; border='var(--risk-y)'; }
+        else { bg='#e8f5e9'; border='var(--risk-g)'; }
+
+        content.parentElement.style.background = bg;
+        content.parentElement.style.borderLeft = `8px solid ${border}`;
+        
+        content.innerHTML = `
+            <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
+            <div style="margin-bottom:15px;">${item.t}</div>
+            <p style="font-size:1.1rem; line-height:1.6; color:#444;">${item.d}</p>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeFoodModal() {
+        document.getElementById('food-result-modal').classList.add('hidden');
     }
     
     function checkMed() {
@@ -529,19 +734,45 @@
             egfr: document.getElementById('kfre-egfr').value,
             uacr: document.getElementById('kfre-uacr').value,
             dm: document.getElementById('kfre-dm').value,
-            hf: document.getElementById('kfre-hf').value
+            hf: document.getElementById('kfre-hf').value,
+            meds: {
+                'drug-sglt2': document.getElementById('drug-sglt2').checked,
+                'drug-rasi': document.getElementById('drug-rasi').checked,
+                'drug-bb': document.getElementById('drug-bb').checked,
+                'drug-mra-old': document.getElementById('drug-mra-old').checked,
+                'drug-nsmra': document.getElementById('drug-nsmra').checked,
+                'drug-statin': document.getElementById('drug-statin').checked,
+                'drug-glp1': document.getElementById('drug-glp1').checked
+            }
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
     function loadUserData() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if(raw) {
-            const data = JSON.parse(raw);
-            if(data.age) document.getElementById('kfre-age').value = data.age;
-            if(data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
-            setOption('kfre-sex', data.sex, document.querySelector(`#group-sex .option-btn:nth-child(${data.sex==='1'?1:2})`));
-            // Add other loaders as needed
-            updateAllRisks();
+            try {
+                const data = JSON.parse(raw);
+                if(data.age) document.getElementById('kfre-age').value = data.age;
+                if(data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
+                setOption('kfre-sex', data.sex, document.querySelector(`#group-sex .option-btn:nth-child(${data.sex==='1'?1:2})`));
+                setOption('kfre-uacr', data.uacr, document.querySelector(`#group-uacr .option-btn:nth-child(${data.uacr==='10'?1:data.uacr==='150'?2:3})`));
+                setOption('kfre-dm', data.dm, document.querySelector(`#group-dm .option-btn:nth-child(${data.dm==='1'?2:1})`));
+                setOption('kfre-hf', data.hf, document.querySelector(`#group-hf .option-btn:nth-child(${data.hf==='1'?2:1})`));
+                
+                updateAllRisks(); // Trigger logic to show/hide slots
+                
+                // Restore Meds Checkbox
+                if(data.meds) {
+                    Object.keys(data.meds).forEach(key => {
+                        const chk = document.getElementById(key);
+                        if(chk && chk.parentElement.style.display !== 'none') {
+                            chk.checked = data.meds[key];
+                            if(chk.checked) chk.parentElement.classList.add('equipped');
+                        }
+                    });
+                    updateStatusAndAdvice();
+                }
+            } catch(e) { console.error(e); }
         }
     }
     function clearUserData() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
@@ -549,6 +780,8 @@
     // Hook updates
     const origUpdate = updateAllRisks;
     updateAllRisks = function() { origUpdate(); saveUserData(); }
+    const origToggle = toggleEquip;
+    toggleEquip = function(el, id) { origToggle(el, id); saveUserData(); }
     window.addEventListener('load', loadUserData);
 
 </script>
