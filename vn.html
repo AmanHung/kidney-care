@@ -475,6 +475,7 @@
         updateArmorVisibility(dm, egfr, hf);
     }
 
+    // --- 💊 Med Logic (Fix: Complete Translation) ---
     function updateMeds(egfr, dm, hf) {
         document.getElementById('med-placeholder').classList.add('hidden');
         document.getElementById('med-content').classList.remove('hidden');
@@ -482,38 +483,82 @@
         g.innerHTML=''; y.innerHTML=''; r.innerHTML='';
         const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
 
-        if(egfr >= 20) add(g, "SGLT2i", "Thuốc bảo vệ chính.");
-        else add(y, "SGLT2i", "Thận trọng nếu eGFR thấp.");
+        // 1. SGLT2i
+        if(egfr >= 20) add(g, "SGLT2i (Thuốc thải đường)", "Thuốc cứu tinh chính cho Tim & Thận!");
+        else add(y, "SGLT2i", "Không khuyến cáo bắt đầu nếu eGFR < 20. Tiếp tục nếu đang dùng.");
         
-        if(hf) add(g, "ARNI / Beta-blocker", "Bắt buộc cho Suy tim.");
-        else add(g, "ACEi / ARB", "Bảo vệ thận cơ bản.");
+        // 2. RASi / ARNI
+        if(hf) {
+            add(g, "ARNI", "Lựa chọn hàng đầu cho Suy tim!");
+            add(g, "Beta-blocker", "Bắt buộc để bảo vệ tim.");
+            add(g, "MRA (Spironolactone)", "Trụ cột thứ 4 suy tim. Kiểm tra kali.");
+        } else {
+            add(g, "ACEi / ARB", "Bảo vệ thận cơ bản & chống đạm niệu.");
+        }
         
+        // 3. DM
         if(dm) {
-             add(g, "GLP-1 RA", "Kiểm soát đường & Tim");
-             if(egfr < 30) add(r, "Metformin", "Nguy cơ Nhiễm toan Lactic");
+             add(g, "GLP-1 RA", "Kiểm soát đường, giảm cân, bảo vệ tim/thận.");
+             if(egfr >= 25 && !hf) add(g, "ns-MRA (Finerenone)", "Đặc trị bệnh thận tiểu đường.");
+             
+             if(egfr < 30) add(r, "Metformin", "CẤM DÙNG nếu eGFR < 30! Nguy cơ nhiễm toan.");
+             else if(egfr < 45) add(y, "Metformin", "Giảm liều (tối đa 1000mg).");
         }
 
-        add(r, "NSAID (Giảm đau)", "Nguy hiểm! Gây hại thận.");
+        // 4. General
+        add(g, "Statin", "Bảo vệ mạch máu, ngừa đột quỵ.");
+        
+        let diureticMsg = hf ? "Kiểm soát triệu chứng (cân nặng). Tạm ngưng nếu mất nước." : "Tạm ngưng khi ốm (Mất nước).";
+        add(y, "Lợi tiểu (Diuretics)", diureticMsg);
+
+        add(r, "NSAID (Giảm đau mạnh)", "NGUY HIỂM! Hủy hoại thận & gây suy tim.");
     }
 
+    // --- 🍽️ Diet Logic (Fix: Complete Translation) ---
     function updateDiet(egfr, dm, hf) {
         document.getElementById('diet-placeholder').classList.add('hidden');
         document.getElementById('diet-content').classList.remove('hidden');
+        
+        // Protein Logic
+        const pBox = document.getElementById('protein-guide-box');
+        const pVal = document.getElementById('protein-guide-val');
+        if(pBox) {
+            pBox.style.display = 'block';
+            if (egfr < 45) { pVal.innerText = "0.6 ~ 0.8"; pVal.style.color = "#d84315"; }
+            else { pVal.innerText = "0.8 ~ 1.0"; pVal.style.color = "#2e7d32"; }
+        }
+
         const g=document.getElementById('list-diet-g'), y=document.getElementById('list-diet-y'), r=document.getElementById('list-diet-r');
         g.innerHTML=''; y.innerHTML=''; r.innerHTML='';
         const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
 
-        add(g, "Protein chất lượng", "Lòng trắng trứng, Cá, Gà.");
-        if(egfr < 45) {
-            add(g, "Tinh bột ít đạm", "Miến, Bột sago (Năng lượng sạch).");
-            add(y, "Gạo lứt", "Nhiều Phốt pho.");
-            add(y, "Rau xanh", "Luộc bỏ nước (Giảm Kali).");
+        add(g, "Protein Chất lượng", "Lòng trắng trứng, Cá, Gà, Đậu phụ.");
+        add(g, "Dầu thực vật tốt", "Dầu Oliu, Dầu hạt cải, Dầu bơ.");
+
+        if(hf) {
+            add(r, "Thực phẩm nhiều Natri", "Dưa muối, Đồ hộp, Nước lẩu. Làm nặng thêm phù nề.");
+            add(y, "Lượng nước uống", "Cân mỗi ngày. Hạn chế nước nếu bị phù.");
+        } else {
+            add(g, "Uống đủ nước", "Uống đủ nếu không bị phù nề.");
         }
-        add(r, "Khế", "Độc cho thận.");
-        if(hf) add(r, "Muối & Mặn", "Làm nặng thêm phù nề.");
+
+        if(dm) {
+            add(r, "Đường tinh luyện", "Nước ngọt, Bánh ngọt. Gây lão hóa mạch máu.");
+            add(g, "Chỉ số đường huyết thấp", "Rau xanh, Ngũ cốc nguyên hạt.");
+        }
+
+        if(egfr < 45) {
+            add(g, "Tinh bột ít đạm", "Miến, Bột sago, Bột củ sen. Bổ sung năng lượng, không độc tố.");
+            add(y, "Gạo lứt / Ngũ cốc", "Nhiều Phốt pho. Nên chuyển sang cơm trắng hoặc miến.");
+            add(y, "Rau xanh đậm", "Nhiều Kali. Cắt nhỏ, luộc kỹ & bỏ nước.");
+            add(r, "Muối giảm Natri", "Chứa Kali Clorua. Nguy hiểm cho tim & thận.");
+        }
+        
+        add(r, "Quả Khế", "Chứa độc tố thần kinh. Cấm tuyệt đối.");
+        add(r, "Thịt chế biến sẵn", "Xúc xích/Jambon chứa Phốt pho vô cơ (hấp thu 100%).");
     }
 
-    // --- Armor Logic (Fixed) ---
+    // --- Armor Logic ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
@@ -549,77 +594,31 @@
         updateStatusAndAdvice();
     }
 
-    // Ranks Data (Missing in previous version)
-    const ranks = [
-        { class: 'status-novice', title: 'Chưa có', icon: '⚠️', msg: 'Rủi ro cao. Hãy hỏi bác sĩ.' },
-        { class: 'status-apprentice', title: 'Sơ cấp', icon: '🛡️', msg: 'Khởi đầu tốt.' },
-        { class: 'status-veteran', title: 'Trung cấp', icon: '✨', msg: 'Bảo vệ khá vững chắc.' },
-        { class: 'status-elite', title: 'Cao cấp', icon: '🏰', msg: 'Tuyệt vời! Bảo vệ đa mục tiêu.' },
-        { class: 'status-guardian', title: 'Hộ vệ Thận', icon: '🏆', msg: 'Bảo vệ mạnh nhất cho tim & thận!' },
-        { class: 'status-god', title: 'Hoàn hảo', icon: '👑', msg: 'Hoàn hảo! Hãy duy trì.' }
-    ];
-
-    function updateStatusAndAdvice() {
-        const checkboxes = document.querySelectorAll('.gear-checkbox');
-        let checkedCount = 0;
-        checkboxes.forEach(box => { 
-            if (box.parentElement.style.display !== 'none') {
-                if (box.checked) checkedCount++; 
-            }
-        });
-        
-        let rankIndex = checkedCount; 
-        if (rankIndex >= 5) rankIndex = 5; 
-        
-        const data = ranks[rankIndex];
-        const statusPanel = document.getElementById('status-panel');
-        document.getElementById('status-title').innerText = data.title;
-        document.getElementById('status-icon').innerText = data.icon;
-        document.getElementById('status-msg').innerText = data.msg;
-        statusPanel.className = 'status-panel ' + data.class;
-        statusPanel.classList.remove('animate-pop');
-        void statusPanel.offsetWidth;
-        statusPanel.classList.add('animate-pop');
-
-        generateAdvice();
-    }
-
-    function toggleEquip(element, checkboxId) {
-        var checkbox = document.getElementById(checkboxId);
-        checkbox.checked = !checkbox.checked;
-        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
-        else { element.classList.remove('equipped'); }
+    function toggleEquip(el, id) {
+        const chk = document.getElementById(id);
+        chk.checked = !chk.checked;
+        el.classList.toggle('equipped', chk.checked);
+        if(chk.checked) playSound(true);
         updateStatusAndAdvice();
     }
 
-    function generateAdvice() {
-        const hfVal = document.getElementById('kfre-hf').value;
-        const dmVal = document.getElementById('kfre-dm').value;
-        const hasHF = hfVal === '1';
+    function updateStatusAndAdvice() {
+        const cnt = document.querySelectorAll('.gear-checkbox:checked').length;
+        const panel = document.getElementById('status-panel');
+        let title="Chưa có", msg="Rủi ro cao.";
+        if(cnt>0) { title="Bảo vệ sơ cấp"; msg="Tốt, tiếp tục!"; }
+        if(cnt>2) { title="Bảo vệ mạnh"; msg="Rất tốt!"; }
+        document.getElementById('status-title').innerText=title;
+        document.getElementById('status-msg').innerText=msg;
         
+        // Advice
         let adviceHTML = "";
+        if(document.getElementById('drug-sglt2').checked) adviceHTML += `<div style="color:green; font-weight:bold;">✅ SGLT2i: Đã bảo vệ!</div>`;
+        else adviceHTML += `<div style="color:red; font-weight:bold;">⚠️ SGLT2i: Khuyến nghị.</div>`;
         
-        // SGLT2i
-        const useSglt2 = document.getElementById('drug-sglt2').checked;
-        if (useSglt2) {
-            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>SGLT2i:</strong> Tốt! Thuốc cứu tinh chính.</div>`;
-        } else {
-            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 Quan trọng</span><br><strong style="color:#d84315;">Hỏi Bác sĩ:</strong> SGLT2i giảm nguy cơ nhập viện & lọc máu.</div>`;
-        }
-
-        // RASi
-        const useRasi = document.getElementById('drug-rasi').checked;
-        if (hasHF) {
-            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>ARNI/RASi:</strong> Bảo vệ tim đúng cách!</div>`;
-            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>Tim mạch:</strong> ARNI hoặc ACEi/ARB được khuyên dùng cho Suy tim.</div>`;
-        } else {
-            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi:</strong> Quan trọng để bảo vệ thận.</div>`;
-            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>Cơ bản:</strong> ACEi/ARB là nền tảng điều trị.</div>`;
-        }
-
-        var adviceDiv = document.getElementById('dynamic-advice');
-        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
-        else { adviceDiv.classList.add('hidden'); }
+        const adviceDiv = document.getElementById('dynamic-advice');
+        adviceDiv.innerHTML = adviceHTML;
+        adviceDiv.classList.remove('hidden');
     }
 
     // --- Quiz Data ---
@@ -677,7 +676,6 @@
         if(!tagContainer) return;
         tagContainer.innerHTML = '';
         
-        // Generate Category Buttons
         Object.keys(foodCategories).forEach(key => {
             const btn = document.createElement('button');
             btn.innerText = foodCategories[key];
@@ -836,3 +834,4 @@
 </script>
 </body>
 </html>
+
