@@ -6,32 +6,38 @@
     <title>Trợ lý Chăm sóc Thận</title>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
-        /* CSS 與 index.html 保持一致 */
         :root { --primary: #009045; --primary-dark: #007035; --accent: #F58220; --heart: #e91e63; --heart-light: #fce4ec; --bg: #fdfdfd; --white: #ffffff; --text: #222; --risk-g: #6bbd45; --risk-y: #ffd700; --risk-o: #f58220; --risk-r: #e03e2e; --nav-height: 85px; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; }
+        
+        /* Header */
         header { background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
         header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%); }
         .header-logo { height: 50px; width: auto; object-fit: contain; }
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
         .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
         .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
+        
+        /* Layout */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: var(--white); border-radius: 20px; padding: 25px 20px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
         .card h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; font-weight: 900; border-bottom: 3px solid #f0f4f8; padding-bottom: 15px; margin-bottom: 20px; }
+        
+        /* Input */
         .input-group { margin-bottom: 25px; text-align: left; }
         .input-group label { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; font-weight: 900; }
         .select-wrapper { position: relative; width: 100%; }
         select { width: 100%; padding: 18px; border: 2px solid #ccc; border-radius: 15px; font-size: 1.2rem; background: #fff; outline: none; font-weight: bold; color: #222; -webkit-appearance: none; appearance: none; }
         .select-wrapper::after { content: '▼'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #444; pointer-events: none; font-size: 1.2rem; }
         select:focus { border-color: var(--primary); background: #f9fff9; }
-        
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn { flex: 1; padding: 15px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1.1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
+        
+        /* Elements */
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.97); }
         .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
@@ -47,9 +53,13 @@
         .matrix-cell.active-cell { border: 4px solid #0044cc; box-shadow: 0 0 15px rgba(0,68,204,0.6); z-index: 10; transform: scale(1.1); }
         .risk-banner { padding: 20px; margin-top: 25px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
+        /* Result Box */
+        .kfre-highlight-label { font-size: 1.1rem; color: #555; font-weight: 900; margin-bottom: 5px; display: block; }
+        .kfre-highlight-value { font-size: 2.5rem; font-weight: 900; color: #0277bd; display: block; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+
         /* Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: white; display: flex; justify-content: space-around; align-items: center; border-top: 2px solid #ccc; z-index: 1000; }
-        .nav-item { text-align: center; color: #999; font-size: 0.9rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
+        .nav-item { text-align: center; color: #999; font-size: 0.85rem; flex: 1; padding: 5px; cursor: pointer; font-weight: 900; }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
         .hidden { display: none !important; }
@@ -66,7 +76,7 @@
         .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
         .equip-slot { background: #fff; border: 3px dashed #ccc; border-radius: 15px; padding: 15px 10px; text-align: center; cursor: pointer; min-height: 140px; display:flex; flex-direction:column; justify-content:center; align-items:center; position: relative; transition: all 0.2s; }
         .equip-slot:active { transform: scale(0.95); }
-        
+        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
         .slot-legendary { border-color: #FF8C00; background-color: #FFF8E1; }
         .slot-epic { border-color: #9C27B0; background-color: #F3E5F5; }
         .slot-rare { border-color: #2196F3; background-color: #E3F2FD; }
@@ -74,7 +84,6 @@
         .slot-arcane { border-color: #00BCD4; background-color: #E0F7FA; }
         .slot-heart { border-color: var(--heart); background-color: var(--heart-light); }
         
-        .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
         .equip-slot.equipped::after { content: 'Đã dùng'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
@@ -87,6 +96,7 @@
         .equip-desc { font-size: 0.85rem; color: #666; display: block; margin-top: 2px; }
         .hidden-checkbox { display: none; }
         
+        /* Status & Quiz */
         .status-panel { display: flex; align-items: center; padding: 20px; border-radius: 15px; margin-bottom: 30px; color: white; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .status-novice { background: linear-gradient(135deg, #757F9A, #D7DDE8); color: #333; }
         .status-apprentice { background: linear-gradient(135deg, #11998e, #38ef7d); }
@@ -94,12 +104,13 @@
         .status-elite { background: linear-gradient(135deg, #834d9b, #d04ed6); }
         .status-guardian { background: linear-gradient(135deg, #F2994A, #F2C94C); box-shadow: 0 0 20px #F2C94C; }
         .status-god { background: linear-gradient(135deg, #FF416C, #FF4B2B); box-shadow: 0 0 20px #FF4B2B; }
-        
+        .animate-pop { animation: pop-effect 0.4s ease-out; }
+        @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Others */
         .symptom-box { background: #fff5f8; border: 2px dashed #f8bbd0; border-radius: 15px; padding: 15px; margin-top: 15px; }
         .sym-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #880e4f; font-weight: bold; }
         .sym-check { transform: scale(1.5); }
-        
-        /* Others */
         .qr-box { width: 220px; height: 220px; margin: 20px auto; border: 2px solid #eee; border-radius: 20px; }
         .qr-img { width: 100%; height: 100%; object-fit: contain; }
         .list-card { text-align: left; margin-bottom: 25px; border-radius: 15px; overflow: hidden; border: 2px solid #ddd; }
@@ -108,13 +119,8 @@
         .list-item { margin-bottom: 15px; border-bottom: 2px dashed #ccc; padding-bottom: 15px; }
         .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
-        
         #food-list-area { min-height: 200px; }
         #food-tags { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; }
-        
-        .animate-pop { animation: pop-effect 0.4s ease-out; }
-        @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
         .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
         .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
@@ -221,7 +227,16 @@
                     <div class="matrix-label">G4</div><div class="matrix-cell bg-r" id="cell-4-1"></div><div class="matrix-cell bg-r" id="cell-4-2"></div><div class="matrix-cell bg-r" id="cell-4-3"></div>
                     <div class="matrix-label">G5</div><div class="matrix-cell bg-r" id="cell-5-1"></div><div class="matrix-cell bg-r" id="cell-5-2"></div><div class="matrix-cell bg-r" id="cell-5-3"></div>
                 </div>
-                <p style="color:#d32f2f; font-weight:900; text-align:center;">👇 Kết quả đã sẵn sàng.<br>Kiểm tra các tab bên dưới.</p>
+                <div id="kfre-result-box" style="background:#e1f5fe; border-radius:15px; padding:25px 15px; border:3px solid #b3e5fc; text-align:center; margin-top:25px; transition: all 0.3s;">
+                    <h3 id="kfre-result-title" style="margin:0 0 20px 0; color:#01579b; font-size:1.5rem; font-weight:900;">📅 Dự đoán Nguy cơ Suy thận</h3>
+                    <div style="display:flex; justify-content:space-around; margin-bottom:20px; align-items: flex-start;">
+                        <div style="flex:1;"><span class="kfre-highlight-label">Rủi ro 2 Năm</span><span id="res-2yr" class="kfre-highlight-value">--%</span></div>
+                        <div style="width:2px; background:#ccc; opacity:0.5; height:60px; margin-top:10px;"></div>
+                        <div style="flex:1;"><span class="kfre-highlight-label">Rủi ro 5 Năm</span><span id="res-5yr" class="kfre-highlight-value">--%</span></div>
+                    </div>
+                    <div id="kfre-advice-box" style="background:white; padding:15px; border-radius:10px; text-align:left; font-size:1.1rem; line-height:1.6; border-left:6px solid #ccc; box-shadow:0 2px 5px rgba(0,0,0,0.05);">Đang tải...</div>
+                </div>
+                <p style="color:#d32f2f; font-weight:900; text-align:center; margin-top: 20px;">👇 Kết quả đã sẵn sàng.<br>Kiểm tra các tab bên dưới.</p>
             </div>
         </div>
     </div>
@@ -231,9 +246,10 @@
             <h2>💊 Tư vấn Thuốc</h2>
             <div id="med-placeholder" style="padding:40px 10px; color:#999;">Vui lòng điền dữ liệu tại "Trang chủ" trước.</div>
             <div id="med-content" class="hidden">
+                <p style="background:#eee; padding:15px; border-radius:15px; color:#444; font-weight:bold;">Hồ sơ: eGFR <span id="med-egfr-val" style="color:var(--primary);">--</span> / <span id="med-cond-text">--</span></p>
                 <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 Điều trị chính</div><div class="list-body" id="list-med-g"></div></div>
                 <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 Thận trọng</div><div class="list-body" id="list-med-y"></div></div>
-                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 Tránh</div><div class="list-body" id="list-med-r"></div></div>
+                <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 Tránh / Chống chỉ định</div><div class="list-body" id="list-med-r"></div></div>
             </div>
         </div>
         <div class="card">
@@ -242,14 +258,19 @@
                 <select id="med-select" onchange="checkMed()">
                     <option value="">🔍 Chọn tên thuốc...</option>
                     <option value="ras">ACEi / ARB (Huyết áp)</option><option value="arni">ARNI (Suy tim)</option><option value="panadol">Panadol</option><option value="nsaid">NSAID (Giảm đau mạnh)</option><option value="sglt2">SGLT2i (Tiểu đường/Thận)</option>
+                    <option value="metformin">Metformin (Tiểu đường)</option>
+                    <option value="mycin">Kháng sinh (Aminoglycosides)</option>
                 </select>
+            </div>
+            <div class="traffic-container">
+                <div id="light-r" class="light" style="color: var(--risk-r); background: var(--risk-r);"></div><div id="light-y" class="light" style="color: var(--risk-y); background: var(--risk-y);"></div><div id="light-g" class="light" style="color: var(--risk-g); background: var(--risk-g);"></div>
             </div>
             <div id="med-result" class="med-result-box hidden"></div>
         </div>
         <div class="card" style="border: 3px solid #ff9800; background: #fff8e1;">
             <h2 style="color:#e65100;">🤢 Quy tắc Ngày Ốm</h2>
             <p style="font-weight:bold; color:#bf360c;">Nếu Tiêu chảy, Sốt, hoặc Mất nước, hỏi bác sĩ về việc tạm dừng:</p>
-            <div class="quiz-option" style="color:#e65100; text-align:center;">SGLT2i, ACEi/ARB, Lợi tiểu, Metformin, NSAID</div>
+            <div class="quiz-option" style="color:#e65100; text-align:center; padding:15px;">SGLT2i, ACEi/ARB, Lợi tiểu, Metformin, NSAID</div>
             <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#d32f2f;">🏥 Đăng ký Khám ngay</a>
         </div>
         <div class="card">
@@ -266,21 +287,40 @@
             <h2>🍽️ Chế độ ăn</h2>
             <div id="diet-placeholder" style="padding:40px 10px; color:#999;">Vui lòng điền dữ liệu tại "Trang chủ".</div>
             <div id="diet-content" class="hidden">
-                <div class="list-card" style="border-color: var(--risk-g);"><div class="list-head" style="background: var(--risk-g);">🟢 Khuyên dùng</div><div class="list-body" id="list-diet-g"></div></div>
+                <div class="list-card" style="border-color: var(--risk-g);">
+                    <div class="list-head" style="background: var(--risk-g);">🟢 Khuyên dùng</div>
+                    <div id="protein-guide-box" style="margin: 15px 0; padding: 15px; background-color: #f1f8e9; border: 2px dashed #558b2f; border-radius: 12px; display: none;">
+                        <p style="margin: 0; font-size: 1.1rem; color: #33691e; font-weight: 900;">🥩 Đạm Hàng ngày</p>
+                        <div style="display: flex; align-items: baseline; margin-top: 5px;">
+                            <span id="protein-guide-val" style="font-size: 2.5rem; font-weight: 900; color: #2e7d32;">--</span>
+                            <span style="margin-left: 8px; font-size: 1.1rem; font-weight:bold; color:#558b2f;">g / kg</span>
+                        </div>
+                    </div>
+                    <div class="list-body" id="list-diet-g"></div>
+                </div>
+                
+                <div class="list-card" style="border-color: #00bcd4;">
+                    <div class="list-head" style="background: #00bcd4;">⚡ Tăng năng lượng</div>
+                    <div class="list-body" style="font-size: 1rem;">
+                        <p style="margin-top:0;"><strong>Tinh bột ít đạm:</strong> Tăng calo, không tăng urê.</p>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                            <div class="option-btn" style="font-size:0.95rem; background:#e0f7fa; border:none; color:#006064;">🍜 Miến</div>
+                            <div class="option-btn" style="font-size:0.95rem; background:#e0f7fa; border:none; color:#006064;">🍮 Bột Sago</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="list-card" style="border-color: var(--risk-y);"><div class="list-head" style="background: var(--risk-y); color:#333;">🟡 Hạn chế</div><div class="list-body" id="list-diet-y"></div></div>
                 <div class="list-card" style="border-color: var(--risk-r);"><div class="list-head" style="background: var(--risk-r);">🔴 Tránh</div><div class="list-body" id="list-diet-r"></div></div>
             </div>
             
             <hr style="margin: 20px 0;">
             <h3 style="color:var(--primary);">🔎 Đèn Giao Thông Thực Phẩm</h3>
-            
             <div id="food-tags" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; margin-bottom: 10px;"></div>
-            
             <input type="text" id="food-search-input" placeholder="Tìm thức ăn (vd: Chuối)..." oninput="filterFood()" style="width: 100%; padding: 15px; border: 2px solid #ccc; border-radius: 30px; margin-bottom:10px;">
             <div id="food-list-area"></div>
             
-            <div id="food-result-modal" class="hidden" onclick="closeFoodModal()" 
-                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s;">
+            <div id="food-result-modal" class="hidden" onclick="closeFoodModal()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s;">
                 <div class="med-result-box" style="width: 90%; max-width: 400px; margin: 0; position: relative; animation: pop-effect 0.3s;" onclick="event.stopPropagation()">
                     <button onclick="closeFoodModal()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #666;">✕</button>
                     <div id="food-result-content"></div>
@@ -293,7 +333,6 @@
         <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
             <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ Khiên bảo vệ Thận</h2>
             <p style="text-align:center; color:#666; font-size:1.1rem; margin-bottom:15px;">Chọn các loại thuốc bạn đang dùng.</p>
-
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
                     <span class="equip-name">Cứu tinh</span><span class="equip-desc">SGLT2i</span>
@@ -326,10 +365,9 @@
                 </div>
             </div>
             
-            <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
+            <div id="status-panel" class="status-panel status-novice" style="margin-top:20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
                 <div class="status-info">
-                    <div class="status-label" style="font-size:0.9rem; opacity:0.8;">Status</div>
                     <div class="status-title" id="status-title">Chưa có bảo vệ</div>
                     <div class="status-msg" id="status-msg">Bạn đang gặp rủi ro. Hãy hỏi bác sĩ.</div>
                 </div>
@@ -343,14 +381,9 @@
             <p id="quiz-counter" style="text-align:right; color:#666; font-weight:bold;">Q1/10</p>
             <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.3rem;">Đang tải...</h3><div id="quiz-options"></div></div>
             <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
-                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900;"></div>
-                <div id="quiz-exp" style="background:#fff; padding:15px; border-radius:10px; margin:10px 0;"></div>
-                <button class="btn btn-next" onclick="nextQ()">Tiếp theo ➜</button>
+                <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900; margin-bottom:15px;"></div><div id="quiz-exp" style="background:#fff; padding:20px; border-radius:15px; border:2px solid #ccc; color:#444; font-size:1.1rem;"></div><button class="btn btn-next" onclick="nextQ()">Tiếp theo ➜</button>
             </div>
-            <div id="quiz-score" class="hidden">
-                <h3 style="font-size:3rem; color:var(--primary);">Điểm: <span id="final-score">0</span></h3>
-                <button class="btn" onclick="initQuiz()">🔄 Thử lại</button>
-            </div>
+            <div id="quiz-score" class="hidden"><h3 style="font-size:3rem; color:var(--primary);">Điểm: <span id="final-score">0</span></h3><button class="btn" onclick="initQuiz()">🔄 Thử lại</button></div>
         </div>
     </div>
 
@@ -362,16 +395,8 @@
                 <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
                 <a href="https://lin.ee/sydupT8" target="_blank" class="btn btn-line" style="background:#06c755;">📲 Kết bạn</a>
             </div>
-            <div style="background:#e3f2fd; padding:25px; border-radius:20px; border:3px solid #bbdefb; margin-bottom:30px;">
-                <h3 style="color:#1976d2; margin-top:0; font-size:1.6rem;">🏥 Đăng ký</h3>
-                <p style="font-weight:bold; color:#555; font-size:1.2rem;">Cảm thấy không khỏe? Đăng ký ngay.</p>
-                <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background: linear-gradient(135deg, #2196f3, #1976d2); box-shadow: 0 6px 15px rgba(33, 150, 243, 0.3);">Đăng ký Online ➜</a>
-            </div>
-            <div style="background:#fff8e1; padding:25px; border-radius:20px; border:3px solid #ffe0b2;">
-                <h3 style="color:var(--accent); margin-top:0; font-size:1.6rem;">💊 Lấy thuốc</h3>
-                <p style="font-weight:bold; color:#555; font-size:1.2rem;">Không cần xếp hàng, đặt thuốc online.</p>
-                <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">Đặt ngay ➜</a>
-            </div>
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/RegisterPage?viewparam=sect" target="_blank" class="btn" style="background:#2196f3;">🏥 Đăng ký Online</a>
+            <a href="https://nreg.fyh.mohw.gov.tw/OReg/HomePage?page=ChronicRegisterPage#" target="_blank" class="btn btn-refill">💊 Lấy thuốc định kỳ</a>
         </div>
     </div>
 </div>
@@ -450,42 +475,81 @@
         
         // Heatmap Logic
         document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('active-cell'));
-        let row = '5';
-        if (egfr >= 90) row = '1'; else if (egfr >= 60) row = '2'; else if (egfr >= 45) row = '3a'; else if (egfr >= 30) row = '3b'; else if (egfr >= 15) row = '4';
-        let col = '1';
-        if (uacr >= 300) col = '3'; else if (uacr >= 30) col = '2';
+        let row = '5', stageText = 'G5';
+        if (egfr >= 90) { row = '1'; stageText = 'G1'; }
+        else if (egfr >= 60) { row = '2'; stageText = 'G2'; }
+        else if (egfr >= 45) { row = '3a'; stageText = 'G3a'; }
+        else if (egfr >= 30) { row = '3b'; stageText = 'G3b'; }
+        else if (egfr >= 15) { row = '4'; stageText = 'G4'; }
+        
+        let col = '1', uacrText = 'Nrml';
+        if (uacr >= 300) { col = '3'; uacrText = 'Macr'; } 
+        else if (uacr >= 30) { col = '2'; uacrText = 'Micr'; }
         
         const cellId = `cell-${row}-${col}`;
         const cell = document.getElementById(cellId);
         if(cell) cell.classList.add('active-cell');
 
-        let text = "Nguy cơ Thấp";
+        let text = "Nguy cơ Thấp (Theo dõi)";
         let color = "#6bbd45";
-        if(cell.classList.contains('bg-r') || cell.classList.contains('bg-o')) { text = "Nguy cơ Cao"; color = "#e03e2e"; }
-        else if(cell.classList.contains('bg-y')) { text = "Nguy cơ Trung bình"; color = "#ffd700"; }
+        let boxBg = "#f0fdf4", boxColor = "#1b5e20";
+
+        if (cell.classList.contains('bg-r') || cell.classList.contains('bg-o')) { 
+            text = "Nguy cơ Cao (Kiểm soát chặt)"; color = "#e03e2e"; 
+            boxBg = "#fff5f5"; boxColor = "#b71c1c";
+        } else if (cell.classList.contains('bg-y')) { 
+            text = "Nguy cơ Trung bình (Thận trọng)"; color = "#ffd700"; 
+            boxBg = "#fffde7"; boxColor = "#f57f17";
+        }
         
         const banner = document.getElementById('risk-banner');
         banner.style.backgroundColor = color;
         banner.style.color = (color==="#ffd700")?"#333":"#fff";
         document.getElementById('risk-title').innerText = text;
-        document.getElementById('risk-desc').innerText = `eGFR ${egfr} + UACR ${uacr}`;
+        document.getElementById('risk-desc').innerText = `eGFR ${stageText} + UACR ${uacrText}`;
+
+        // KFRE Logic
+        const sexNum = 1; // Simplify for demo or get from input
+        const logACR = Math.log(uacr);
+        const sum = -0.2201 * (age/10 - 7.036) + 0.2467 * (sexNum - 0.5642) - 0.5567 * (egfr/5 - 7.222) + 0.4510 * (logACR - 5.137);
+        const risk2 = 1 - Math.pow(0.9832, Math.exp(sum));
+        const risk5 = 1 - Math.pow(0.9365, Math.exp(sum));
+        
+        document.getElementById('res-2yr').innerText = (risk2 * 100).toFixed(1) + "%";
+        document.getElementById('res-5yr').innerText = (risk5 * 100).toFixed(1) + "%";
+
+        const adviceBox = document.getElementById('kfre-advice-box');
+        let adviceHTML = "";
+        if (risk2 >= 0.4) adviceHTML = `Nguy cơ suy thận rất cao. Cần khám chuyên khoa Thận ngay.`;
+        else if (risk2 >= 0.1) adviceHTML = `Cân nhắc tham gia chương trình quản lý bệnh thận mạn (CKD).`;
+        else if (risk5 >= 0.03) adviceHTML = `Khuyến nghị chuyển tuyến chuyên khoa Thận.`;
+        else adviceHTML = `Nguy cơ ngắn hạn thấp. Duy trì lối sống lành mạnh.`;
+        
+        if(hf) adviceHTML += "<br>❤️ <b>Suy tim:</b> Kiểm soát dịch nghiêm ngặt.";
+        adviceBox.innerHTML = adviceHTML;
 
         updateMeds(egfr, dm, hf);
         updateDiet(egfr, dm, hf);
         updateArmorVisibility(dm, egfr, hf);
     }
 
-    // --- 💊 Med Logic (Fix: Complete Translation) ---
     function updateMeds(egfr, dm, hf) {
         document.getElementById('med-placeholder').classList.add('hidden');
         document.getElementById('med-content').classList.remove('hidden');
+        
+        document.getElementById('med-egfr-val').innerText = egfr;
+        let conds = ['CKD']; 
+        if(dm) conds.push('Tiểu đường'); 
+        if(hf) conds.push('Suy tim');
+        document.getElementById('med-cond-text').innerText = conds.join(' + ');
+
         const g=document.getElementById('list-med-g'), y=document.getElementById('list-med-y'), r=document.getElementById('list-med-r');
         g.innerHTML=''; y.innerHTML=''; r.innerHTML='';
         const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
 
         // 1. SGLT2i
-        if(egfr >= 20) add(g, "SGLT2i (Thuốc thải đường)", "Thuốc cứu tinh chính cho Tim & Thận!");
-        else add(y, "SGLT2i", "Không khuyến cáo bắt đầu nếu eGFR < 20. Tiếp tục nếu đang dùng.");
+        if(egfr >= 20) add(g, "SGLT2i (Cứu tinh)", "Thuốc chính bảo vệ tim & thận.");
+        else add(y, "SGLT2i", "Thận trọng nếu eGFR < 20. Tiếp tục nếu đang dùng.");
         
         // 2. RASi / ARNI
         if(hf) {
@@ -498,28 +562,21 @@
         
         // 3. DM
         if(dm) {
-             add(g, "GLP-1 RA", "Kiểm soát đường, giảm cân, bảo vệ tim/thận.");
+             add(g, "GLP-1 RA", "Kiểm soát đường, cân nặng, tim mạch.");
              if(egfr >= 25 && !hf) add(g, "ns-MRA (Finerenone)", "Đặc trị bệnh thận tiểu đường.");
              
              if(egfr < 30) add(r, "Metformin", "CẤM DÙNG nếu eGFR < 30! Nguy cơ nhiễm toan.");
              else if(egfr < 45) add(y, "Metformin", "Giảm liều (tối đa 1000mg).");
         }
 
-        // 4. General
-        add(g, "Statin", "Bảo vệ mạch máu, ngừa đột quỵ.");
-        
-        let diureticMsg = hf ? "Kiểm soát triệu chứng (cân nặng). Tạm ngưng nếu mất nước." : "Tạm ngưng khi ốm (Mất nước).";
-        add(y, "Lợi tiểu (Diuretics)", diureticMsg);
-
-        add(r, "NSAID (Giảm đau mạnh)", "NGUY HIỂM! Hủy hoại thận & gây suy tim.");
+        add(g, "Statin", "Bảo vệ mạch máu.");
+        add(r, "NSAID (Giảm đau)", "NGUY HIỂM! Hủy hoại thận & gây suy tim.");
     }
 
-    // --- 🍽️ Diet Logic (Fix: Complete Translation) ---
     function updateDiet(egfr, dm, hf) {
         document.getElementById('diet-placeholder').classList.add('hidden');
         document.getElementById('diet-content').classList.remove('hidden');
         
-        // Protein Logic
         const pBox = document.getElementById('protein-guide-box');
         const pVal = document.getElementById('protein-guide-val');
         if(pBox) {
@@ -533,52 +590,63 @@
         const add = (l,t,d) => l.innerHTML += `<div class="list-item" style="border-bottom:1px dashed #ccc; padding:10px 0;"><strong style="display:block;">${t}</strong><small>${d}</small></div>`;
 
         add(g, "Protein Chất lượng", "Lòng trắng trứng, Cá, Gà, Đậu phụ.");
-        add(g, "Dầu thực vật tốt", "Dầu Oliu, Dầu hạt cải, Dầu bơ.");
+        add(g, "Dầu thực vật", "Dầu Oliu, Dầu hạt cải.");
 
         if(hf) {
-            add(r, "Thực phẩm nhiều Natri", "Dưa muối, Đồ hộp, Nước lẩu. Làm nặng thêm phù nề.");
-            add(y, "Lượng nước uống", "Cân mỗi ngày. Hạn chế nước nếu bị phù.");
+            add(r, "Nhiều Natri", "Dưa muối, Đồ hộp, Nước lẩu. Làm nặng thêm phù.");
+            add(y, "Nước uống", "Cân mỗi ngày. Hạn chế nước nếu bị phù.");
         } else {
-            add(g, "Uống đủ nước", "Uống đủ nếu không bị phù nề.");
+            add(g, "Đủ nước", "Uống đủ nếu không bị phù.");
         }
 
         if(dm) {
-            add(r, "Đường tinh luyện", "Nước ngọt, Bánh ngọt. Gây lão hóa mạch máu.");
+            add(r, "Đường tinh luyện", "Nước ngọt, Bánh ngọt.");
             add(g, "Chỉ số đường huyết thấp", "Rau xanh, Ngũ cốc nguyên hạt.");
         }
 
         if(egfr < 45) {
-            add(g, "Tinh bột ít đạm", "Miến, Bột sago, Bột củ sen. Bổ sung năng lượng, không độc tố.");
-            add(y, "Gạo lứt / Ngũ cốc", "Nhiều Phốt pho. Nên chuyển sang cơm trắng hoặc miến.");
-            add(y, "Rau xanh đậm", "Nhiều Kali. Cắt nhỏ, luộc kỹ & bỏ nước.");
-            add(r, "Muối giảm Natri", "Chứa Kali Clorua. Nguy hiểm cho tim & thận.");
+            add(g, "Tinh bột ít đạm", "Miến, Bột sago (Năng lượng sạch không độc tố).");
+            add(y, "Gạo lứt", "Nhiều Phốt pho. Chuyển sang cơm trắng hoặc Miến.");
+            add(y, "Rau xanh", "Nhiều Kali. Luộc kỹ & bỏ nước.");
+            add(r, "Muối giảm Natri", "Chứa Kali Clorua. Nguy hiểm cho tim.");
         }
         
-        add(r, "Quả Khế", "Chứa độc tố thần kinh. Cấm tuyệt đối.");
-        add(r, "Thịt chế biến sẵn", "Xúc xích/Jambon chứa Phốt pho vô cơ (hấp thu 100%).");
+        add(r, "Khế", "Độc tố thần kinh cho thận.");
+        add(r, "Thịt chế biến", "Xúc xích/Jambon chứa Phốt pho vô cơ.");
     }
 
-    // --- Armor Logic ---
+    // --- Armor Logic (Fully Synced) ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
         
-        if(hasHF) { nameRasi.innerText = "Bảo vệ kép (ARNI)"; iconRasi.style.display='inline'; iconRasi.innerText="⛑️"; }
-        else { nameRasi.innerText = "Bảo vệ cơ bản"; iconRasi.style.display='inline'; iconRasi.innerText="🧥"; }
+        if(hasHF) { 
+            nameRasi.innerText = "Bảo vệ Kép"; iconRasi.style.display='inline'; iconRasi.innerText="⛑️"; 
+            document.getElementById('desc-rasi').innerText = "ARNI";
+        } else { 
+            nameRasi.innerText = "Bảo vệ Cơ bản"; iconRasi.style.display='inline'; iconRasi.innerText="🧥"; 
+            document.getElementById('desc-rasi').innerText = "ACEi/ARB";
+        }
 
         const slotBb = document.getElementById('slot-bb');
         const slotMraOld = document.getElementById('slot-mra-old');
         const slotNsMra = document.getElementById('slot-nsmra');
         const slotGlp1 = document.getElementById('slot-glp1');
 
-        if(hasHF) { slotBb.style.display='flex'; slotMraOld.style.display='flex'; slotNsMra.style.display='none'; }
-        else { 
+        // HF Logic
+        if(hasHF) { 
+            slotBb.style.display='flex'; 
+            slotMraOld.style.display='flex'; 
+            slotNsMra.style.display='none'; 
+            document.getElementById('drug-nsmra').checked = false; slotNsMra.classList.remove('equipped');
+        } else { 
             slotBb.style.display='none'; 
             document.getElementById('drug-bb').checked = false; slotBb.classList.remove('equipped');
             slotMraOld.style.display='none'; 
             document.getElementById('drug-mra-old').checked = false; slotMraOld.classList.remove('equipped');
         }
 
+        // DM Logic (ns-MRA vs GLP1)
         if(hasDM && egfr >= 25 && !hasHF) { slotNsMra.style.display='flex'; } 
         else { 
             slotNsMra.style.display='none'; 
@@ -602,70 +670,71 @@
         updateStatusAndAdvice();
     }
 
+    const ranks = [
+        { class: 'status-novice', title: 'Chưa có', icon: '⚠️', msg: 'Rủi ro cao. Hãy hỏi bác sĩ.' },
+        { class: 'status-apprentice', title: 'Sơ cấp', icon: '🛡️', msg: 'Khởi đầu tốt.' },
+        { class: 'status-veteran', title: 'Trung cấp', icon: '✨', msg: 'Bảo vệ khá vững chắc.' },
+        { class: 'status-elite', title: 'Cao cấp', icon: '🏰', msg: 'Tuyệt vời! Bảo vệ đa mục tiêu.' },
+        { class: 'status-guardian', title: 'Hộ vệ Thận', icon: '🏆', msg: 'Bảo vệ mạnh nhất cho tim & thận!' },
+        { class: 'status-god', title: 'Hoàn hảo', icon: '👑', msg: 'Hoàn hảo! Hãy duy trì.' }
+    ];
+
     function updateStatusAndAdvice() {
-        const cnt = document.querySelectorAll('.gear-checkbox:checked').length;
-        const panel = document.getElementById('status-panel');
-        let title="Chưa có", msg="Rủi ro cao.";
-        if(cnt>0) { title="Bảo vệ sơ cấp"; msg="Tốt, tiếp tục!"; }
-        if(cnt>2) { title="Bảo vệ mạnh"; msg="Rất tốt!"; }
-        document.getElementById('status-title').innerText=title;
-        document.getElementById('status-msg').innerText=msg;
+        const checkboxes = document.querySelectorAll('.gear-checkbox');
+        let checkedCount = 0;
+        checkboxes.forEach(box => { 
+            if (box.parentElement.style.display !== 'none') {
+                if (box.checked) checkedCount++; 
+            }
+        });
         
-        // Advice
-        let adviceHTML = "";
-        if(document.getElementById('drug-sglt2').checked) adviceHTML += `<div style="color:green; font-weight:bold;">✅ SGLT2i: Đã bảo vệ!</div>`;
-        else adviceHTML += `<div style="color:red; font-weight:bold;">⚠️ SGLT2i: Khuyến nghị.</div>`;
+        let rankIndex = checkedCount; 
+        if (rankIndex >= 5) rankIndex = 5; 
         
-        const adviceDiv = document.getElementById('dynamic-advice');
-        adviceDiv.innerHTML = adviceHTML;
-        adviceDiv.classList.remove('hidden');
+        const data = ranks[rankIndex];
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        statusPanel.className = 'status-panel ' + data.class;
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth;
+        statusPanel.classList.add('animate-pop');
+
+        generateAdvice();
     }
 
-    // --- Quiz Data ---
-    const quizPool = [
-        {q:"Có được ăn Khế không?", a:[{t:"Không được",c:true},{t:"Được một ít",c:false}], exp:"Khế chứa độc tố thần kinh."},
-        {q:"Bệnh nhân suy tim cần cân?", a:[{t:"Mỗi ngày",c:true},{t:"Mỗi tháng",c:false}], exp:"Tăng 2kg trong 2 ngày là nguy hiểm."},
-        {q:"Khó thở khi nằm ngủ?", a:[{t:"Có thể Suy tim",c:true},{t:"Gối quá thấp",c:false}], exp:"Dấu hiệu dịch trong phổi."},
-        {q:"Tự mua thuốc giảm đau?", a:[{t:"Không (NSAID hại thận)",c:true},{t:"Được",c:false}], exp:"Thuốc giảm đau mạnh gây hại thận."}
-    ];
-    let qIdx=0, score=0;
-    
-    function initQuiz() {
-        qIdx=0; score=0;
-        document.getElementById('quiz-score').classList.add('hidden');
-        document.getElementById('quiz-area').classList.remove('hidden');
-        renderQ();
-    }
-    function renderQ() {
-        if(qIdx >= quizPool.length) { showScore(); return; }
-        const q = quizPool[qIdx];
-        document.getElementById('quiz-question').innerText = q.q;
-        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}`;
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        const div = document.getElementById('quiz-options');
-        div.innerHTML = '';
-        q.a.forEach(opt => {
-            const btn = document.createElement('div');
-            btn.className='quiz-option';
-            btn.innerText=opt.t;
-            btn.onclick=()=>{
-                playSound(opt.c);
-                if(opt.c) { btn.classList.add('correct'); score+=25; }
-                else { btn.classList.add('wrong'); }
-                document.getElementById('quiz-res-text').innerText = opt.c?"Đúng!":"Sai!";
-                document.getElementById('quiz-exp').innerText = q.exp;
-                document.getElementById('quiz-feedback').classList.remove('hidden');
-            };
-            div.appendChild(btn);
-        });
-        document.querySelector('.progress-fill').style.width = `${(qIdx/quizPool.length)*100}%`;
-    }
-    function nextQ() { qIdx++; renderQ(); }
-    function showScore() {
-        document.getElementById('quiz-area').classList.add('hidden');
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        document.getElementById('quiz-score').classList.remove('hidden');
-        document.getElementById('final-score').innerText = score;
+    function generateAdvice() {
+        const hfVal = document.getElementById('kfre-hf').value;
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasHF = hfVal === '1';
+        let adviceHTML = "";
+        
+        // SGLT2i
+        if(document.getElementById('drug-sglt2').checked) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid green; margin-bottom:5px;">✅ <strong>SGLT2i:</strong> Tốt! Thuốc cứu tinh chính.</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; padding:10px; border-left:5px solid orange; margin-bottom:5px;">⚠️ <strong>SGLT2i:</strong> Khuyên dùng. Giảm nguy cơ nhập viện.</div>`;
+        }
+
+        // RASi
+        if(document.getElementById('drug-rasi').checked) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid green; margin-bottom:5px;">✅ <strong>${hasHF?'ARNI':'ACEi/ARB'}:</strong> Bảo vệ cơ bản đã có.</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; padding:10px; border-left:5px solid orange; margin-bottom:5px;">⚠️ <strong>Cơ bản:</strong> ACEi/ARB/ARNI rất quan trọng.</div>`;
+        }
+        
+        // Beta-blocker
+        const slotBb = document.getElementById('slot-bb');
+        if (slotBb.style.display !== 'none') {
+            const useBb = document.getElementById('drug-bb').checked;
+            if (useBb) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid green; margin-bottom:10px;">✅ <strong>Beta-blocker:</strong> Đã trang bị! Giảm tải cho tim.</div>`;
+            else adviceHTML += `<div style="background:#fffde7; border-left:5px solid orange; padding:10px; margin-bottom:10px;">❤️ <strong>Tim:</strong> Chẹn beta là một trong 4 trụ cột suy tim.</div>`;
+        }
+
+        const adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
     }
 
     // --- Food Search (FIXED) ---
@@ -704,8 +773,6 @@
         let count = 0;
         Object.keys(foodDB).forEach(key => {
             const item = foodDB[key];
-            
-            // Search Logic (Match Category & Keyword)
             const isGlobalSearch = input !== '';
             const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
             const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
@@ -771,6 +838,10 @@
         const d = medDB[val];
         box.classList.remove('hidden');
         box.innerHTML = `<strong>${d.title}</strong><br>${d.desc}`;
+        // Color logic
+        if(d.level==='r') { box.style.background="#fff5f5"; box.style.borderColor="var(--risk-r)"; document.getElementById('light-r').classList.add('on'); }
+        else if(d.level==='y') { box.style.background="#fffbe6"; box.style.borderColor="var(--risk-y)"; document.getElementById('light-y').classList.add('on'); }
+        else { box.style.background="#e8f5e9"; box.style.borderColor="var(--risk-g)"; document.getElementById('light-g').classList.add('on'); }
     }
     
     // --- Data Persistence ---
@@ -824,14 +895,103 @@
     }
     function clearUserData() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
     
-    // Hook updates
     const origUpdate = updateAllRisks;
     updateAllRisks = function() { origUpdate(); saveUserData(); }
     const origToggle = toggleEquip;
     toggleEquip = function(el, id) { origToggle(el, id); saveUserData(); }
     window.addEventListener('load', loadUserData);
 
+    // Quiz Data (Complete)
+    const quizPool = [
+        {tags:['all'], q:"Có nên đổi sang 'Muối giảm Natri'?", a:[{t:"Có, ít muối tốt hơn",c:false},{t:"Không, chứa nhiều Kali",c:true}], exp:"Muối giảm Natri thay thế Natri bằng Kali. Nguy hiểm cho bệnh nhân thận và người dùng thuốc tim mạch."},
+        {tags:['all'], q:"Về việc uống nước?", a:[{t:"Ngừng uống nước",c:false},{t:"Uống vừa phải nếu không phù",c:true}], exp:"Trừ khi bị phù nặng hoặc suy tim, uống nước vừa phải giúp trao đổi chất."},
+        {tags:['hf'], q:"Việc quan trọng nhất cho Suy tim?", a:[{t:"Cân mỗi ngày",c:true},{t:"Tập nặng",c:false}], exp:"Tăng đột ngột (2kg trong 2 ngày) là dấu hiệu ứ nước. Cần khám ngay."},
+        {tags:['all'], q:"Tự mua thuốc giảm đau mạnh (NSAID)?", a:[{t:"Tuyệt đối KHÔNG",c:true},{t:"Được, dùng ít thôi",c:false}], exp:"NSAID gây co mạch, làm tổn thương thận và làm nặng thêm suy tim."},
+        {tags:['hf'], q:"Phải kê cao gối mới ngủ được?", a:[{t:"Đau cổ",c:false},{t:"Suy tim trở nặng",c:true}], exp:"Khó thở khi nằm (Orthopnea) là dấu hiệu dịch ứ trong phổi."},
+        {tags:['all'], q:"Có được ăn Khế không?", a:[{t:"Tuyệt đối KHÔNG",c:true},{t:"Ăn một chút",c:false}], exp:"Khế chứa độc tố thần kinh mà thận yếu không lọc được."},
+        {tags:['all'], q:"Huyết áp bình thường thì tự ngưng thuốc?", a:[{t:"Đúng, uống nhiều hại thận",c:false},{t:"Sai, tự ngưng rất nguy hiểm",c:true}], exp:"Ổn định huyết áp mới bảo vệ được thận. Tự ngưng thuốc dễ gây đột quỵ."},
+        {tags:['dm'], q:"Mục tiêu HbA1c cho người tiểu đường?", a:[{t:"Càng thấp càng tốt",c:false},{t:"Thường < 7%",c:true}], exp:"Thường là < 7%, nhưng cần thảo luận mục tiêu cá nhân với bác sĩ."},
+        {tags:['dm'], q:"Hạ đường huyết (vã mồ hôi, run tay) làm gì?", a:[{t:"Tiêm Insulin",c:false},{t:"Ăn 15g Đường",c:true}], exp:"Bổ sung đường ngay. Tiêm insulin sẽ làm tình trạng tồi tệ hơn!"},
+        {tags:['all'], q:"Chạy thận là chấm hết?", a:[{t:"Đúng",c:false},{t:"Sai, vẫn sống tốt",c:true}], exp:"Nhiều bệnh nhân vẫn đi du lịch, làm việc và sống vui vẻ khi chạy thận."},
+        {tags:['all'], q:"Nước cốt gà có tốt cho CKD?", a:[{t:"Không, nhiều Kali/Phốt pho",c:true},{t:"Tốt, bổ sung sức khỏe",c:false}], exp:"Nước cốt gà cô đặc chứa nhiều Kali, Phốt pho và Purin."},
+        {tags:['dm'], q:"Dấu hiệu sớm của Bệnh thận tiểu đường?", a:[{t:"Đau lưng",c:false},{t:"Tiểu đạm vi lượng",c:true}], exp:"Tiểu đạm vi lượng (UACR 30-300) là dấu hiệu cảnh báo sớm nhất."},
+        {tags:['hf'], q:"Suy tim: Khó thở đột ngột?", a:[{t:"Uống nước",c:false},{t:"Đi cấp cứu ngay",c:true}], exp:"Có thể là phù phổi cấp. Cần can thiệp y tế ngay lập tức."},
+        {tags:['all'], q:"Tại sao tránh Thực phẩm chế biến sẵn?", a:[{t:"Nhiều calo",c:false},{t:"Phốt pho vô cơ",c:true}], exp:"Phụ gia chứa Phốt pho vô cơ hấp thụ 100%, gây hại xương và mạch máu."},
+        {tags:['all'], q:"Bệnh Gút nên tránh?", a:[{t:"Nội tạng, cá khô, nước hầm",c:true},{t:"Trứng, Sữa, Cơm",c:false}], exp:"Nội tạng và nước hầm cô đặc chứa nhiều Purin và Phốt pho."},
+        {tags:['all'], q:"Bổ sung năng lượng mà không tăng đạm?", a:[{t:"Tinh bột ít đạm (Miến)",c:true},{t:"Gạo lứt",c:false}], exp:"Miến/Bột sago cung cấp năng lượng mà không sinh ra độc tố urê."},
+        {tags:['all'], q:"Kiêng dầu mỡ hoàn toàn để giảm cân?", a:[{t:"Đúng",c:false},{t:"Sai, cần dầu tốt",c:true}], exp:"Thiếu calo sẽ gây teo cơ. Nên dùng dầu thực vật tốt (Oliu)."},
+        {tags:['all'], q:"Cách nấu rau để giảm Kali?", a:[{t:"Luộc kỹ & bỏ nước",c:true},{t:"Nấu canh rau",c:false}], exp:"Kali tan trong nước. Luộc rau và bỏ nước luộc đi để loại bỏ Kali."},
+        {tags:['all'], q:"Giảm cân cho người Gút?", a:[{t:"Nhịn ăn nhanh",c:false},{t:"Giảm từ từ",c:true}], exp:"Giảm cân quá nhanh sinh ra keton, ức chế thải axit uric."}
+    ];
+
+    let qIdx=0, score=0, currentQuizData=[];
+    function initQuiz() { 
+        qIdx=0; score=0; 
+        document.getElementById('quiz-score').classList.add('hidden'); 
+        document.getElementById('quiz-area').classList.remove('hidden'); 
+        
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hfVal = document.getElementById('kfre-hf').value;
+        
+        // Filter questions based on profile
+        currentQuizData = quizPool.filter(q => {
+            if (q.tags.includes('all')) return true; 
+            if (q.tags.includes('dm') && dmVal === '1') return true; 
+            if (q.tags.includes('hf') && hfVal === '1') return true; 
+            return false;
+        });
+
+        // Shuffle
+        for (let i = currentQuizData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [currentQuizData[i], currentQuizData[j]] = [currentQuizData[j], currentQuizData[i]];
+        }
+        
+        // Limit to 10
+        currentQuizData = currentQuizData.slice(0, 10);
+        
+        // Fallback
+        if(currentQuizData.length < 10) {
+             let remaining = quizPool.filter(q => !currentQuizData.includes(q));
+             for (let i = 0; i < (10 - currentQuizData.length); i++) {
+                 if (remaining[i]) currentQuizData.push(remaining[i]);
+             }
+        }
+
+        renderQ(); 
+    }
+    function renderQ() {
+        if(qIdx >= currentQuizData.length) { 
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-score').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+            return; 
+        }
+        const q = currentQuizData[qIdx];
+        document.getElementById('quiz-question').innerText = q.q;
+        document.getElementById('quiz-counter').innerText = `Q${qIdx+1}/${currentQuizData.length}`;
+        document.getElementById('quiz-feedback').classList.add('hidden');
+        const div = document.getElementById('quiz-options');
+        div.innerHTML = '';
+        q.a.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className='quiz-option';
+            btn.innerText=opt.t;
+            btn.onclick=()=>{
+                playSound(opt.c);
+                document.querySelectorAll('.quiz-option').forEach(b=>b.style.pointerEvents='none');
+                if(opt.c) { btn.classList.add('correct'); score+=10; document.getElementById('quiz-res-text').innerText="🎉 Chính xác!"; document.getElementById('quiz-res-text').style.color="green"; }
+                else { btn.classList.add('wrong'); document.getElementById('quiz-res-text').innerText="😱 Sai rồi!"; document.getElementById('quiz-res-text').style.color="red"; }
+                document.getElementById('quiz-exp').innerText = q.exp;
+                document.getElementById('quiz-feedback').classList.remove('hidden');
+            };
+            div.appendChild(btn);
+        });
+        document.querySelector('.progress-fill').style.width = `${(qIdx/currentQuizData.length)*100}%`;
+    }
+    function nextQ() { qIdx++; renderQ(); }
+
 </script>
 </body>
 </html>
-
