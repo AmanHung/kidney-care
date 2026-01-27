@@ -32,7 +32,6 @@
         .option-group { display: flex; gap: 10px; width: 100%; }
         .option-btn { flex: 1; padding: 15px 5px; border: 2px solid #ddd; border-radius: 15px; background: #fff; color: #666; font-size: 1.1rem; font-weight: 900; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .option-btn.active { border-color: var(--primary); background-color: #e8f5e9; color: var(--primary); box-shadow: 0 4px 10px rgba(0, 144, 69, 0.2); transform: scale(1.02); }
-        
         .btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 15px rgba(0,144,69,0.3); display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.97); }
         .btn-outline { background: #fff; border: 3px solid var(--primary); color: var(--primary); box-shadow: none; }
@@ -76,7 +75,7 @@
         .slot-heart { border-color: var(--heart); background-color: var(--heart-light); }
         
         .equip-slot.equipped { border-style: solid; border-width: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); background: #fff; }
-        .equip-slot.equipped::after { content: 'Equipped'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
+        .equip-slot.equipped::after { content: 'Đã dùng'; position: absolute; top: -12px; right: -5px; color: white; font-size: 0.8rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #555; }
         .slot-legendary.equipped::after { background: #FF8C00; }
         .slot-epic.equipped::after { background: #9C27B0; }
         .slot-rare.equipped::after { background: #2196F3; }
@@ -110,12 +109,15 @@
         .list-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .med-result-box { background: #e8f5e9; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 8px solid var(--primary); animation: fadeIn 0.3s ease; }
         
-        /* Food Search */
         #food-list-area { min-height: 200px; }
         #food-tags { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; }
         
         .animate-pop { animation: pop-effect 0.4s ease-out; }
         @keyframes pop-effect { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 25px; width: 90%; max-width: 500px; border-radius: 15px; position: relative; animation: pop-effect 0.3s; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #999; cursor: pointer; background: none; border: none; }
     </style>
     <script src="data_vn.js"></script>
 </head>
@@ -288,9 +290,10 @@
     </div>
 
     <div id="tab-quiz" class="section">
-        <div class="card">
-            <h2>🛡️ Khiên bảo vệ Thận</h2>
-            <p style="text-align:center; color:#666;">Chọn các loại thuốc bạn đang dùng.</p>
+        <div class="card" style="border: 3px solid #6bbd45; background: #fff;">
+            <h2 style="color:#2e7d32; border-bottom-color:#a5d6a7;">🛡️ Khiên bảo vệ Thận</h2>
+            <p style="text-align:center; color:#666; font-size:1.1rem; margin-bottom:15px;">Chọn các loại thuốc bạn đang dùng.</p>
+
             <div class="equip-grid">
                 <div class="equip-slot slot-legendary" onclick="toggleEquip(this, 'drug-sglt2')">
                     <span class="equip-name">Cứu tinh</span><span class="equip-desc">SGLT2i</span>
@@ -323,9 +326,10 @@
                 </div>
             </div>
             
-            <div id="status-panel" class="status-panel status-novice" style="margin-top:20px;">
+            <div id="status-panel" class="status-panel status-novice" style="margin-top: 20px;">
                 <div class="status-icon" id="status-icon">⚠️</div>
                 <div class="status-info">
+                    <div class="status-label" style="font-size:0.9rem; opacity:0.8;">Status</div>
                     <div class="status-title" id="status-title">Chưa có bảo vệ</div>
                     <div class="status-msg" id="status-msg">Bạn đang gặp rủi ro. Hãy hỏi bác sĩ.</div>
                 </div>
@@ -336,8 +340,8 @@
         <div class="card" style="margin-top: 20px;">
             <h2>🎓 Trắc nghiệm Sức khỏe</h2>
             <div class="progress-bar"><div id="quiz-progress" class="progress-fill"></div></div>
-            <p id="quiz-counter" style="text-align:right;">Q1/10</p>
-            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px;">Đang tải...</h3><div id="quiz-options"></div></div>
+            <p id="quiz-counter" style="text-align:right; color:#666; font-weight:bold;">Q1/10</p>
+            <div id="quiz-area"><h3 id="quiz-question" style="min-height:70px; font-size:1.3rem;">Đang tải...</h3><div id="quiz-options"></div></div>
             <div id="quiz-feedback" class="hidden" style="margin-top:25px;">
                 <div id="quiz-res-text" style="font-size:1.6rem; font-weight:900;"></div>
                 <div id="quiz-exp" style="background:#fff; padding:15px; border-radius:10px; margin:10px 0;"></div>
@@ -356,7 +360,7 @@
             <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:3px solid #eee; margin-bottom:30px;">
                 <h3 style="color:#06c755; margin-top:0;">LINE Official</h3>
                 <div class="qr-box"><img src="line_qr.png" class="qr-img" onerror="this.style.display='none'"></div>
-                <a href="https://lin.ee/sydupT8" target="_blank" class="btn" style="background:#06c755;">📲 Kết bạn</a>
+                <a href="https://lin.ee/sydupT8" target="_blank" class="btn btn-line" style="background:#06c755;">📲 Kết bạn</a>
             </div>
             <div style="background:#e3f2fd; padding:25px; border-radius:20px; border:3px solid #bbdefb; margin-bottom:30px;">
                 <h3 style="color:#1976d2; margin-top:0; font-size:1.6rem;">🏥 Đăng ký</h3>
@@ -509,7 +513,7 @@
         if(hf) add(r, "Muối & Mặn", "Làm nặng thêm phù nề.");
     }
 
-    // --- Armor & Quiz Logic ---
+    // --- Armor Logic (Fixed) ---
     function updateArmorVisibility(hasDM, egfr, hasHF) {
         const iconRasi = document.getElementById('icon-rasi');
         const nameRasi = document.getElementById('name-rasi');
@@ -545,31 +549,77 @@
         updateStatusAndAdvice();
     }
 
-    function toggleEquip(el, id) {
-        const chk = document.getElementById(id);
-        chk.checked = !chk.checked;
-        el.classList.toggle('equipped', chk.checked);
-        if(chk.checked) playSound(true);
+    // Ranks Data (Missing in previous version)
+    const ranks = [
+        { class: 'status-novice', title: 'Chưa có', icon: '⚠️', msg: 'Rủi ro cao. Hãy hỏi bác sĩ.' },
+        { class: 'status-apprentice', title: 'Sơ cấp', icon: '🛡️', msg: 'Khởi đầu tốt.' },
+        { class: 'status-veteran', title: 'Trung cấp', icon: '✨', msg: 'Bảo vệ khá vững chắc.' },
+        { class: 'status-elite', title: 'Cao cấp', icon: '🏰', msg: 'Tuyệt vời! Bảo vệ đa mục tiêu.' },
+        { class: 'status-guardian', title: 'Hộ vệ Thận', icon: '🏆', msg: 'Bảo vệ mạnh nhất cho tim & thận!' },
+        { class: 'status-god', title: 'Hoàn hảo', icon: '👑', msg: 'Hoàn hảo! Hãy duy trì.' }
+    ];
+
+    function updateStatusAndAdvice() {
+        const checkboxes = document.querySelectorAll('.gear-checkbox');
+        let checkedCount = 0;
+        checkboxes.forEach(box => { 
+            if (box.parentElement.style.display !== 'none') {
+                if (box.checked) checkedCount++; 
+            }
+        });
+        
+        let rankIndex = checkedCount; 
+        if (rankIndex >= 5) rankIndex = 5; 
+        
+        const data = ranks[rankIndex];
+        const statusPanel = document.getElementById('status-panel');
+        document.getElementById('status-title').innerText = data.title;
+        document.getElementById('status-icon').innerText = data.icon;
+        document.getElementById('status-msg').innerText = data.msg;
+        statusPanel.className = 'status-panel ' + data.class;
+        statusPanel.classList.remove('animate-pop');
+        void statusPanel.offsetWidth;
+        statusPanel.classList.add('animate-pop');
+
+        generateAdvice();
+    }
+
+    function toggleEquip(element, checkboxId) {
+        var checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked;
+        if(checkbox.checked) { element.classList.add('equipped'); playSound(true); } 
+        else { element.classList.remove('equipped'); }
         updateStatusAndAdvice();
     }
 
-    function updateStatusAndAdvice() {
-        const cnt = document.querySelectorAll('.gear-checkbox:checked').length;
-        const panel = document.getElementById('status-panel');
-        let title="Chưa có", msg="Rủi ro cao.";
-        if(cnt>0) { title="Bảo vệ sơ cấp"; msg="Tốt, tiếp tục!"; }
-        if(cnt>2) { title="Bảo vệ mạnh"; msg="Rất tốt!"; }
-        document.getElementById('status-title').innerText=title;
-        document.getElementById('status-msg').innerText=msg;
+    function generateAdvice() {
+        const hfVal = document.getElementById('kfre-hf').value;
+        const dmVal = document.getElementById('kfre-dm').value;
+        const hasHF = hfVal === '1';
         
-        // Advice
         let adviceHTML = "";
-        if(document.getElementById('drug-sglt2').checked) adviceHTML += `<div style="color:green; font-weight:bold;">✅ SGLT2i: Đã bảo vệ!</div>`;
-        else adviceHTML += `<div style="color:red; font-weight:bold;">⚠️ SGLT2i: Khuyến nghị.</div>`;
         
-        const adviceDiv = document.getElementById('dynamic-advice');
-        adviceDiv.innerHTML = adviceHTML;
-        adviceDiv.classList.remove('hidden');
+        // SGLT2i
+        const useSglt2 = document.getElementById('drug-sglt2').checked;
+        if (useSglt2) {
+            adviceHTML += `<div style="background:#e8f5e9; padding:12px; border-left:5px solid #2e7d32; margin-bottom:12px; border-radius:5px;">✅ <strong>SGLT2i:</strong> Tốt! Thuốc cứu tinh chính.</div>`;
+        } else {
+            adviceHTML += `<div style="background:#fffde7; border: 2px solid #ff8f00; padding: 15px; margin-bottom: 12px; border-radius: 8px;"><span style="background:#d32f2f; color:white; padding:3px 8px; border-radius:4px; font-size:0.9rem; font-weight:bold;">🔥 Quan trọng</span><br><strong style="color:#d84315;">Hỏi Bác sĩ:</strong> SGLT2i giảm nguy cơ nhập viện & lọc máu.</div>`;
+        }
+
+        // RASi
+        const useRasi = document.getElementById('drug-rasi').checked;
+        if (hasHF) {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>ARNI/RASi:</strong> Bảo vệ tim đúng cách!</div>`;
+            else adviceHTML += `<div style="background:#fce4ec; border-left:5px solid #e91e63; padding:10px; margin-bottom:10px;">❤️ <strong>Tim mạch:</strong> ARNI hoặc ACEi/ARB được khuyên dùng cho Suy tim.</div>`;
+        } else {
+            if (useRasi) adviceHTML += `<div style="background:#e8f5e9; padding:10px; border-left:5px solid #2e7d32; margin-bottom:10px; border-radius:5px;">✅ <strong>RASi:</strong> Quan trọng để bảo vệ thận.</div>`;
+            else adviceHTML += `<div style="background:#fff3e0; padding:10px; border-left:5px solid #ff9800; margin-bottom:10px; border-radius:5px;">💡 <strong>Cơ bản:</strong> ACEi/ARB là nền tảng điều trị.</div>`;
+        }
+
+        var adviceDiv = document.getElementById('dynamic-advice');
+        if (adviceHTML !== "") { adviceDiv.innerHTML = adviceHTML; adviceDiv.classList.remove('hidden'); } 
+        else { adviceDiv.classList.add('hidden'); }
     }
 
     // --- Quiz Data ---
@@ -604,186 +654,4 @@
                 if(opt.c) { btn.classList.add('correct'); score+=25; }
                 else { btn.classList.add('wrong'); }
                 document.getElementById('quiz-res-text').innerText = opt.c?"Đúng!":"Sai!";
-                document.getElementById('quiz-exp').innerText = q.exp;
-                document.getElementById('quiz-feedback').classList.remove('hidden');
-            };
-            div.appendChild(btn);
-        });
-        document.querySelector('.progress-fill').style.width = `${(qIdx/quizPool.length)*100}%`;
-    }
-    function nextQ() { qIdx++; renderQ(); }
-    function showScore() {
-        document.getElementById('quiz-area').classList.add('hidden');
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        document.getElementById('quiz-score').classList.remove('hidden');
-        document.getElementById('final-score').innerText = score;
-    }
-
-    // --- Food Search (FIXED) ---
-    let currentCategory = 'all';
-    
-    function initFoodSearch() { 
-        const tagContainer = document.getElementById('food-tags');
-        if(!tagContainer) return;
-        tagContainer.innerHTML = '';
-        
-        // Generate Category Buttons
-        Object.keys(foodCategories).forEach(key => {
-            const btn = document.createElement('button');
-            btn.innerText = foodCategories[key];
-            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
-            btn.style.flex = '0 0 auto';
-            btn.style.padding = '8px 15px';
-            btn.onclick = () => {
-                document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = key;
-                filterFood();
-            };
-            tagContainer.appendChild(btn);
-        });
-        
-        filterFood(); 
-    }
-    
-    function filterFood() {
-        const inputEl = document.getElementById('food-search-input');
-        if(!inputEl) return;
-        const input = inputEl.value.toLowerCase().trim();
-        const listArea = document.getElementById('food-list-area');
-        listArea.innerHTML = '';
-        
-        let count = 0;
-        Object.keys(foodDB).forEach(key => {
-            const item = foodDB[key];
-            
-            // Search Logic (Match Category & Keyword)
-            const isGlobalSearch = input !== '';
-            const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
-            const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
-
-            if (catMatch && keyMatch) {
-                const div = document.createElement('div');
-                div.className = 'quiz-option'; 
-                div.style.padding = '10px';
-                div.style.marginBottom = '8px';
-                div.style.display = 'flex';
-                div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
-                
-                let dotColor = '#ddd';
-                if(item.t.includes('Xanh')) dotColor = 'var(--risk-g)';
-                if(item.t.includes('Vàng')) dotColor = 'var(--risk-y)';
-                if(item.t.includes('Đỏ')) dotColor = 'var(--risk-r)';
-
-                div.innerHTML = `
-                    <div style="font-weight:bold; font-size:1.0rem;">
-                        <span style="color:${dotColor}; margin-right:8px;">●</span>${item.n}
-                    </div>
-                    <span style="font-size:0.8rem; color:#888;">></span>
-                `;
-                div.onclick = () => showFoodDetail(item);
-                listArea.appendChild(div);
-                count++;
-            }
-        });
-        
-        if (count === 0) listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Không tìm thấy.</p>';
-    }
-    
-    function showFoodDetail(item) {
-        const modal = document.getElementById('food-result-modal');
-        const content = document.getElementById('food-result-content');
-        
-        let bg = '#fff', border = '#ccc';
-        if(item.t.includes('Đỏ')) { bg='#fff5f5'; border='var(--risk-r)'; }
-        else if(item.t.includes('Vàng')) { bg='#fffbe6'; border='var(--risk-y)'; }
-        else { bg='#e8f5e9'; border='var(--risk-g)'; }
-
-        content.parentElement.style.background = bg;
-        content.parentElement.style.borderLeft = `8px solid ${border}`;
-        
-        content.innerHTML = `
-            <h3 style="margin-top:0; color:#333; font-size:1.5rem;">${item.n}</h3>
-            <div style="margin-bottom:15px;">${item.t}</div>
-            <p style="font-size:1.1rem; line-height:1.6; color:#444;">${item.d}</p>
-        `;
-        
-        modal.classList.remove('hidden');
-    }
-
-    function closeFoodModal() {
-        document.getElementById('food-result-modal').classList.add('hidden');
-    }
-    
-    function checkMed() {
-        const val = document.getElementById('med-select').value;
-        const box = document.getElementById('med-result');
-        if(!val) { box.classList.add('hidden'); return; }
-        const d = medDB[val];
-        box.classList.remove('hidden');
-        box.innerHTML = `<strong>${d.title}</strong><br>${d.desc}`;
-    }
-    
-    // --- Data Persistence ---
-    const STORAGE_KEY = 'kidney_care_data';
-    function saveUserData() {
-        const data = {
-            age: document.getElementById('kfre-age').value,
-            sex: document.getElementById('kfre-sex').value,
-            egfr: document.getElementById('kfre-egfr').value,
-            uacr: document.getElementById('kfre-uacr').value,
-            dm: document.getElementById('kfre-dm').value,
-            hf: document.getElementById('kfre-hf').value,
-            meds: {
-                'drug-sglt2': document.getElementById('drug-sglt2').checked,
-                'drug-rasi': document.getElementById('drug-rasi').checked,
-                'drug-bb': document.getElementById('drug-bb').checked,
-                'drug-mra-old': document.getElementById('drug-mra-old').checked,
-                'drug-nsmra': document.getElementById('drug-nsmra').checked,
-                'drug-statin': document.getElementById('drug-statin').checked,
-                'drug-glp1': document.getElementById('drug-glp1').checked
-            }
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-    function loadUserData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(raw) {
-            try {
-                const data = JSON.parse(raw);
-                if(data.age) document.getElementById('kfre-age').value = data.age;
-                if(data.egfr) document.getElementById('kfre-egfr').value = data.egfr;
-                setOption('kfre-sex', data.sex, document.querySelector(`#group-sex .option-btn:nth-child(${data.sex==='1'?1:2})`));
-                setOption('kfre-uacr', data.uacr, document.querySelector(`#group-uacr .option-btn:nth-child(${data.uacr==='10'?1:data.uacr==='150'?2:3})`));
-                setOption('kfre-dm', data.dm, document.querySelector(`#group-dm .option-btn:nth-child(${data.dm==='1'?2:1})`));
-                setOption('kfre-hf', data.hf, document.querySelector(`#group-hf .option-btn:nth-child(${data.hf==='1'?2:1})`));
-                
-                updateAllRisks(); // Trigger logic to show/hide slots
-                
-                // Restore Meds Checkbox
-                if(data.meds) {
-                    Object.keys(data.meds).forEach(key => {
-                        const chk = document.getElementById(key);
-                        if(chk && chk.parentElement.style.display !== 'none') {
-                            chk.checked = data.meds[key];
-                            if(chk.checked) chk.parentElement.classList.add('equipped');
-                        }
-                    });
-                    updateStatusAndAdvice();
-                }
-            } catch(e) { console.error(e); }
-        }
-    }
-    function clearUserData() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
-    
-    // Hook updates
-    const origUpdate = updateAllRisks;
-    updateAllRisks = function() { origUpdate(); saveUserData(); }
-    const origToggle = toggleEquip;
-    toggleEquip = function(el, id) { origToggle(el, id); saveUserData(); }
-    window.addEventListener('load', loadUserData);
-
-</script>
-</body>
-</html>
+                document.getElementById('quiz-exp
