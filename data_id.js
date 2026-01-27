@@ -1,4 +1,4 @@
-// data_id.js - Indonesian Database
+// data_id.js - Indonesian Database (Fixed)
 
 const medDB = {
     'ras': { level: 'g', title: '✅ Perlindungan Dasar (ACEi/ARB)', desc: 'Obat dasar untuk perlindungan ginjal dan jantung. Sedikit penurunan eGFR di awal adalah normal.' },
