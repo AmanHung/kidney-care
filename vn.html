@@ -745,20 +745,22 @@
         if(!tagContainer) return;
         tagContainer.innerHTML = '';
         
-        Object.keys(foodCategories).forEach(key => {
-            const btn = document.createElement('button');
-            btn.innerText = foodCategories[key];
-            btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
-            btn.style.flex = '0 0 auto';
-            btn.style.padding = '8px 15px';
-            btn.onclick = () => {
-                document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = key;
-                filterFood();
-            };
-            tagContainer.appendChild(btn);
-        });
+        if (typeof foodCategories !== 'undefined') {
+            Object.keys(foodCategories).forEach(key => {
+                const btn = document.createElement('button');
+                btn.innerText = foodCategories[key];
+                btn.className = `option-btn ${key === 'all' ? 'active' : ''}`;
+                btn.style.flex = '0 0 auto';
+                btn.style.padding = '8px 15px';
+                btn.onclick = () => {
+                    document.querySelectorAll('#food-tags .option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = key;
+                    filterFood();
+                };
+                tagContainer.appendChild(btn);
+            });
+        }
         
         filterFood(); 
     }
@@ -771,41 +773,46 @@
         listArea.innerHTML = '';
         
         let count = 0;
-        Object.keys(foodDB).forEach(key => {
-            const item = foodDB[key];
-            const isGlobalSearch = input !== '';
-            const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
-            const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
-
-            if (catMatch && keyMatch) {
-                const div = document.createElement('div');
-                div.className = 'quiz-option'; 
-                div.style.padding = '10px';
-                div.style.marginBottom = '8px';
-                div.style.display = 'flex';
-                div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
+        if (typeof foodDB !== 'undefined') {
+            Object.keys(foodDB).forEach(key => {
+                const item = foodDB[key];
                 
-                let dotColor = '#ddd';
-                if(item.t.includes('Xanh')) dotColor = 'var(--risk-g)';
-                if(item.t.includes('Vàng')) dotColor = 'var(--risk-y)';
-                if(item.t.includes('Đỏ')) dotColor = 'var(--risk-r)';
+                const isGlobalSearch = input !== '';
+                const catMatch = isGlobalSearch ? true : (currentCategory === 'all' || item.c === currentCategory);
+                const keyMatch = input === '' || item.n.toLowerCase().includes(input) || key.includes(input);
 
-                div.innerHTML = `
-                    <div style="font-weight:bold; font-size:1.0rem;">
-                        <span style="color:${dotColor}; margin-right:8px;">●</span>${item.n}
-                    </div>
-                    <span style="font-size:0.8rem; color:#888;">></span>
-                `;
-                div.onclick = () => showFoodDetail(item);
-                listArea.appendChild(div);
-                count++;
-            }
-        });
+                if (catMatch && keyMatch) {
+                    const div = document.createElement('div');
+                    div.className = 'quiz-option'; 
+                    div.style.padding = '10px';
+                    div.style.marginBottom = '8px';
+                    div.style.display = 'flex';
+                    div.style.justifyContent = 'space-between';
+                    div.style.alignItems = 'center';
+                    
+                    // 修正：針對越南語的燈號判斷 (Xanh/Vàng/Đỏ)
+                    let dotColor = '#ddd';
+                    if(item.t.includes('Xanh')) dotColor = 'var(--risk-g)';
+                    else if(item.t.includes('Vàng')) dotColor = 'var(--risk-y)';
+                    else if(item.t.includes('Đỏ')) dotColor = 'var(--risk-r)';
+
+                    div.innerHTML = `
+                        <div style="font-weight:bold; font-size:1.0rem;">
+                            <span style="color:${dotColor}; margin-right:8px;">●</span>${item.n}
+                        </div>
+                        <span style="font-size:0.8rem; color:#888;">></span>
+                    `;
+                    div.onclick = () => showFoodDetail(item);
+                    listArea.appendChild(div);
+                    count++;
+                }
+            });
+        }
         
         if (count === 0) listArea.innerHTML = '<p style="text-align:center; color:#999; margin-top:20px;">Không tìm thấy.</p>';
     }
     
+    // 修正：針對越南語的燈號顏色判斷
     function showFoodDetail(item) {
         const modal = document.getElementById('food-result-modal');
         const content = document.getElementById('food-result-content');
@@ -995,3 +1002,4 @@
 </script>
 </body>
 </html>
+
