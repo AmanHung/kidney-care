@@ -36,6 +36,25 @@
         .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
         .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
 
+        /* 右側區塊 (這段原本缺漏) */
+        .header-right { 
+            display: flex; flex-direction: column; align-items: flex-end; gap: 5px; 
+        }
+
+        /* 語言選單樣式 (修正版) */
+        .lang-select { 
+            padding: 2px 5px; 
+            border-radius: 12px; 
+            border: 1px solid #ccc; 
+            font-size: 0.8rem; 
+            background: #fff; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #555; 
+            max-width: 95px; /* 限制最大寬度 */
+            width: 100%;     /* 填滿 header-right 容器寬度 */
+        }
+
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .section { display: none; animation: fadeIn 0.3s ease; }
@@ -220,19 +239,21 @@
         .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
         .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
 
-       /* 語言選單 (統一使用中文版樣式) */
-        .lang-select { 
-            padding: 2px 5px; 
-            border-radius: 12px; 
-            border: 1px solid #ccc; 
-            font-size: 0.8rem; 
-            background: #fff; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: #555; 
-            max-width: 95px; /* 限制最大寬度 */
-            width: 100%;     /* 讓它填滿父容器 (header-right) 的寬度，但受 max-width 限制 */
-        }
+        .guide-box { background: #fff; border-radius: 18px; padding: 20px 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; }
+        .guide-title { margin: 0 0 15px 0; font-weight: 900; color: #444; font-size: 1.2rem; text-align: center; letter-spacing: 1px; }
+        .guide-row { display: flex; align-items: flex-start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
+        .guide-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .guide-icon { flex: 0 0 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.8rem; margin-right: 15px; background: #f9f9f9; }
+        .guide-text { flex: 1; }
+        .guide-head { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; display: block; }
+        .guide-desc { font-size: 1rem; color: #666; line-height: 1.5; text-align: justify; }
+        
+        .icon-g { background: #e8f5e9; color: var(--risk-g); box-shadow: 0 2px 5px rgba(107, 189, 69, 0.2); }
+        .text-g { color: var(--risk-g); }
+        .icon-y { background: #fffde7; color: #fbc02d; box-shadow: 0 2px 5px rgba(251, 192, 45, 0.2); }
+        .text-y { color: #fbc02d; }
+        .icon-r { background: #ffebee; color: var(--risk-r); box-shadow: 0 2px 5px rgba(224, 62, 46, 0.2); }
+        .text-r { color: var(--risk-r); }
     </style>
     <script src="data_en.js"></script>
 </head>
@@ -1387,6 +1408,7 @@
 </script>
 </body>
 </html>
+
 
 
 
