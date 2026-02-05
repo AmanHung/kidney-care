@@ -10,18 +10,45 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; padding-bottom: calc(var(--nav-height) + 20px); color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; }
         
-        /* Header */
-        header { background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-        header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%); }
-        .header-logo { height: 50px; width: auto; object-fit: contain; }
+       /* Header */
+        header { 
+            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%);
+        }
+        
+        /* Logo: 微調高度 */
+        .header-logo { height: 45px; width: auto; object-fit: contain; }
+        
+        /* 標題區塊 */
         .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
-        .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
+        .header-title-box h1 { 
+            margin: 0; 
+            font-size: 1.6rem; 
+            color: #333; font-weight: 900; line-height: 1.1; 
+        }
         .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
-        /* 語言選單樣式 */
+
+        /* 右側區塊 (Logo + 選單) */
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+
+        /* 語言選單 */
         .lang-select { 
             padding: 2px 5px; border-radius: 12px; border: 1px solid #ccc; 
             font-size: 0.8rem; background: #fff; font-weight: bold; 
             cursor: pointer; color: #555; max-width: 95px; width: auto;
+        }
+
+        /* 📱 手機版專屬微調 (螢幕小於 380px) */
+        @media (max-width: 380px) {
+            .header-logo { height: 32px; } /* Logo 再縮小 */
+            .header-title-box h1 { font-size: 1.1rem; } /* 標題再縮小 */
+            .header-title-box p { display: none; } /* 極窄螢幕隱藏副標題 */
+            .lang-select { max-width: 70px; font-size: 0.7rem; }
         }
         
         /* Layout */
@@ -1011,6 +1038,7 @@
 </script>
 </body>
 </html>
+
 
 
 
