@@ -20,21 +20,45 @@
             color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; 
         }
         
-        /* Header */
+       /* Header 優化版 (適用手機) */
         header { 
-            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
+            background: var(--white); padding: 8px 10px; border-radius: 0 0 20px 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between; align-items: center; gap: 5px;
         }
         header::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 5px;
             background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%);
         }
-        .header-logo { height: 50px; width: auto; object-fit: contain; }
-        header img.header-logo:first-of-type { height: 38px; }
-        .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
-        .header-title-box h1 { margin: 0; font-size: 1.8rem; color: #333; font-weight: 900; line-height: 1.1; }
-        .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.85rem; font-weight: bold; }
+        
+        /* Logo 設定 */
+        .header-logo { height: 42px; width: auto; object-fit: contain; flex-shrink: 0; }
+        
+        /* 中間標題區塊 */
+        .header-title-box { text-align: center; flex: 1; padding: 0 2px; min-width: 0; /* 允許文字縮小 */ }
+        .header-title-box h1 { 
+            margin: 0; font-size: 1.35rem; color: #333; font-weight: 900; line-height: 1.1; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* 防止換行 */
+        }
+        .header-title-box p { margin: 2px 0 0 0; color: #666; font-size: 0.75rem; font-weight: bold; }
+
+        /* 右側區塊 (Logo + 選單) */
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+
+        /* 語言選單優化 */
+        .lang-select { 
+            padding: 1px 4px; border-radius: 8px; border: 1px solid #ccc; 
+            font-size: 0.75rem; background: #fff; font-weight: bold; 
+            cursor: pointer; color: #555; max-width: 85px; /* 限制最大寬度 */
+        }
+
+        /* 📱 手機版專屬微調 (螢幕小於 380px) */
+        @media (max-width: 380px) {
+            .header-logo { height: 32px; } /* Logo 再縮小 */
+            .header-title-box h1 { font-size: 1.1rem; } /* 標題再縮小 */
+            .header-title-box p { display: none; } /* 極窄螢幕隱藏副標題 */
+            .lang-select { max-width: 70px; font-size: 0.7rem; }
+        }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -226,22 +250,20 @@
 <body>
 
 <header>
-    <img src="logo_left.png" alt="豐原醫院" class="header-logo" onerror="this.style.opacity='0.2'">
-    
+    <img src="logo_left.png" alt="Hospital Logo" class="header-logo" onerror="this.style.opacity='0.2'">
     <div class="header-title-box">
-        <h1 style="color:var(--primary);">保腎護心助理</h1>
-        <p>心/腎/糖 智慧照護</p>
+        <h1 style="color:var(--primary);">保腎護心</h1>
+        <p>智慧照護</p>
     </div>
-
-    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
-        <img src="logo_right_new.png" alt="五福藥師圈" class="header-logo" onerror="this.style.opacity='0.2'">
-        
-        <select onchange="if(this.value) location.href=this.value;" style="...">
-    <option value="#" selected>🇹🇼 中文</option>
-    <option value="en.html">🇺🇸 English</option>
-    <option value="id.html">🇮🇩 Indo</option>
-    <option value="vn.html">🇻🇳 Tiếng Việt</option>
-</select>
+    <div class="header-right">
+        <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
+        <select class="lang-select" onchange="if(this.value) location.href=this.value;">
+            <option value="" disabled>🌏 語言</option>
+            <option value="#" selected>🇹🇼 中文</option>
+            <option value="en.html">🇺🇸 English</option>
+            <option value="id.html">🇮🇩 Indo</option>
+            <option value="vn.html">🇻🇳 Việt</option>
+        </select>
     </div>
 </header>
 
@@ -1720,6 +1742,7 @@
 </script>
 </body>
 </html>
+
 
 
 
