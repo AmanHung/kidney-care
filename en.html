@@ -220,9 +220,19 @@
         .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
         .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
 
-        /* Lang Switcher */
-        .lang-switch-box { position: absolute; right: 15px; top: 15px; }
-        .lang-select { padding: 5px 10px; border-radius: 15px; border: 1px solid #ccc; font-weight: bold; background: #fff; }
+       /* 語言選單樣式 (與中文版統一) */
+        .lang-select { 
+            padding: 2px 5px; 
+            border-radius: 12px; 
+            border: 1px solid #ccc; 
+            font-size: 0.8rem; 
+            background: #fff; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #555; 
+            max-width: 95px; /* 限制最大寬度 */
+            width: auto;     /* 自動適應內容 */
+        }
     </style>
     <script src="data_en.js"></script>
 </head>
@@ -1377,6 +1387,7 @@
 </script>
 </body>
 </html>
+
 
 
 
