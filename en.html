@@ -20,49 +20,21 @@
             color: var(--text); font-size: 19px; line-height: 1.5; user-select: none; 
         }
         
-        /* Header (與中文版完全統一) */
+        /* Header */
         header { 
-            background: var(--white); 
-            padding: 12px 15px; 
-            border-radius: 0 0 25px 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-            position: sticky; top: 0; z-index: 100;
-            display: flex; 
-            justify-content: space-between; /* 關鍵：左右分開 */
-            align-items: center;            /* 垂直置中 */
+            background: var(--white); padding: 12px 15px; border-radius: 0 0 25px 25px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        
-        /* 中間標題區塊 */
-        .header-title-box { 
-            text-align: center; 
-            flex: 1;          /* 關鍵：佔據所有剩餘空間 */
-            padding: 0 5px; 
+        header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary) 30%, var(--heart) 70%);
         }
-
-        /* 右側區塊 (Logo + 選單) */
-        .header-right { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-end; 
-            gap: 5px; 
-            flex-shrink: 0;   /* 關鍵！防止被擠壓或拉伸 */
-            width: auto;      /* 確保寬度只包覆內容 */
-        }
-
-        /* 語言選單 (確保不被拉寬) */
-        .lang-select { 
-            padding: 2px 5px; 
-            border-radius: 12px; 
-            border: 1px solid #ccc; 
-            font-size: 0.8rem; 
-            background: #fff; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: #555; 
-            max-width: 95px; 
-            width: 100%;      /* 在 header-right 內填滿，但受 max-width 限制 */
-            box-sizing: border-box; /* 確保 padding 不會撐大寬度 */
-        }
+        .header-logo { height: 50px; width: auto; object-fit: contain; }
+        header img.header-logo:first-of-type { height: 38px; }
+        .header-title-box { text-align: center; flex: 1; padding: 0 5px; }
+        .header-title-box h1 { margin: 0; font-size: 1.6rem; color: #333; font-weight: 900; line-height: 1.1; }
+        .header-title-box p { margin: 3px 0 0 0; color: #666; font-size: 0.8rem; font-weight: bold; }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -248,21 +220,9 @@
         .report-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; font-size: 1.1rem; }
         .highlight-report { border: 3px solid red; background: yellow; color: red; font-weight: bold; padding: 0 5px; }
 
-        .guide-box { background: #fff; border-radius: 18px; padding: 20px 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; }
-        .guide-title { margin: 0 0 15px 0; font-weight: 900; color: #444; font-size: 1.2rem; text-align: center; letter-spacing: 1px; }
-        .guide-row { display: flex; align-items: flex-start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
-        .guide-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .guide-icon { flex: 0 0 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.8rem; margin-right: 15px; background: #f9f9f9; }
-        .guide-text { flex: 1; }
-        .guide-head { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; display: block; }
-        .guide-desc { font-size: 1rem; color: #666; line-height: 1.5; text-align: justify; }
-        
-        .icon-g { background: #e8f5e9; color: var(--risk-g); box-shadow: 0 2px 5px rgba(107, 189, 69, 0.2); }
-        .text-g { color: var(--risk-g); }
-        .icon-y { background: #fffde7; color: #fbc02d; box-shadow: 0 2px 5px rgba(251, 192, 45, 0.2); }
-        .text-y { color: #fbc02d; }
-        .icon-r { background: #ffebee; color: var(--risk-r); box-shadow: 0 2px 5px rgba(224, 62, 46, 0.2); }
-        .text-r { color: var(--risk-r); }
+        /* Lang Switcher */
+        .lang-switch-box { position: absolute; right: 15px; top: 15px; }
+        .lang-select { padding: 5px 10px; border-radius: 15px; border: 1px solid #ccc; font-weight: bold; background: #fff; }
     </style>
     <script src="data_en.js"></script>
 </head>
@@ -274,17 +234,18 @@
         <h1 style="color:var(--primary);">Kidney Care Assistant</h1>
         <p>Heart / Kidney / Diabetes</p>
     </div>
-    <div class="header-right">
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
         <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
-        <select class="lang-select" onchange="if(this.value) location.href=this.value;">
-            <option value="" disabled>🌏 Language</option>
-            <option value="index.html">🇹🇼 Chinese</option>
-            <option value="#" selected>🇺🇸 English</option>
-            <option value="id.html">🇮🇩 Indo</option>
-            <option value="vn.html">🇻🇳 Việt</option>
-        </select>
+        <select class="lang-select" onchange="if(this.value) location.href=this.value;" 
+        style="padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; font-size: 0.8rem; background: #fff; font-weight: bold; cursor: pointer; color: #555;">
+    <option value="" disabled>🌏 Language</option>
+    <option value="index.html">🇹🇼 Chinese</option>
+    <option value="#" selected>🇺🇸 English</option>
+    <option value="id.html">🇮🇩 Indo</option>
+    <option value="vn.html">🇻🇳 Tiếng Việt</option>
+</select>
     </div>
-</header
+</header>
 
 <div class="container">
 
@@ -1417,12 +1378,5 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
