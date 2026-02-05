@@ -231,19 +231,18 @@
 <header>
     <img src="logo_left.png" alt="Hospital Logo" class="header-logo" onerror="this.style.opacity='0.2'">
     <div class="header-title-box">
-        <h1 style="color:var(--primary);">Kidney Care Assistant</h1>
-        <p>Heart / Kidney / Diabetes</p>
+        <h1 style="color:var(--primary);">Kidney Care</h1>
+        <p>Assistant</p>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+    <div class="header-right">
         <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
-        <select class="lang-select" onchange="if(this.value) location.href=this.value;" 
-        style="padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; font-size: 0.8rem; background: #fff; font-weight: bold; cursor: pointer; color: #555;">
-    <option value="" disabled>🌏 Language</option>
-    <option value="index.html">🇹🇼 Chinese</option>
-    <option value="#" selected>🇺🇸 English</option>
-    <option value="id.html">🇮🇩 Indo</option>
-    <option value="vn.html">🇻🇳 Tiếng Việt</option>
-</select>
+        <select class="lang-select" onchange="if(this.value) location.href=this.value;">
+            <option value="" disabled>🌏 Language</option>
+            <option value="index.html">🇹🇼 Chinese</option>
+            <option value="#" selected>🇺🇸 English</option>
+            <option value="id.html">🇮🇩 Indo</option>
+            <option value="vn.html">🇻🇳 Việt</option>
+        </select>
     </div>
 </header>
 
@@ -1378,6 +1377,7 @@
 </script>
 </body>
 </html>
+
 
 
 
