@@ -123,17 +123,16 @@
     <img src="logo_left.png" alt="Hospital Logo" class="header-logo" onerror="this.style.opacity='0.2'">
     <div class="header-title-box">
         <h1 style="color:var(--primary);">Asisten Ginjal</h1>
-        <p>Jantung / Ginjal / Diabetes</p>
+        <p>Jantung/Diabetes</p>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+    <div class="header-right">
         <img src="logo_right_new.png" alt="Logo" class="header-logo" onerror="this.style.opacity='0.2'">
-        <select onchange="if(this.value) location.href=this.value;" 
-                style="padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; font-size: 0.8rem; background: #fff; font-weight: bold; cursor: pointer; color: #555;">
+        <select class="lang-select" onchange="if(this.value) location.href=this.value;">
             <option value="" disabled>🌏 Bahasa</option>
             <option value="index.html">🇹🇼 Chinese</option>
             <option value="en.html">🇺🇸 English</option>
             <option value="#" selected>🇮🇩 Indo</option>
-            <option value="vn.html">🇻🇳 Tiếng Việt</option>
+            <option value="vn.html">🇻🇳 Việt</option>
         </select>
     </div>
 </header>
@@ -918,3 +917,4 @@
 </script>
 </body>
 </html>
+
